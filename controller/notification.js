@@ -54,8 +54,8 @@ exports.getAll = async (req, res, next) => {
 
         let apiResponse = response.generate(constants.SUCCESS, `Fetched Successfully`, constants.HTTP_SUCCESS, responeData);
 
-        // let copy = [...responeData];
-        // copy = copy.map(ele => ele._id);
+        let copy = [...responeData];
+        copy = copy.map(ele => ele._id);
 
         // await notificationModel.updateMany({ _id: { $in: copy } }, { $set: { seen: true } });
 
