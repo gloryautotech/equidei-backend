@@ -6,44 +6,58 @@ const notificationModel = require('../model/notification-logger');
 
 exports.getAll = async (req, res, next) => {
     try {
-        const features = new APIFeatures(notificationModel.find({}), req.query).sort();
-
+        const features = new APIFeatures(notificationModel.find({ seen: false, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
         let notificationData = await features.query;
-        let mainArray = [];
-        if (req.query.role == 'Admin') {
+        let finalArray = [];
+        if (notificationData && notificationData.length == req.query.limit) {
 
-            if (notificationData && notificationData.length) {
-                mainArray = notificationData.filter(v => !v.seen && v.type == 'User');
+        } else {
+
+            const features1 = new APIFeatures(notificationModel.find({ seen: true, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
+            let restArray = await features1.query;
+            if(restArray && restArray.length){
+                let temp = [...notificationData,...restArray];
+                temp = temp.slice(0,req.query.limit);
+                notificationData = JSON.parse(JSON.stringify(temp));
             }
-
-            if (mainArray && mainArray.length < 10) {
-                mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'User')];
-            }
-
-            notificationData = mainArray.slice(0,10);
-
-        } else if (req.query.role == 'User') {
-
-            if (notificationData && notificationData.length) {
-                mainArray = notificationData.filter(v => !v.seen && v.type == 'Admin' && v.userId == req.query.userId);
-            }
-
-            if (mainArray && mainArray.length < 10) {
-                mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'Admin' && v.userId == req.query.userId)];
-            }
-
-            notificationData = mainArray.slice(0,10);
-
         }
+        // let mainArray = [];
+        // if (req.query.role == 'Admin') {
 
-        const responeData = JSON.parse(JSON.stringify(notificationData));
+        //     if (notificationData && notificationData.length) {
+        //         mainArray = notificationData.filter(v => !v.seen && v.type == 'User');
+        //     }
+
+        //     if (mainArray && mainArray.length < 10) {
+        //         mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'User')];
+        //     }
+
+        //     notificationData = mainArray.slice(0,10);
+
+        // } else if (req.query.role == 'User') {
+
+        //     if (notificationData && notificationData.length) {
+        //         mainArray = notificationData.filter(v => !v.seen && v.type == 'Admin' && v.userId == req.query.userId);
+        //     }
+
+        //     if (mainArray && mainArray.length < 10) {
+        //         mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'Admin' && v.userId == req.query.userId)];
+        //     }
+
+        //     notificationData = mainArray.slice(0,10);
+
+        // }
+
+        finalArray = [...notificationData];
+
+        const responeData = JSON.parse(JSON.stringify(finalArray));
 
         let apiResponse = response.generate(constants.SUCCESS, `Fetched Successfully`, constants.HTTP_SUCCESS, responeData);
 
-        let copy = [...responeData];
-        copy = copy.map(ele => ele._id);
+        // let copy = [...responeData];
+        // copy = copy.map(ele => ele._id);
 
-        await notificationModel.updateMany({ _id: { $in: copy } }, { $set: { seen: true } });
+        // await notificationModel.updateMany({ _id: { $in: copy } }, { $set: { seen: true } });
 
         res.status(200).send(apiResponse)
     } catch (error) {
