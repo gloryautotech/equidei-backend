@@ -16,11 +16,11 @@ exports.getAll = async (req, res, next) => {
                 mainArray = notificationData.filter(v => !v.seen && v.type == 'User');
             }
 
-            if (mainArray && mainArray.length < 15) {
+            if (mainArray && mainArray.length < 10) {
                 mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'User')];
             }
 
-            notificationData = mainArray.slice(0,15);
+            notificationData = mainArray.slice(0,10);
 
         } else if (req.query.role == 'User') {
 
@@ -28,11 +28,11 @@ exports.getAll = async (req, res, next) => {
                 mainArray = notificationData.filter(v => !v.seen && v.type == 'Admin' && v.userId == req.query.userId);
             }
 
-            if (mainArray && mainArray.length < 15) {
+            if (mainArray && mainArray.length < 10) {
                 mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'Admin' && v.userId == req.query.userId)];
             }
 
-            notificationData = mainArray.slice(0,15);
+            notificationData = mainArray.slice(0,10);
 
         }
 
