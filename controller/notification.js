@@ -15,9 +15,9 @@ exports.getAll = async (req, res, next) => {
 
             const features1 = new APIFeatures(notificationModel.find({ seen: true, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
             let restArray = await features1.query;
-            if(restArray && restArray.length){
-                let temp = [...notificationData,...restArray];
-                temp = temp.slice(0,req.query.limit);
+            if (restArray && restArray.length) {
+                let temp = [...notificationData, ...restArray];
+                temp = temp.slice(0, req.query.limit);
                 notificationData = JSON.parse(JSON.stringify(temp));
             }
         }
@@ -57,7 +57,7 @@ exports.getAll = async (req, res, next) => {
         let copy = [...responeData];
         copy = copy.map(ele => ele._id);
 
-        // await notificationModel.updateMany({ _id: { $in: copy } }, { $set: { seen: true } });
+        await notificationModel.updateMany({ _id: { $in: copy } }, { $set: { seen: true } });
 
         res.status(200).send(apiResponse)
     } catch (error) {
