@@ -3,6 +3,8 @@ const response = require('../lib/responseLib');
 const { constants, messages } = require("../constants.js");
 const APIFeatures = require('../utils/apiFeatures');
 const notificationModel = require('../model/notification-logger');
+const userModel = require('../model/user');
+const mongoose = require("mongoose");
 
 exports.getAll = async (req, res, next) => {
     try {
@@ -76,7 +78,7 @@ exports.deleteNotification = async (req, res, next) => {
         if (!notificationData) {
             apiResponse = response.generate(
                 constants.ERROR,
-                messages.USER.INVALIDUSER,
+                "Invalid Notification Id",
                 constants.HTTP_NOT_FOUND,
                 null
             );
@@ -85,7 +87,7 @@ exports.deleteNotification = async (req, res, next) => {
         } else {
             let apiResponse = response.generate(
                 constants.SUCCESS,
-                messages.USER.DELETEDSUCCESS,
+                "Notification Deleted Successfully",
                 constants.HTTP_SUCCESS,
                 notificationData
             );
@@ -99,3 +101,48 @@ exports.deleteNotification = async (req, res, next) => {
         });
     }
 };
+
+exports.alertNotification = async (req, res, next) => {
+    try {
+
+        const id = req.params.id;
+
+        let userData = await userModel.findOne({ _id: id });
+        if (!userData) {
+            apiResponse = response.generate(
+                constants.ERROR,
+                messages.USER.INVALIDUSER,
+                constants.HTTP_NOT_FOUND,
+                null
+            );
+            res.status(400).send(apiResponse);
+            return;
+        } else {
+
+            let dataModel = await createNotificationData({ status: 'Rejected', userId: id });
+            let notiData = await dataModel.save().then();
+
+            apiResponse = response.generate(constants.SUCCESS, "Notification created", constants.HTTP_SUCCESS, notiData);
+            res.status(200).send(apiResponse);
+        }
+    } catch (err) {
+        res.status(400).json({
+            status: 400,
+            message: err.message,
+        });
+    }
+}
+
+function createNotificationData(data) {
+
+    let dataModel = new notificationModel({
+        _id: new mongoose.Types.ObjectId(),
+        msg: data.status == 'Completed' ? 'Congratulations!' : 'Click here to view the report',
+        userId: data.userId,
+        title: data.status == 'Completed' ? 'KYC Verification Done' : 'KYC Verification Failed',
+        type: "Admin",
+        adminStatus: data.status
+    })
+
+    return dataModel;
+}
