@@ -90,6 +90,7 @@ app.get('/checkenv', (req, res) => {
 app.use('/api/auth', require('./router/auth'));
 app.use('/api/userList', require('./router/userList'));
 app.use('/api/notification', require('./router/notification'));
+app.use('/api/asset',require("./router/asset"))
 
 app.use('/', image);
 
@@ -101,7 +102,7 @@ app.use((err, req, res, next) => {
 	errorHandler(err, req, res, next);
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 7777;
 
 
 app.listen(port, () => {
