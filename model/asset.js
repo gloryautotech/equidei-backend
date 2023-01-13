@@ -19,9 +19,6 @@ const assetSchema = mongoose.Schema({
     assetModel: {
         type: String
     },
-    assetValue: {
-        type: String
-    },
     technicalSpecifications: {
         type: String
     },
