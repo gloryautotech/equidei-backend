@@ -8,7 +8,7 @@ const passwordUtil = require("../utils/password");
 const buildResponse = require("../utils/buildResponse");
 const userModel = require("../model/user");
 const notificationModel = require("../model/notification-logger")
-;const userListModel = require("../model/userList");
+    ; const userListModel = require("../model/userList");
 const zipCodeModel = require("../model/zipCode");
 const axios = require("axios");
 const sgMail = require("@sendgrid/mail");
@@ -402,12 +402,24 @@ let companyDetails = async (req, res) => {
                 : await userModel
                     .findOneAndUpdate({ mobile: req.body.userId }, data, { new: true })
                     .lean();
+
+            let dataModel = await createNotificationData({
+                userId: isUserExist._id, msg: 'Updated Details', title: req.body.companyDetails.name
+                    ? req.body.companyDetails.name
+                    : req.body.companyDetails?.name == ""
+                        ? ""
+                        : data.companyDetails.name, type: 'User'
+            })
+
+            await dataModel.save().then();
+
             let apiResponse = response.generate(
                 constants.SUCCESS,
                 "Your information has been updated",
                 constants.HTTP_SUCCESS,
                 isUserExist
             );
+
             res.status(200).send(apiResponse);
         } else {
             apiResponse = response.generate(
@@ -1388,13 +1400,13 @@ let accountActivation = async (req, res, next) => {
                     registrationDate: userData.createdAt,
                 });
                 await createUser.save().then();
-                dataModel = await createNotificationData({userId:userData._id,msg:'Added new request for verification',title:userData.companyDetails.name,type:'User'})
-            }else{
+                dataModel = await createNotificationData({ userId: userData._id, msg: 'Added new request for verification', title: userData.companyDetails.name, type: 'User' })
+            } else {
                 userData.isKYCVerificationInProgress = "PROGRESS";
                 userData = await userData.save();
                 userListData.status = 'Updated By MSME';
                 await userListData.save().then();
-                dataModel = await createNotificationData({userId:userData._id,msg:'Updated Rejected Documents',title:userData.companyDetails.name,type:'User'})
+                dataModel = await createNotificationData({ userId: userData._id, msg: 'Updated Rejected Documents', title: userData.companyDetails.name, type: 'User' })
             }
 
             await dataModel.save().then();
@@ -1415,14 +1427,14 @@ let accountActivation = async (req, res, next) => {
     }
 };
 
-function createNotificationData(data){
+function createNotificationData(data) {
 
     let dataModel = new notificationModel({
         _id: new mongoose.Types.ObjectId(),
-        msg:data.msg,
-        userId:data.userId,
-        title:data.title,
-        type:data.type
+        msg: data.msg,
+        userId: data.userId,
+        title: data.title,
+        type: data.type
     })
 
     return dataModel;

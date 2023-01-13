@@ -3,40 +3,56 @@ const response = require('../lib/responseLib');
 const { constants, messages } = require("../constants.js");
 const APIFeatures = require('../utils/apiFeatures');
 const notificationModel = require('../model/notification-logger');
+const userModel = require('../model/user');
+const mongoose = require("mongoose");
 
 exports.getAll = async (req, res, next) => {
     try {
-        const features = new APIFeatures(notificationModel.find({}), req.query).sort();
-
+        const features = new APIFeatures(notificationModel.find({ seen: false, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
         let notificationData = await features.query;
-        let mainArray = [];
-        if (req.query.role == 'Admin') {
+        let finalArray = [];
+        if (notificationData && notificationData.length == req.query.limit) {
 
-            if (notificationData && notificationData.length) {
-                mainArray = notificationData.filter(v => !v.seen && v.type == 'User');
+        } else {
+
+            const features1 = new APIFeatures(notificationModel.find({ seen: true, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
+            let restArray = await features1.query;
+            if (restArray && restArray.length) {
+                let temp = [...notificationData, ...restArray];
+                temp = temp.slice(0, req.query.limit);
+                notificationData = JSON.parse(JSON.stringify(temp));
             }
-
-            if (mainArray && mainArray.length < 15) {
-                mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'User')];
-            }
-
-            notificationData = mainArray.slice(0,15);
-
-        } else if (req.query.role == 'User') {
-
-            if (notificationData && notificationData.length) {
-                mainArray = notificationData.filter(v => !v.seen && v.type == 'Admin' && v.userId == req.query.userId);
-            }
-
-            if (mainArray && mainArray.length < 15) {
-                mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'Admin' && v.userId == req.query.userId)];
-            }
-
-            notificationData = mainArray.slice(0,15);
-
         }
+        // let mainArray = [];
+        // if (req.query.role == 'Admin') {
 
-        const responeData = JSON.parse(JSON.stringify(notificationData));
+        //     if (notificationData && notificationData.length) {
+        //         mainArray = notificationData.filter(v => !v.seen && v.type == 'User');
+        //     }
+
+        //     if (mainArray && mainArray.length < 10) {
+        //         mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'User')];
+        //     }
+
+        //     notificationData = mainArray.slice(0,10);
+
+        // } else if (req.query.role == 'User') {
+
+        //     if (notificationData && notificationData.length) {
+        //         mainArray = notificationData.filter(v => !v.seen && v.type == 'Admin' && v.userId == req.query.userId);
+        //     }
+
+        //     if (mainArray && mainArray.length < 10) {
+        //         mainArray = [...mainArray,...notificationData.filter(v => v.seen && v.type == 'Admin' && v.userId == req.query.userId)];
+        //     }
+
+        //     notificationData = mainArray.slice(0,10);
+
+        // }
+
+        finalArray = [...notificationData];
+
+        const responeData = JSON.parse(JSON.stringify(finalArray));
 
         let apiResponse = response.generate(constants.SUCCESS, `Fetched Successfully`, constants.HTTP_SUCCESS, responeData);
 
@@ -62,7 +78,7 @@ exports.deleteNotification = async (req, res, next) => {
         if (!notificationData) {
             apiResponse = response.generate(
                 constants.ERROR,
-                messages.USER.INVALIDUSER,
+                "Invalid Notification Id",
                 constants.HTTP_NOT_FOUND,
                 null
             );
@@ -71,7 +87,7 @@ exports.deleteNotification = async (req, res, next) => {
         } else {
             let apiResponse = response.generate(
                 constants.SUCCESS,
-                messages.USER.DELETEDSUCCESS,
+                "Notification Deleted Successfully",
                 constants.HTTP_SUCCESS,
                 notificationData
             );
@@ -85,3 +101,48 @@ exports.deleteNotification = async (req, res, next) => {
         });
     }
 };
+
+exports.alertNotification = async (req, res, next) => {
+    try {
+
+        const id = req.params.id;
+
+        let userData = await userModel.findOne({ _id: id });
+        if (!userData) {
+            apiResponse = response.generate(
+                constants.ERROR,
+                messages.USER.INVALIDUSER,
+                constants.HTTP_NOT_FOUND,
+                null
+            );
+            res.status(400).send(apiResponse);
+            return;
+        } else {
+
+            let dataModel = await createNotificationData({ status: 'Rejected', userId: id });
+            let notiData = await dataModel.save().then();
+
+            apiResponse = response.generate(constants.SUCCESS, "Notification created", constants.HTTP_SUCCESS, notiData);
+            res.status(200).send(apiResponse);
+        }
+    } catch (err) {
+        res.status(400).json({
+            status: 400,
+            message: err.message,
+        });
+    }
+}
+
+function createNotificationData(data) {
+
+    let dataModel = new notificationModel({
+        _id: new mongoose.Types.ObjectId(),
+        msg: data.status == 'Completed' ? 'Congratulations!' : 'Click here to view the report',
+        userId: data.userId,
+        title: data.status == 'Completed' ? 'KYC Verification Done' : 'KYC Verification Failed',
+        type: "Admin",
+        adminStatus: data.status
+    })
+
+    return dataModel;
+}
