@@ -8,14 +8,31 @@ const mongoose = require("mongoose");
 
 exports.getAll = async (req, res, next) => {
     try {
-        const features = new APIFeatures(notificationModel.find({ seen: false, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
+
+        let obj = {
+            seen: false,
+            type: req.query.role == 'Admin' ? 'User' : 'Admin'
+        }
+
+        if (req.query.role == 'User') {
+            obj['userId'] = req.query.userId;
+        }
+        const features = new APIFeatures(notificationModel.find(obj), req.query).sort().paginate();
         let notificationData = await features.query;
         let finalArray = [];
         if (notificationData && notificationData.length == req.query.limit) {
 
         } else {
 
-            const features1 = new APIFeatures(notificationModel.find({ seen: true, type: req.query.role == 'Admin' ? 'User' : 'Admin' }), req.query).sort().paginate();
+            let obj = {
+                seen: true,
+                type: req.query.role == 'Admin' ? 'User' : 'Admin'
+            }
+
+            if (req.query.role == 'User') {
+                obj['userId'] = req.query.userId;
+            }
+            const features1 = new APIFeatures(notificationModel.find(obj), req.query).sort().paginate();
             let restArray = await features1.query;
             if (restArray && restArray.length) {
                 let temp = [...notificationData, ...restArray];
