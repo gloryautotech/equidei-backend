@@ -404,7 +404,7 @@ let companyDetails = async (req, res) => {
                     .lean();
 
             let dataModel = await createNotificationData({
-                userId: req.body.userId, msg: 'Updated Details', title: req.body.companyDetails.name
+                userId: isUserExist._id, msg: 'Updated Details', title: req.body.companyDetails.name
                     ? req.body.companyDetails.name
                     : req.body.companyDetails?.name == ""
                         ? ""
