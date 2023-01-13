@@ -509,12 +509,15 @@ let personalKYC = async (req, res) => {
 
                 });
             }
-
             if (
                 data.KYCPersonal["isPANSubmitted"] == true &&
-                data.KYCPersonal["isAadharSubmitted"] == true
+                data.KYCPersonal["isAadharSubmitted"] == true &&
+                data.PAN.status !== "Rejected" &&
+                data.aadhar.status !== "Rejected"
             ) {
                 data["isPersonalKYCDone"] = true;
+            } else {
+                data["isPersonalKYCDone"] = false;
             }
             isUserExist = isTrue
                 ? await userModel
@@ -750,7 +753,6 @@ let businessKYC = async (req, res) => {
                     }
                 });
             }
-
             if (
                 data.KYCBussiness.isPANSubmitted == true &&
                 data.KYCBussiness.udhyamDetailsSubmitted == true &&
@@ -758,9 +760,19 @@ let businessKYC = async (req, res) => {
                 data.KYCBussiness.isStatementSubmitted == true &&
                 data.KYCBussiness.isProfitLossSubmitted == true &&
                 data.KYCBussiness.isIncomeTaxSubmitted == true &&
-                data.KYCBussiness.isCurrentOutStandingLoan == true
+                data.KYCBussiness.isCurrentOutStandingLoan == true &&
+                data.companyDetails.PAN.status !== "Rejected" &&
+                data.companyDetails.udhyamDetails.status !== "Rejected" &&
+                data.companyDetails.GST.status !== "Rejected" &&
+                data.companyDetails.currentOutstandingLoan.status !== "Rejected" &&
+                data.companyDetails.bankDetails.status !== "Rejected" &&
+                data.companyDetails.profitLossStatement.status !== "Rejected" &&
+                data.companyDetails.incomeTaxReturn.status !== "Rejected" &&
+                data.companyDetails.udhyamDetails.status !== "Rejected"
             ) {
                 data["isBussinesKYCDone"] = true;
+            } else {
+                data["isBussinesKYCDone"] = false;
             }
             isUserExist = isTrue
                 ? await userModel
