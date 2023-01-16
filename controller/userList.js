@@ -92,7 +92,22 @@ exports.verify = async (req, res, next) => {
             userData.companyDetails.profitLossStatement.message = req.body.businessKYC.profitLossStatement.message ? req.body.businessKYC.profitLossStatement.message : '';
             userData.companyDetails.incomeTaxReturn.status = req.body.businessKYC.incomeTaxReturn.status;
             userData.companyDetails.incomeTaxReturn.message = req.body.businessKYC.incomeTaxReturn.message ? req.body.businessKYC.incomeTaxReturn.message : '';
-
+            
+            if (userData.PAN.status !== 'Rejected' && userData.aadhar.status !== 'Rejected') {
+                await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { isPersonalKYCDone: true } }, { new: true });
+                userData.isPersonalKYCDone = true
+            } else {
+                let data = await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { isPersonalKYCDone: false } }, { new: true });
+                userData.isPersonalKYCDone = false
+            }
+            if (userData.companyDetails.PAN.status !== "Rejected" && userData.companyDetails.udhyamDetails.status !== "Rejected" && userData.companyDetails.GST.status !== "Rejected" && userData.companyDetails.currentOutstandingLoan.status !== "Rejected" && userData.companyDetails.bankDetails.status !== "Rejected" && userData.companyDetails.profitLossStatement.status !== "Rejected" && userData.companyDetails.incomeTaxReturn.status !== "Rejected" && userData.companyDetails.udhyamDetails.status !== "Rejected") {
+                await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { isBussinesKYCDone: true } }, { new: true });
+                userData.isBussinesKYCDone = true
+            } else {
+                await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { isBussinesKYCDone: false } }, { new: true });
+                userData.isBussinesKYCDone = false
+            }
+           
             let dataModel = null;
             if (userData.PAN.status == 'Verified' && userData.aadhar.status == 'Verified' && userData.companyDetails.PAN.status == 'Verified' && userData.companyDetails.udhyamDetails.status == 'Verified' && userData.companyDetails.GST.status == 'Verified' && userData.companyDetails.currentOutstandingLoan.status == 'Verified' && userData.companyDetails.bankDetails.bankStatement.status == 'Verified' && userData.companyDetails.profitLossStatement.status == 'Verified' && userData.companyDetails.incomeTaxReturn.status == 'Verified') {
                 userData.isKYCVerificationInProgress = 'DONE';
