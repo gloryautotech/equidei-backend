@@ -827,7 +827,10 @@ let login = async (req, res) => {
                 getUser.password &&
                 (await getUser.comparePassword(password))
             ) {
-                console.log(getUser);
+                if (getUser.isKYCVerificationInProgress == "DONE") {
+                    getUser.profileCompletion = 100;
+                    await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
+                }
                 resData.token = passwordUtil.genJwtToken(getUser._id);
                 resData.user = JSON.parse(JSON.stringify(getUser));
                 resData.user.userId = req.body.userId;
@@ -1404,7 +1407,7 @@ let accountActivation = async (req, res, next) => {
             let dataModel = null;
             if (!userListData) {
                 userData.isKYCVerificationInProgress = "PROGRESS";
-                userData.profileCompletion=85;
+                userData.profileCompletion = 85;
                 await userModel.findOneAndUpdate({ userId: id }, { $set: { profileCompletion: 85 } }, { new: true });
                 userData = await userData.save();
                 let createUser = new userListModel({
@@ -1417,7 +1420,7 @@ let accountActivation = async (req, res, next) => {
                 dataModel = await createNotificationData({ userId: userData._id, msg: 'Added new request for verification', title: userData.companyDetails.name, type: 'User' })
             } else {
                 userData.isKYCVerificationInProgress = "PROGRESS";
-                userData.profileCompletion=85;
+                userData.profileCompletion = 85;
                 await userModel.findOneAndUpdate({ userId: id }, { $set: { profileCompletion: 85 } }, { new: true });
                 userData = await userData.save();
                 userListData.status = 'Updated By MSME';
