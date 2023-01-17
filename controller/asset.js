@@ -63,8 +63,22 @@ const updateAsset = async (req, res) => {
         res.status(500).send(apiResponse);
     }
 }
-
-const getAllAssetList = async (req, res) => {
+const getAllAssetList= async (req,res)=>{
+    try {
+       let assetData= await assetModel.find()
+        let apiResponse = response.generate(constants.SUCCESS, messages.asset.GETASSETLIST, constants.HTTP_SUCCESS, assetData);
+        res.status(200).send(apiResponse);
+    } catch (err) {
+        let apiResponse = response.generate(
+            constants.ERROR,
+            messages.asset.FAILURE,
+            constants.HTTP_SERVER_ERROR,
+            err
+        );
+        res.status(500).send(apiResponse);
+    }
+}
+const getAllAssetListByQuery = async (req, res) => {
     try {
         const features = new APIFeatures(assetModel.find({}), req.body)
             .sort()
@@ -103,4 +117,4 @@ const getAssetListById = async (req, res) => {
     }
 }
 
-module.exports = { assetRegister, updateAsset, getAllAssetList, getAssetListById }
+module.exports = { assetRegister, updateAsset, getAllAssetListByQuery, getAssetListById ,getAllAssetList}
