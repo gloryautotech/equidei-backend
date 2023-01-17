@@ -1404,6 +1404,8 @@ let accountActivation = async (req, res, next) => {
             let dataModel = null;
             if (!userListData) {
                 userData.isKYCVerificationInProgress = "PROGRESS";
+                userData.profileCompletion=85;
+                await userModel.findOneAndUpdate({ userId: id }, { $set: { profileCompletion: 85 } }, { new: true });
                 userData = await userData.save();
                 let createUser = new userListModel({
                     _id: new mongoose.Types.ObjectId(),
@@ -1415,6 +1417,8 @@ let accountActivation = async (req, res, next) => {
                 dataModel = await createNotificationData({ userId: userData._id, msg: 'Added new request for verification', title: userData.companyDetails.name, type: 'User' })
             } else {
                 userData.isKYCVerificationInProgress = "PROGRESS";
+                userData.profileCompletion=85;
+                await userModel.findOneAndUpdate({ userId: id }, { $set: { profileCompletion: 85 } }, { new: true });
                 userData = await userData.save();
                 userListData.status = 'Updated By MSME';
                 await userListData.save().then();
