@@ -66,7 +66,7 @@ const updateAsset = async (req, res) => {
 
 const getAllAssetList = async (req, res) => {
     try {
-        const features = new APIFeatures(assetModel.find({}), req.query)
+        const features = new APIFeatures(assetModel.find({}), req.body)
             .sort()
             .limitFields()
             .paginate()

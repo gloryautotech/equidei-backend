@@ -833,6 +833,12 @@ let login = async (req, res) => {
                 }else if(getUser.isKYCVerificationInProgress == "INITIAL"){
                     getUser.profileCompletion = 75;
                     await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+                }else if(getUser.isKYCVerificationInProgress == "FAILED"){
+                    getUser.profileCompletion = 75;
+                    await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+                }else if(getUser.isKYCVerificationInProgress == "PROGRESS"){
+                    getUser.profileCompletion = 85;
+                    await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
                 }
                 resData.token = passwordUtil.genJwtToken(getUser._id);
                 resData.user = JSON.parse(JSON.stringify(getUser));
