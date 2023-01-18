@@ -385,23 +385,22 @@ let companyDetails = async (req, res) => {
             //     }
             //     data.profileCompletion = profileCompletion;
             // }
-            
-            
+
+
             // 
-            if(data.isKYCVerificationInProgress == "DONE"){
-                data.profileCompletion=100
+            if (data.isKYCVerificationInProgress == "DONE") {
+                data.profileCompletion = 100
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "FAILED"){
-                data.profileCompletion=75
+            } else if (data.isKYCVerificationInProgress == "FAILED") {
+                data.profileCompletion = 75
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "PROGRESS"){
+            } else if (data.isKYCVerificationInProgress == "PROGRESS") {
                 data.profileCompletion = 85;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "INITIAL"){
+            } else if (data.isKYCVerificationInProgress == "INITIAL") {
                 data.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
             }
-            console.log(data);
 
             if (
                 data.KYCBussiness.isPANSubmitted == true &&
@@ -528,17 +527,17 @@ let personalKYC = async (req, res) => {
 
                 });
             }
-             // 
-             if (data.isKYCVerificationInProgress == "DONE") {
+            // 
+            if (data.isKYCVerificationInProgress == "DONE") {
                 data.profileCompletion = 100;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "INITIAL"){
+            } else if (data.isKYCVerificationInProgress == "INITIAL") {
                 data.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "FAILED"){
+            } else if (data.isKYCVerificationInProgress == "FAILED") {
                 data.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "PROGRESS"){
+            } else if (data.isKYCVerificationInProgress == "PROGRESS") {
                 data.profileCompletion = 85;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
             }
@@ -790,13 +789,13 @@ let businessKYC = async (req, res) => {
             if (data.isKYCVerificationInProgress == "DONE") {
                 data.profileCompletion = 100;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "INITIAL"){
+            } else if (data.isKYCVerificationInProgress == "INITIAL") {
                 data.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "FAILED"){
+            } else if (data.isKYCVerificationInProgress == "FAILED") {
                 data.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-            }else if(data.isKYCVerificationInProgress == "PROGRESS"){
+            } else if (data.isKYCVerificationInProgress == "PROGRESS") {
                 data.profileCompletion = 85;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
             }
@@ -877,13 +876,15 @@ let login = async (req, res) => {
                 if (getUser.isKYCVerificationInProgress == "DONE") {
                     getUser.profileCompletion = 100;
                     await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
-                }else if(getUser.isKYCVerificationInProgress == "INITIAL"){
+                }
+                //  else if (getUser.isKYCVerificationInProgress == "INITIAL") {
+                //     getUser.profileCompletion = 75;
+                //     await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+                // } 
+                else if (getUser.isKYCVerificationInProgress == "FAILED") {
                     getUser.profileCompletion = 75;
                     await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-                }else if(getUser.isKYCVerificationInProgress == "FAILED"){
-                    getUser.profileCompletion = 75;
-                    await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
-                }else if(getUser.isKYCVerificationInProgress == "PROGRESS"){
+                } else if (getUser.isKYCVerificationInProgress == "PROGRESS") {
                     getUser.profileCompletion = 85;
                     await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
                 }
