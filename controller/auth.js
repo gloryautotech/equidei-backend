@@ -312,27 +312,28 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails?.state == ""
                     ? ""
                     : data.companyDetails.state;
-            // if (
-            //     data.companyDetails.name &&
-            //     data.companyDetails.product &&
-            //     data.companyDetails.yearOfIncorporation &&
-            //     data.companyDetails.industryType &&
-            //     data.companyDetails.licenseNumber &&
-            //     data.companyDetails.GST.GSTNumber &&
-            //     data.companyDetails.PAN.panNumber &&
-            //     data.companyDetails.udhyamDetails.udhyamNumber &&
-            //     data.companyDetails.bankDetails.accountNumber &&
-            //     data.companyDetails.bankDetails.IFSC &&
-            //     data.companyDetails.bankDetails.branchName &&
-            //     data.companyDetails.address &&
-            //     data.companyDetails.zip &&
-            //     data.companyDetails.city &&
-            //     data.companyDetails.state
-            // ) {
-            //     //&& data.companyDetails.bankDetails.bankName
-            //     data["isAllCompanyInfoAvailable"] = true;
-            //     data.profileCompletion = profileCompletion + 43.75;
-            // } else {
+            if (
+                data.companyDetails.name &&
+                data.companyDetails.product &&
+                data.companyDetails.yearOfIncorporation &&
+                data.companyDetails.industryType &&
+                data.companyDetails.licenseNumber &&
+                data.companyDetails.GST.GSTNumber &&
+                data.companyDetails.PAN.panNumber &&
+                data.companyDetails.udhyamDetails.udhyamNumber &&
+                data.companyDetails.bankDetails.accountNumber &&
+                data.companyDetails.bankDetails.IFSC &&
+                data.companyDetails.bankDetails.branchName &&
+                data.companyDetails.address &&
+                data.companyDetails.zip &&
+                data.companyDetails.city &&
+                data.companyDetails.state
+            ) {
+                //&& data.companyDetails.bankDetails.bankName
+                data["isAllCompanyInfoAvailable"] = true;
+                // data.profileCompletion = 75;
+            }
+            //  else {
             //     data["isAllCompanyInfoAvailable"] = false;
             //     if (data.companyDetails.name) {
             //         profileCompletion = profileCompletion + 2.91;
@@ -396,6 +397,9 @@ let companyDetails = async (req, res) => {
             }else if(data.isKYCVerificationInProgress == "PROGRESS"){
                 data.profileCompletion = 85;
                 await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "INITIAL"){
+                data.profileCompletion = 75;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
             }
             console.log(data);
 
