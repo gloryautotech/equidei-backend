@@ -312,78 +312,93 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails?.state == ""
                     ? ""
                     : data.companyDetails.state;
-            if (
-                data.companyDetails.name &&
-                data.companyDetails.product &&
-                data.companyDetails.yearOfIncorporation &&
-                data.companyDetails.industryType &&
-                data.companyDetails.licenseNumber &&
-                data.companyDetails.GST.GSTNumber &&
-                data.companyDetails.PAN.panNumber &&
-                data.companyDetails.udhyamDetails.udhyamNumber &&
-                data.companyDetails.bankDetails.accountNumber &&
-                data.companyDetails.bankDetails.IFSC &&
-                data.companyDetails.bankDetails.branchName &&
-                data.companyDetails.address &&
-                data.companyDetails.zip &&
-                data.companyDetails.city &&
-                data.companyDetails.state
-            ) {
-                //&& data.companyDetails.bankDetails.bankName
-                data["isAllCompanyInfoAvailable"] = true;
-                data.profileCompletion = profileCompletion + 43.75;
-            } else {
-                data["isAllCompanyInfoAvailable"] = false;
-                if (data.companyDetails.name) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.product) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.yearOfIncorporation) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.industryType) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.licenseNumber) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.GST.GSTNumber) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.udhyamDetails.udhyamNumber) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.PAN.panNumber) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                // if (data.companyDetails.bankDetails.bankName) {
-                //     profileCompletion = profileCompletion + 2.91;
-                // }
-                if (data.companyDetails.bankDetails.accountNumber) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.bankDetails.IFSC) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.bankDetails.branchName) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.address) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.zip) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.city) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                if (data.companyDetails.state) {
-                    profileCompletion = profileCompletion + 2.91;
-                }
-                data.profileCompletion = profileCompletion;
+            // if (
+            //     data.companyDetails.name &&
+            //     data.companyDetails.product &&
+            //     data.companyDetails.yearOfIncorporation &&
+            //     data.companyDetails.industryType &&
+            //     data.companyDetails.licenseNumber &&
+            //     data.companyDetails.GST.GSTNumber &&
+            //     data.companyDetails.PAN.panNumber &&
+            //     data.companyDetails.udhyamDetails.udhyamNumber &&
+            //     data.companyDetails.bankDetails.accountNumber &&
+            //     data.companyDetails.bankDetails.IFSC &&
+            //     data.companyDetails.bankDetails.branchName &&
+            //     data.companyDetails.address &&
+            //     data.companyDetails.zip &&
+            //     data.companyDetails.city &&
+            //     data.companyDetails.state
+            // ) {
+            //     //&& data.companyDetails.bankDetails.bankName
+            //     data["isAllCompanyInfoAvailable"] = true;
+            //     data.profileCompletion = profileCompletion + 43.75;
+            // } else {
+            //     data["isAllCompanyInfoAvailable"] = false;
+            //     if (data.companyDetails.name) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.product) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.yearOfIncorporation) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.industryType) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.licenseNumber) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.GST.GSTNumber) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.udhyamDetails.udhyamNumber) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.PAN.panNumber) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     // if (data.companyDetails.bankDetails.bankName) {
+            //     //     profileCompletion = profileCompletion + 2.91;
+            //     // }
+            //     if (data.companyDetails.bankDetails.accountNumber) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.bankDetails.IFSC) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.bankDetails.branchName) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.address) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.zip) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.city) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     if (data.companyDetails.state) {
+            //         profileCompletion = profileCompletion + 2.91;
+            //     }
+            //     data.profileCompletion = profileCompletion;
+            // }
+            
+            
+            // 
+            if(data.isKYCVerificationInProgress == "DONE"){
+                data.profileCompletion=100
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "FAILED"){
+                data.profileCompletion=75
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "PROGRESS"){
+                data.profileCompletion = 85;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
             }
+            console.log(data);
+
             if (
                 data.KYCBussiness.isPANSubmitted == true &&
                 data.KYCBussiness.udhyamDetailsSubmitted == true &&
@@ -470,7 +485,7 @@ let personalKYC = async (req, res) => {
                 if (data.PAN.name && data.PAN.file) {
                     data.isKYCPartial = true;
                     data.KYCPersonal["isPANSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.aadhar) {
@@ -492,7 +507,7 @@ let personalKYC = async (req, res) => {
                 if (data.aadhar.name && data.aadhar.file) {
                     data.isKYCPartial = true;
                     data.KYCPersonal["isAadharSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
 
@@ -508,6 +523,20 @@ let personalKYC = async (req, res) => {
                     }
 
                 });
+            }
+             // 
+             if (data.isKYCVerificationInProgress == "DONE") {
+                data.profileCompletion = 100;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "INITIAL"){
+                data.profileCompletion = 75;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "FAILED"){
+                data.profileCompletion = 75;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "PROGRESS"){
+                data.profileCompletion = 85;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
             }
             if (
                 data.KYCPersonal["isPANSubmitted"] == true &&
@@ -587,7 +616,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["isPANSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.companyDetails.udhyamDetails) {
@@ -616,7 +645,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["udhyamDetailsSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.companyDetails.GST) {
@@ -643,7 +672,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["isGSTSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.companyDetails.bankDetails) {
@@ -665,7 +694,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["isStatementSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.companyDetails.profitLossStatement) {
@@ -687,7 +716,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["isProfitLossSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.companyDetails.incomeTaxReturn) {
@@ -709,7 +738,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["isIncomeTaxSubmitted"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
             if (req.body.companyDetails.currentOutstandingLoan) {
@@ -731,7 +760,7 @@ let businessKYC = async (req, res) => {
                 ) {
                     data.isKYCPartial = true;
                     data.KYCBussiness["isCurrentOutStandingLoan"] = true;
-                    data.profileCompletion = data.profileCompletion + 2.91;
+                    // data.profileCompletion = data.profileCompletion + 2.91;
                 }
             }
 
@@ -752,6 +781,20 @@ let businessKYC = async (req, res) => {
                         }
                     }
                 });
+            }
+            // 
+            if (data.isKYCVerificationInProgress == "DONE") {
+                data.profileCompletion = 100;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 100 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "INITIAL"){
+                data.profileCompletion = 75;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "FAILED"){
+                data.profileCompletion = 75;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 75 } }, { new: true });
+            }else if(data.isKYCVerificationInProgress == "PROGRESS"){
+                data.profileCompletion = 85;
+                await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
             }
             if (
                 data.KYCBussiness.isPANSubmitted == true &&
