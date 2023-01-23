@@ -829,7 +829,7 @@ let login = async (req, res) => {
             ) {
                 console.log(getUser);
                 resData.token = passwordUtil.genJwtToken(getUser._id);
-                resData.user = JSON.parse(JSON.stringify(getUser));
+                resData.user = await buildResponse(JSON.parse(JSON.stringify(getUser)));
                 resData.user.userId = req.body.userId;
             } else {
                 let apiResponse = response.generate(
@@ -1033,6 +1033,7 @@ let sendOTP = async (req, res, next) => {
             }
         }
 
+        obtainUser = await buildResponse(obtainUser);
         if (!isTrue) {
             apiResponse = response.generate1(
                 constants.SUCCESS,

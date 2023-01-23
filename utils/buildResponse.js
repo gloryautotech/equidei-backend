@@ -58,7 +58,8 @@ function buildResponse(body) {
     data.isKYCVerificationInProgress = body.isKYCVerificationInProgress;
     data.isMobile = body.isMobile;
     data.role = body.role;
-    data.userId = body.userId;
+    data.adminName = body.adminName;
+    data.userId = body.userId ? body.userId : body.email ? body.email : body.mobile ? body.mobile : '' ;
     data.profileCompletion = body.profileCompletion;
     data._id = body._id;
 
