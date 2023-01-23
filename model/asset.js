@@ -19,7 +19,7 @@ const assetSchema = mongoose.Schema({
     assetModel: {
         type: String
     },
-    technicalSpecifications: {
+    technicalSpecificationsName: {
         type: String
     },
     purchaseBill: {
