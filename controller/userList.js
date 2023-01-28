@@ -92,7 +92,7 @@ exports.verify = async (req, res, next) => {
             userData.companyDetails.profitLossStatement.message = req.body.businessKYC.profitLossStatement.message ? req.body.businessKYC.profitLossStatement.message : '';
             userData.companyDetails.incomeTaxReturn.status = req.body.businessKYC.incomeTaxReturn.status;
             userData.companyDetails.incomeTaxReturn.message = req.body.businessKYC.incomeTaxReturn.message ? req.body.businessKYC.incomeTaxReturn.message : '';
-            
+
             if (userData.PAN.status !== 'Rejected' && userData.aadhar.status !== 'Rejected') {
                 await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { isPersonalKYCDone: true } }, { new: true });
                 userData.isPersonalKYCDone = true
@@ -107,32 +107,49 @@ exports.verify = async (req, res, next) => {
                 await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { isBussinesKYCDone: false } }, { new: true });
                 userData.isBussinesKYCDone = false
             }
-           
+
             let dataModel = null;
             if (userData.PAN.status == 'Verified' && userData.aadhar.status == 'Verified' && userData.companyDetails.PAN.status == 'Verified' && userData.companyDetails.udhyamDetails.status == 'Verified' && userData.companyDetails.GST.status == 'Verified' && userData.companyDetails.currentOutstandingLoan.status == 'Verified' && userData.companyDetails.bankDetails.bankStatement.status == 'Verified' && userData.companyDetails.profitLossStatement.status == 'Verified' && userData.companyDetails.incomeTaxReturn.status == 'Verified') {
                 userData.isKYCVerificationInProgress = 'DONE';
-                userData.profileCompletion=100;
+                userData.profileCompletion = 100;
                 await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { profileCompletion: 100 } }, { new: true });
                 await userListModel.findOneAndUpdate({ userId: req.body.id }, { $set: { status: 'Completed' } }, { new: true });
-                dataModel = await createNotificationData({status:'Completed',userId:req.body.id});
+                dataModel = createNotificationData({ status: 'Completed', userId: req.body.id });
             }
             else if (userData.PAN.status == 'Verified' || userData.aadhar.status == 'Verified' || userData.companyDetails.PAN.status == 'Verified' || userData.companyDetails.udhyamDetails.status == 'Verified' || userData.companyDetails.GST.status == 'Verified' || userData.companyDetails.currentOutstandingLoan.status == 'Verified' || userData.companyDetails.bankDetails.bankStatement.status == 'Verified' || userData.companyDetails.profitLossStatement.status == 'Verified' || userData.companyDetails.incomeTaxReturn.status == 'Verified') {
                 userData.isKYCVerificationInProgress = 'FAILED';
-                userData.profileCompletion=75;
+                userData.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { profileCompletion: 75 } }, { new: true });
                 await userListModel.findOneAndUpdate({ userId: req.body.id }, { $set: { status: 'Rejected' } }, { new: true });
-                dataModel = await createNotificationData({status:'Rejected',userId:req.body.id});
+                dataModel = createNotificationData({ status: 'Rejected', userId: req.body.id });
             }
             else {
                 userData.isKYCVerificationInProgress = 'FAILED';
-                userData.profileCompletion=75;
+                userData.profileCompletion = 75;
                 await userModel.findOneAndUpdate({ userId: req.body.id }, { $set: { profileCompletion: 75 } }, { new: true });
                 await userListModel.findOneAndUpdate({ userId: req.body.id }, { $set: { status: 'Rejected' } }, { new: true });
-                dataModel = await createNotificationData({status:'Rejected',userId:req.body.id});
+                dataModel = createNotificationData({ status: 'Rejected', userId: req.body.id });
             }
             userData = await userData.save();
 
-            await dataModel.save().then();
+            let notiData= await dataModel.save();
+            // socket
+            let sockets = await req.io.fetchSockets();
+            if (notiData.type == "Admin") {
+                let userId = notiData.userId.toString();
+                for (let socket of sockets) {
+                    if (socket.connected && !(socket.disconnected) && socket.handshake.query["userId"] == userId) {
+                        socket.emit('notification', notiData);
+                        break;
+                    }
+                }
+            } else {
+                let index = sockets.findIndex(item => item.connected && !(item.disconnected) && item.handshake.query["isAdmin"] == "true");
+                if (index != -1) {
+                    sockets[index].emit('notification', notiData);
+                }
+            }
+
             apiResponse = response.generate(constants.SUCCESS, messages.USER.FETCHEDSUCCESS, constants.HTTP_SUCCESS, userData);
             res.status(200).send(apiResponse);
         }
@@ -144,15 +161,15 @@ exports.verify = async (req, res, next) => {
     }
 };
 
-function createNotificationData(data){
+function createNotificationData(data) {
 
     let dataModel = new notificationModel({
         _id: new mongoose.Types.ObjectId(),
-        msg:data.status == 'Completed' ? 'Congratulations!' : 'Click here to view the report',
-        userId:data.userId,
-        title:data.status == 'Completed' ? 'KYC Verification Done' : 'KYC Verification Failed',
-        type:"Admin",
-        adminStatus:data.status
+        msg: data.status == 'Completed' ? 'Congratulations!' : 'Click here to view the report',
+        userId: data.userId,
+        title: data.status == 'Completed' ? 'KYC Verification Done' : 'KYC Verification Failed',
+        type: "Admin",
+        adminStatus: data.status
     })
 
     return dataModel;

@@ -375,8 +375,23 @@ let companyDetails = async (req, res) => {
                         : data.companyDetails.name, type: 'User'
             })
 
-            await dataModel.save().then();
-
+            let notiData = await dataModel.save().then();
+            //    socket
+            let sockets = await req.io.fetchSockets();
+            if (notiData.type == "Admin") {
+                let userId = notiData.userId.toString();
+                for (let socket of sockets) {
+                    if (socket.connected && !(socket.disconnected) && socket.handshake.query["userId"] == userId) {
+                        socket.emit('notification', notiData);
+                        break;
+                    }
+                }
+            } else {
+                let index = sockets.findIndex(item => item.connected && !(item.disconnected) && item.handshake.query["isAdmin"] == "true");
+                if (index != -1) {
+                    sockets[index].emit('notification', notiData);
+                }
+            }
             let apiResponse = response.generate(
                 constants.SUCCESS,
                 "Your information has been updated",
@@ -1417,7 +1432,23 @@ let accountActivation = async (req, res, next) => {
                 dataModel = await createNotificationData({ userId: userData._id, msg: 'Updated Rejected Documents', title: userData.companyDetails.name, type: 'User' })
             }
 
-            await dataModel.save().then();
+            let notiData = await dataModel.save().then();
+            // socket
+            let sockets = await req.io.fetchSockets();
+            if (notiData.type == "Admin") {
+                let userId = notiData.userId.toString();
+                for (let socket of sockets) {
+                    if (socket.connected && !(socket.disconnected) && socket.handshake.query["userId"] == userId) {
+                        socket.emit('notification', notiData);
+                        break;
+                    }
+                }
+            } else {
+                let index = sockets.findIndex(item => item.connected && !(item.disconnected) && item.handshake.query["isAdmin"] == "true");
+                if (index != -1) {
+                    sockets[index].emit('notification', notiData);
+                }
+            }
             apiResponse = response.generate(
                 constants.SUCCESS,
                 "success",
@@ -1556,6 +1587,7 @@ let DeleteUser = async (req, res, next) => {
             res.status(400).send(apiResponse);
             return;
         } else {
+            await userListModel.findOneAndDelete({ userId: userData.id }, { new: true })
             let apiResponse = response.generate(
                 constants.SUCCESS,
                 messages.USER.DELETEDSUCCESS,

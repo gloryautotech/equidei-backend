@@ -9,6 +9,11 @@ const bodyparser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
+// connect app with http
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 const { createServer } = require('http');
 
@@ -43,9 +48,9 @@ mongoose
 app.use(cors());
 app.options('*', cors());
 app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
-    allowedHeaders: ['Content-Type']
+	origin: '*',
+	methods: ['GET', 'POST', 'DELETE', 'UPDATE', 'PUT', 'PATCH'],
+	allowedHeaders: ['Content-Type']
 }));
 app.use(
 	bodyparser.urlencoded({
@@ -68,15 +73,15 @@ app.use(bodyparser.json({ limit: '3mb' }));
 // 	next();
 // });
 app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    res.header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "*")
-    next();
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept"
+	);
+	res.header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Methods", "*")
+	next();
 });
 app.use(express.json());
 
@@ -95,7 +100,12 @@ if (process.env.NODE_ENV !== 'development' && instanceId === 1) {
 	require('./jobs');
 }
 
-
+app.use((req, res, next) => {
+	// if (req.path.toLowerCase().includes('/api/notification/')) {
+		req.io = io;
+	// }
+	return next();
+});
 // swagger docs
 app.use(`/api/v1/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/checkenv', (req, res) => {
@@ -106,8 +116,9 @@ app.get('/checkenv', (req, res) => {
 
 app.use('/api/auth', require('./router/auth'));
 app.use('/api/userList', require('./router/userList'));
+
 app.use('/api/notification', require('./router/notification'));
-app.use('/api/asset',require("./router/asset"))
+app.use('/api/asset', require("./router/asset"))
 
 app.use('/', image);
 
@@ -120,8 +131,13 @@ app.use((err, req, res, next) => {
 });
 
 const port = process.env.PORT || 7777;
+// websocket
+// io.on('connection', (socket) => {
+// 	socket.on('chat message', (msg) => {
+// 		io.emit('chat message', msg);
+// 	});
+// });
 
-
-app.listen(port, () => {
+server.listen(port, () => {
 	console.log(`server in running on PORT: ${port} - ENV: ${process.env.NODE_ENV}`);
 });

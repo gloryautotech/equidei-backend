@@ -124,9 +124,9 @@ exports.alertNotification = async (req, res, next) => {
 
         const id = req.params.id;
 
-        let userData = await userModel.findOne({ _id: id });
+        let userData = await userModel.findById(id);
         if (!userData) {
-            apiResponse = response.generate(
+            let apiResponse = response.generate(
                 constants.ERROR,
                 messages.USER.INVALIDUSER,
                 constants.HTTP_NOT_FOUND,
@@ -135,11 +135,25 @@ exports.alertNotification = async (req, res, next) => {
             res.status(400).send(apiResponse);
             return;
         } else {
-
-            let dataModel = await createNotificationData({ status: 'Rejected', userId: id });
-            let notiData = await dataModel.save().then();
-
-            apiResponse = response.generate(constants.SUCCESS, "Notification created", constants.HTTP_SUCCESS, notiData);
+            let dataModel = createNotificationData({ status: 'Rejected', userId: id });
+            let notiData = await dataModel.save();
+            // socket
+            let sockets = await req.io.fetchSockets();
+            if (notiData.type == "Admin") {
+                let userId = notiData.userId.toString();
+                for (let socket of sockets) {
+                    if (socket.connected && !(socket.disconnected) && socket.handshake.query["userId"] == userId) {
+                        socket.emit('notification', notiData);
+                        break;
+                    }
+                }
+            } else {
+                let index = sockets.findIndex(item => item.connected && !(item.disconnected) && item.handshake.query["isAdmin"] == "true");
+                if (index != -1) {
+                    sockets[index].emit('notification', notiData);
+                }
+            }
+            let apiResponse = response.generate(constants.SUCCESS, "Notification created", constants.HTTP_SUCCESS, notiData);
             res.status(200).send(apiResponse);
         }
     } catch (err) {
