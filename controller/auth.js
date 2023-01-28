@@ -836,7 +836,7 @@ let login = async (req, res) => {
                     await userModel.findOneAndUpdate({ userId: req.body.userId }, { $set: { profileCompletion: 85 } }, { new: true });
                 }
                 resData.token = passwordUtil.genJwtToken(getUser._id);
-                resData.user = JSON.parse(JSON.stringify(getUser));
+                resData.user = await buildResponse(JSON.parse(JSON.stringify(getUser)));
                 resData.user.userId = req.body.userId;
             } else {
                 let apiResponse = response.generate(
@@ -1039,6 +1039,9 @@ let sendOTP = async (req, res, next) => {
                 res.status(500).send({ message: "This userId is not registered" });
             }
         }
+
+        if (obtainUser)
+            obtainUser = await buildResponse(obtainUser);
 
         if (!isTrue) {
             apiResponse = response.generate1(
