@@ -378,6 +378,10 @@ const userSchema = mongoose.Schema({
     isAllCompanyInfoAvailable: {
         type: Boolean,
         default: false
+    }, 
+    isAllPersonalInfoAvailable: {
+        type: Boolean,
+        default: false
     },
     isKYCPartial: {
         type: Boolean,

@@ -1539,7 +1539,7 @@ let UserUpdateById = async (req, res, next) => {
         } else if (req.body.mobile) {
             req.body.isMobile = true;
         }
-
+        req.body.isAllPersonalInfoAvailable = true
         const UpdatedUser = isTrue
             ? await userModel.findOneAndUpdate({ email: id }, req.body, { new: true })
             : await userModel.findOneAndUpdate({ mobile: id }, req.body, {
