@@ -51,6 +51,7 @@ function buildResponse(body) {
     data.document.businessKYC.bankStatement.isStatementSubmitted = body.KYCBussiness.isStatementSubmitted;
 
     data.isAllCompanyInfoAvailable = body.isAllCompanyInfoAvailable;
+    data.isAllPersonalInfoAvailable = body.isAllPersonalInfoAvailable;
     data.isBussinesKYCDone = body.isBussinesKYCDone;
     data.isEmail = body.isEmail;
     data.isKYCPartial = body.isKYCPartial;
