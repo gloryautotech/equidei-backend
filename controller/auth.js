@@ -1041,7 +1041,7 @@ let sendOTP = async (req, res, next) => {
         }
 
         if (obtainUser)
-            obtainUser = await buildResponse(req);
+            obtainUser = await buildResponse(obtainUser);
 
         if (!isTrue) {
             apiResponse = response.generate1(

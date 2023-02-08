@@ -233,7 +233,7 @@ exports.mapData = async (req, res, next) => {
 
             userListData = userListData.filter(ele => {
 
-                let regisdate = moment(ele.registrationDate);
+                let regisdate = moment(ele.updatedAt);
                 if (oldDate < regisdate && regisdate < currentDate) {
                     return true;
                 } else {
@@ -247,7 +247,7 @@ exports.mapData = async (req, res, next) => {
 
             userListData = userListData.filter(ele => {
 
-                let regisdate = moment(ele.registrationDate);
+                let regisdate = moment(ele.updatedAt);
                 if (oldDate < regisdate && regisdate < currentDate) {
                     return true;
                 } else {
@@ -262,7 +262,7 @@ exports.mapData = async (req, res, next) => {
 
             userListData = userListData.filter(ele => {
 
-                let regisdate = moment(ele.registrationDate);
+                let regisdate = moment(ele.updatedAt);
                 if (oldDate < regisdate && regisdate < currentDate) {
                     return true;
                 } else {
@@ -276,7 +276,7 @@ exports.mapData = async (req, res, next) => {
 
             userListData = userListData.filter(ele => {
 
-                let regisdate = moment(ele.registrationDate);
+                let regisdate = moment(ele.updatedAt);
                 if (oldDate < regisdate && regisdate < currentDate) {
                     return true;
                 } else {
