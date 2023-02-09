@@ -1227,7 +1227,7 @@ let ifscValidation = async (req, res, next) => {
             res.status(200).send(apiResponse);
         } else {
             apiResponse = response.generate(
-                constants.SUCCESS,
+                true,
                 "try after some time",
                 constants.HTTP_SUCCESS,
                 null
@@ -1237,7 +1237,7 @@ let ifscValidation = async (req, res, next) => {
     } catch (err) {
         if (err.isAxiosError == true && err.response.status == 404) {
             apiResponse = response.generate(
-                constants.SUCCESS,
+                true,
                 "send correct IFSC Code",
                 constants.HTTP_SUCCESS,
                 response.data
