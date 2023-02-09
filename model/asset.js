@@ -11,7 +11,7 @@ const assetSchema = mongoose.Schema({
         type: Number
     },
     serialNumber: {
-        type: string
+        type: Number
     },
     assetMake: {
         type: String
