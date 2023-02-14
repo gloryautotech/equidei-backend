@@ -24,7 +24,6 @@ const swaggerDocument = require('./docs/swagger.json');
 const ErrorResponse = require('./utils/errorResponse');
 const errorHandler = require('./utils/errorHandler');
 const protect = require('./middleware/protect');
-const router = require('./router/documentVarification');
 
 
 
@@ -122,7 +121,7 @@ app.use('/api/userList', require('./router/userList'));
 
 app.use('/api/notification', require('./router/notification'));
 app.use('/api/asset', require("./router/asset"))
-app.use(router)
+app.use('/api',require('./router/documentVarification'))
 app.use('/', image);
 
 app.all('*', (req, res, next) => {
