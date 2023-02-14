@@ -76,6 +76,7 @@ const fetchDataWithCin = async function (req, res) {
             }
         };
 
+        
         axios.request(options).then(function (response) {
             console.log(response.data);
             let apiResponse = responsea.generate(constants.SUCCESS, messages.cin.SUCCESS, constants.HTTP_SUCCESS, response.data,);
