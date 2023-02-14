@@ -112,7 +112,12 @@ let messages = {
     "SUCCESS": "asset added successfully",
     "UPDATE":"asset updated successfully",
     "GETASSETLIST":"asset list"
-  }
+  },
+  "cin": {
+    "FAILURE": "axiox error",
+    "serverError": "server error",
+    "SUCCESS": "successfully fetched"
+  },
 }
 module.exports = {
   constants,
