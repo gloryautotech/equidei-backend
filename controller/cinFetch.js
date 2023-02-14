@@ -63,7 +63,7 @@ const responsea = require('../lib/responseLib');
 const fetchDataWithCin = async function (req, res) {
     try {
 
-        let { patronId, authToken, cin } = req.body
+        let { cin } = req.body
         let options = {
             method: 'POST',
             url: `https://preproduction.signzy.tech/api/v2/patrons/63d0baac7486ee4822af0414/companyconsolidated`,
@@ -72,7 +72,7 @@ const fetchDataWithCin = async function (req, res) {
             },
             data: {
                 task: 'fetchRealtime',
-                essentials: { cin: 'U74999TG2021PTC152491' }
+                essentials: { cin: `${cin}`}
             }
         };
 
