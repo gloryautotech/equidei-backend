@@ -1,6 +1,6 @@
 let axios = require("axios").default;
 const { constants, messages } = require("../constants.js");
-const responsea = require('../lib/responseLib');
+const response = require('../lib/responseLib');
 
 // const fetchDataWithCin2 = async function (req, res) {
 //     try {
@@ -77,9 +77,8 @@ const fetchDataWithCin = async function (req, res) {
         };
 
         
-        axios.request(options).then(function (response) {
-            console.log(response.data);
-            let apiResponse = responsea.generate(constants.SUCCESS, messages.cin.SUCCESS, constants.HTTP_SUCCESS, response.data,);
+        axios.request(options).then(function (responseFromAxios) {
+            let apiResponse = response.generate(constants.SUCCESS, messages.cin.SUCCESS, constants.HTTP_SUCCESS, responseFromAxios.data,);
             res.status(200).send(apiResponse);
         }).catch(function (err) {
             let apiResponse = response.generate(
