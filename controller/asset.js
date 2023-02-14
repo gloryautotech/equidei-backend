@@ -28,6 +28,7 @@ const updateAsset = async (req, res) => {
     try {
         let assetId = req.query.registerId;
         let data = req.body
+        
         let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
         updatedAsset = updatedAsset.toObject();
         if (updatedAsset.assetType == "plantAndMachinery") {

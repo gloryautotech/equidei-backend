@@ -375,23 +375,27 @@ let companyDetails = async (req, res) => {
                         : data.companyDetails.name, type: 'User'
             })
 
-            let notiData = await dataModel.save().then();
-            //    socket
-            let sockets = await req.io.fetchSockets();
-            if (notiData.type == "Admin") {
-                let userId = notiData.userId.toString();
-                for (let socket of sockets) {
-                    if (socket.connected && !(socket.disconnected) && socket.handshake.query["userId"] == userId) {
-                        socket.emit('notification', notiData);
-                        break;
+            if (data.isKYCVerificationInProgress !== "INITIAL") {
+                let notiData = await dataModel.save().then();
+                //    socket
+                let sockets = await req.io.fetchSockets();
+                if (notiData.type == "Admin") {
+                    let userId = notiData.userId.toString();
+                    for (let socket of sockets) {
+                        if (socket.connected && !(socket.disconnected) && socket.handshake.query["userId"] == userId) {
+                            socket.emit('notification', notiData);
+                            break;
+                        }
+                    }
+                } else {
+                    let index = sockets.findIndex(item => item.connected && !(item.disconnected) && item.handshake.query["isAdmin"] == "true");
+                    if (index != -1) {
+                        sockets[index].emit('notification', notiData);
                     }
                 }
-            } else {
-                let index = sockets.findIndex(item => item.connected && !(item.disconnected) && item.handshake.query["isAdmin"] == "true");
-                if (index != -1) {
-                    sockets[index].emit('notification', notiData);
-                }
             }
+
+
             let apiResponse = response.generate(
                 constants.SUCCESS,
                 "Your information has been updated",
@@ -1227,7 +1231,7 @@ let ifscValidation = async (req, res, next) => {
             res.status(200).send(apiResponse);
         } else {
             apiResponse = response.generate(
-                constants.SUCCESS,
+                true,
                 "try after some time",
                 constants.HTTP_SUCCESS,
                 null
@@ -1237,7 +1241,7 @@ let ifscValidation = async (req, res, next) => {
     } catch (err) {
         if (err.isAxiosError == true && err.response.status == 404) {
             apiResponse = response.generate(
-                constants.SUCCESS,
+                true,
                 "send correct IFSC Code",
                 constants.HTTP_SUCCESS,
                 response.data
