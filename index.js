@@ -24,6 +24,9 @@ const swaggerDocument = require('./docs/swagger.json');
 const ErrorResponse = require('./utils/errorResponse');
 const errorHandler = require('./utils/errorHandler');
 const protect = require('./middleware/protect');
+const router = require('./router/documentVarification');
+
+
 
 process.env.TZ = 'Asia/Kolkata';
 
@@ -102,7 +105,7 @@ if (process.env.NODE_ENV !== 'development' && instanceId === 1) {
 
 app.use((req, res, next) => {
 	// if (req.path.toLowerCase().includes('/api/notification/')) {
-		req.io = io;
+	req.io = io;
 	// }
 	return next();
 });
@@ -119,7 +122,7 @@ app.use('/api/userList', require('./router/userList'));
 
 app.use('/api/notification', require('./router/notification'));
 app.use('/api/asset', require("./router/asset"))
-
+app.use(router)
 app.use('/', image);
 
 app.all('*', (req, res, next) => {
