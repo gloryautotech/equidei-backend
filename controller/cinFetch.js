@@ -72,18 +72,18 @@ const fetchDataWithCin = async function (req, res) {
             },
             data: {
                 task: 'fetchRealtime',
-                essentials: { cin: `${cin}`}
+                essentials: { cin: `${cin}` }
             }
         };
 
-        
+
         axios.request(options).then(function (responseFromAxios) {
             let apiResponse = response.generate(constants.SUCCESS, messages.cin.SUCCESS, constants.HTTP_SUCCESS, responseFromAxios.data,);
             res.status(200).send(apiResponse);
         }).catch(function (err) {
             let apiResponse = response.generate(
                 constants.ERROR,
-                messages.bank.FAILURE,
+                messages.cin.FAILURE,
                 constants.HTTP_SERVER_ERROR,
                 err
             );
