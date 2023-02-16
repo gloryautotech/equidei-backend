@@ -13,6 +13,10 @@ const zipCodeModel = require("../model/zipCode");
 const axios = require("axios");
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const otpModel = require('../model/email&otpForVerify')
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+let client = require('twilio')(accountSid, authToken);
 
 const regex = new RegExp(
     /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
@@ -1043,29 +1047,26 @@ let sendOTP = async (req, res, next) => {
                 res.status(500).send({ message: "This userId is not registered" });
             }
         }
-
         if (obtainUser)
-            obtainUser = await buildResponse(obtainUser);
-
-        if (!isTrue) {
-            apiResponse = response.generate1(
-                constants.SUCCESS,
-                obtainUser ? obtainUser.adminName : null,
-                `your OTP is sent to this mobile ${req.body.userId}`,
-                constants.HTTP_SUCCESS,
-                obtainUser
-            );
-        } else {
+            obtainUser = buildResponse(obtainUser);
+        if (isTrue) {
+            let otp = Math.floor(1000 + Math.random() * 9000);
+            console.log(otp)
             const msg = {
                 to: req.body.userId, // Change to your recipient
-                from: "kyalharshit@gmail.com", // Change to your verified sender
+                from: "joincensorblack@gmail.com", // Change to your verified sender
                 subject: "OTP Form EQUIDEI",
-                text: `your OTP is ${process.env.OTP}`,
+                text: `your OTP is ${otp}`,
             };
             await sgMail
                 .send(msg)
-                .then(() => {
+                .then(async () => {
                     console.log("Email sent");
+                    let obj = {
+                        email: req.body.userId,
+                        otp: otp
+                    }
+                    await otpModel.findOneAndUpdate({ email: req.body.userId }, obj, { new: true, upsert: true })
                     apiResponse = response.generate1(
                         constants.SUCCESS,
                         obtainUser ? obtainUser.adminName : null,
@@ -1073,12 +1074,34 @@ let sendOTP = async (req, res, next) => {
                         constants.HTTP_SUCCESS,
                         obtainUser
                     );
+                    res.status(200).send(apiResponse);
                 })
                 .catch((error) => {
                     console.error(error);
                 });
+        } else {
+            // client.verify.v2.services
+            //     .create({ friendlyName: 'My First Verify Service' })
+            //     .then((service) => {
+            //         console.log(service.sid)
+            client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
+                .verifications
+                .create({ to: `+91${req.body.userId}`, channel: "sms" })
+                .then((verification) => {
+                    console.log(verification.status)
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser ? obtainUser.adminName : null,
+                        `your OTP is sent to this mobile ${req.body.userId}`,
+                        constants.HTTP_SUCCESS,
+                        obtainUser
+                    );
+                    res.status(200).send(apiResponse);
+                }).catch((err) => {
+                    console.log(err)
+                })
+            // });
         }
-        return res.status(200).send(apiResponse);
     } catch (err) {
         res.status(500).send({ Error: err.message });
     }
@@ -1087,21 +1110,50 @@ let sendOTP = async (req, res, next) => {
 let verifyOTP = async (req, res, next) => {
     try {
         let apiResponse;
-        let isTrue = regex.test(req.body.userId);
         if (req.body.changed) {
             isTrue = regex.test(req.body.oldUserId);
-            if (req.body.otp == process.env.OTP.toString()) {
-                let obtainUser = isTrue
-                    ? await userModel.findOne({ email: req.body.oldUserId })
-                    : await userModel.findOne({ mobile: req.body.oldUserId });
-                if (!obtainUser) {
-                    res.status(500).send({ message: "oldUserId does not Exist" });
-                } else {
-                    if (isTrue) {
-                        obtainUser.isEmail = true;
-                    } else {
-                        obtainUser.isMobile = true;
-                    }
+            let obtainUser = isTrue
+                ? await userModel.findOne({ email: req.body.oldUserId })
+                : await userModel.findOne({ mobile: req.body.oldUserId });
+            if (!obtainUser) {
+                res.status(500).send({ message: "oldUserId does not Exist" });
+            }
+            if (!isTrue) {
+                client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
+                    .verificationChecks
+                    .create({ to: `+91${req.body.oldUserId}`, code: `${req.body.otp}` })
+                    .then(async (verification_check) => {
+                        console.log(verification_check.status)
+                        if (verification_check.status == "approved") {
+
+                            obtainUser.isMobile = true;
+
+                            obtainUser.otpVerified = true;
+                            obtainUser = await obtainUser.save();
+                            apiResponse = response.generate1(
+                                constants.SUCCESS,
+                                obtainUser.adminName,
+                                `OTP matched successfully`,
+                                constants.HTTP_SUCCESS,
+                                null
+                            );
+                            res.status(200).send(apiResponse);
+                        } else {
+                            apiResponse = response.generate1(
+                                constants.SUCCESS,
+                                obtainUser.adminName,
+                                `OTP did not matched`,
+                                constants.HTTP_UNAUTHORIZED,
+                                null
+                            );
+                            res.status(200).send(apiResponse);
+                        }
+                    });
+            } else {
+                let findOtp = await otpModel.findOne({ email: req.body.oldUserId })
+                if (req.body.otp == findOtp.otp) {
+                    obtainUser.isEmail = true;
+
                     obtainUser.otpVerified = true;
                     obtainUser = await obtainUser.save();
                     apiResponse = response.generate1(
@@ -1111,37 +1163,66 @@ let verifyOTP = async (req, res, next) => {
                         constants.HTTP_SUCCESS,
                         null
                     );
+                    res.status(200).send(apiResponse);
+                } else {
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser.adminName,
+                        `OTP did not matched`,
+                        constants.HTTP_UNAUTHORIZED,
+                        null
+                    );
+                    res.status(200).send(apiResponse);
+
                 }
-            } else {
-                apiResponse = response.generate1(
-                    constants.SUCCESS,
-                    obtainUser.adminName,
-                    `OTP did not matched`,
-                    constants.HTTP_UNAUTHORIZED,
-                    null
-                );
+
             }
         } else {
-            if (req.body.otp == process.env.OTP.toString()) {
-                let token = jwt.sign(
-                    {
-                        userId: req.body.userId,
-                        expiresIn: "20m",
-                    },
-                    process.env.JWT_SECRET
-                );
+            let isTrue = regex.test(req.body.userId)
+            let obtainUser = isTrue
+                ? await userModel.findOne({ email: req.body.userId })
+                : await userModel.findOne({ mobile: req.body.userId });
+            if (!obtainUser) {
+                res.status(500).send({ message: "UserId does not Exist" });
+            }
 
-                let obtainUser = isTrue
-                    ? await userModel.findOne({ email: req.body.userId })
-                    : await userModel.findOne({ mobile: req.body.userId });
-                if (!obtainUser) {
-                    res.status(500).send({ message: "User does not Exist" });
-                } else {
-                    if (isTrue) {
-                        obtainUser.isEmail = true;
-                    } else {
-                        obtainUser.isMobile = true;
-                    }
+            if (!isTrue) {
+                client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
+                    .verificationChecks
+                    .create({ to: `+91${req.body.userId}`, code: `${req.body.otp}` })
+                    .then(async (verification_check) => {
+                        console.log(verification_check.status)
+                        if (verification_check.status == "approved") {
+
+                            obtainUser.isMobile = true;
+
+                            obtainUser.otpVerified = true;
+                            obtainUser = await obtainUser.save();
+                            apiResponse = response.generate1(
+                                constants.SUCCESS,
+                                obtainUser.adminName,
+                                `OTP matched successfully`,
+                                constants.HTTP_SUCCESS,
+                                null
+                            );
+                            res.status(200).send(apiResponse);
+
+                        } else {
+                            apiResponse = response.generate1(
+                                constants.SUCCESS,
+                                obtainUser.adminName,
+                                `OTP did not matched`,
+                                constants.HTTP_UNAUTHORIZED,
+                                null
+                            );
+                            res.status(200).send(apiResponse);
+                        }
+                    });
+            } else {
+                let findOtp = await otpModel.findOne({ email: req.body.userId })
+                if (req.body.otp == findOtp.otp) {
+                    obtainUser.isEmail = true;
+
                     obtainUser.otpVerified = true;
                     obtainUser = await obtainUser.save();
                     apiResponse = response.generate1(
@@ -1149,20 +1230,21 @@ let verifyOTP = async (req, res, next) => {
                         obtainUser.adminName,
                         `OTP matched successfully`,
                         constants.HTTP_SUCCESS,
-                        { token: token }
+                        null
                     );
+                    res.status(200).send(apiResponse);
+                } else {
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser.adminName,
+                        `OTP did not matched`,
+                        constants.HTTP_UNAUTHORIZED,
+                        null
+                    );
+                    res.status(200).send(apiResponse);
                 }
-            } else {
-                apiResponse = response.generate1(
-                    constants.SUCCESS,
-                    obtainUser.adminName,
-                    `OTP did not matched`,
-                    constants.HTTP_UNAUTHORIZED,
-                    null
-                );
             }
         }
-        return res.status(200).send(apiResponse);
     } catch (err) {
         res.status(500).send({ Error: err.message });
     }

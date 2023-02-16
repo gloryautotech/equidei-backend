@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const express = require('express');
 // const fileupload = require('express-fileupload');
 
@@ -121,7 +120,7 @@ app.use('/api/userList', require('./router/userList'));
 
 app.use('/api/notification', require('./router/notification'));
 app.use('/api/asset', require("./router/asset"))
-app.use('/api',require('./router/documentVarification'))
+app.use('/api', require('./router/documentVarification'))
 app.use('/', image);
 
 app.all('*', (req, res, next) => {
