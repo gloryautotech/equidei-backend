@@ -1044,7 +1044,7 @@ let sendOTP = async (req, res, next) => {
                 .lean();
         if (!req.body.changed) {
             if (!obtainUser) {
-                res.status(500).send({ message: "This userId is not registered" });
+                return res.status(500).send({ message: "This userId is not registered" });
             }
         }
         if (obtainUser)
@@ -1116,39 +1116,32 @@ let verifyOTP = async (req, res, next) => {
                 ? await userModel.findOne({ email: req.body.oldUserId })
                 : await userModel.findOne({ mobile: req.body.oldUserId });
             if (!obtainUser) {
-                res.status(500).send({ message: "oldUserId does not Exist" });
+                return res.status(500).send({ message: "oldUserId does not Exist" });
             }
             if (!isTrue) {
-                client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
-                    .verificationChecks
-                    .create({ to: `+91${req.body.oldUserId}`, code: `${req.body.otp}` })
-                    .then(async (verification_check) => {
-                        console.log(verification_check.status)
-                        if (verification_check.status == "approved") {
-
-                            obtainUser.isMobile = true;
-                            obtainUser.otpVerified = true;
-                            
-                            obtainUser = await obtainUser.save();
-                            apiResponse = response.generate1(
-                                constants.SUCCESS,
-                                obtainUser.adminName,
-                                `OTP matched successfully`,
-                                constants.HTTP_SUCCESS,
-                                null
-                            );
-                            res.status(200).send(apiResponse);
-                        } else {
-                            apiResponse = response.generate1(
-                                constants.SUCCESS,
-                                obtainUser.adminName,
-                                `OTP did not matched`,
-                                constants.HTTP_UNAUTHORIZED,
-                                null
-                            );
-                            res.status(200).send(apiResponse);
-                        }
-                    });
+                let data = mobileOtpVerify(req.body.oldUserId, req.body.otp)
+                if (data) {
+                    obtainUser.isMobile = true;
+                    obtainUser.otpVerified = true;
+                    obtainUser = await obtainUser.save();
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser.adminName,
+                        `OTP matched successfully`,
+                        constants.HTTP_SUCCESS,
+                        null
+                    );
+                    res.status(200).send(apiResponse);
+                } else {
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser.adminName,
+                        `OTP did not matched`,
+                        constants.HTTP_UNAUTHORIZED,
+                        null
+                    );
+                    res.status(200).send(apiResponse);
+                }
             } else {
                 let findOtp = await otpModel.findOne({ email: req.body.oldUserId })
                 if (req.body.otp == findOtp.otp) {
@@ -1183,46 +1176,14 @@ let verifyOTP = async (req, res, next) => {
                 ? await userModel.findOne({ email: req.body.userId })
                 : await userModel.findOne({ mobile: req.body.userId });
             if (!obtainUser) {
-                res.status(500).send({ message: "UserId does not Exist" });
+                return res.status(500).send({ message: "UserId does not Exist" });
             }
 
             if (!isTrue) {
-                client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
-                    .verificationChecks
-                    .create({ to: `+91${req.body.userId}`, code: `${req.body.otp}` })
-                    .then(async (verification_check) => {
-                        console.log(verification_check.status)
-                        if (verification_check.status == "approved") {
-
-                            obtainUser.isMobile = true;
-
-                            obtainUser.otpVerified = true;
-                            obtainUser = await obtainUser.save();
-                            apiResponse = response.generate1(
-                                constants.SUCCESS,
-                                obtainUser.adminName,
-                                `OTP matched successfully`,
-                                constants.HTTP_SUCCESS,
-                                null
-                            );
-                            res.status(200).send(apiResponse);
-
-                        } else {
-                            apiResponse = response.generate1(
-                                constants.SUCCESS,
-                                obtainUser.adminName,
-                                `OTP did not matched`,
-                                constants.HTTP_UNAUTHORIZED,
-                                null
-                            );
-                            res.status(200).send(apiResponse);
-                        }
-                    });
-            } else {
-                let findOtp = await otpModel.findOne({ email: req.body.userId })
-                if (req.body.otp == findOtp.otp) {
-                    obtainUser.isEmail = true;
-
+                let data = mobileOtpVerify(req.body.userId, req.body.otp)
+                if (data) {
+                    let token = jwtToken(req.body.userId)
+                    obtainUser.isMobile = true;
                     obtainUser.otpVerified = true;
                     obtainUser = await obtainUser.save();
                     apiResponse = response.generate1(
@@ -1230,7 +1191,33 @@ let verifyOTP = async (req, res, next) => {
                         obtainUser.adminName,
                         `OTP matched successfully`,
                         constants.HTTP_SUCCESS,
+                        { token: token }
+                    );
+                    res.status(200).send(apiResponse);
+
+                } else {
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser.adminName,
+                        `OTP did not matched`,
+                        constants.HTTP_UNAUTHORIZED,
                         null
+                    );
+                    res.status(200).send(apiResponse);
+                }
+            } else {
+                let findOtp = await otpModel.findOne({ email: req.body.userId })
+                if (req.body.otp == findOtp.otp) {
+                    let token = jwtToken(req.body.userId)
+                    obtainUser.isEmail = true;
+                    obtainUser.otpVerified = true;
+                    obtainUser = await obtainUser.save();
+                    apiResponse = response.generate1(
+                        constants.SUCCESS,
+                        obtainUser.adminName,
+                        `OTP matched successfully`,
+                        constants.HTTP_SUCCESS,
+                        { token: token }
                     );
                     res.status(200).send(apiResponse);
                 } else {
@@ -1694,6 +1681,31 @@ let DeleteUser = async (req, res, next) => {
     }
 };
 
+function mobileOtpVerify(userId, otp) {
+    client.verify.v2.services(process.env.TWILIO_SERVICE_SID)
+        .verificationChecks
+        .create({ to: `+91${userId}`, code: `${otp}` })
+        .then(async (verification_check) => {
+            if (verification_check.status == "approved") {
+                return true
+            } else {
+                return false
+            }
+        }).catch((err) => {
+            console.log(err)
+        })
+}
+
+function jwtToken(userId) {
+    let token = jwt.sign(
+        {
+            userId: userId,
+            expiresIn: "20m",
+        },
+        process.env.JWT_SECRET
+    );
+    return token
+}
 module.exports = {
     registration,
     companyDetails,
