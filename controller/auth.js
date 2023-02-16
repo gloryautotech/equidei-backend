@@ -1127,8 +1127,8 @@ let verifyOTP = async (req, res, next) => {
                         if (verification_check.status == "approved") {
 
                             obtainUser.isMobile = true;
-
                             obtainUser.otpVerified = true;
+                            
                             obtainUser = await obtainUser.save();
                             apiResponse = response.generate1(
                                 constants.SUCCESS,
