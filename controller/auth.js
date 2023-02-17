@@ -1122,7 +1122,7 @@ let verifyOTP = async (req, res, next) => {
                 ? await userModel.findOne({ email: req.body.oldUserId })
                 : await userModel.findOne({ mobile: req.body.oldUserId });
             if (!obtainUser) {
-                return res.status(500).send({ message: "oldUserId does not Exist" });
+                res.status(500).send({ message: "oldUserId does not Exist" });
             }
 
             let findOTP = await otpModel.findOne({ userId: req.body.oldUserId })
@@ -1155,7 +1155,7 @@ let verifyOTP = async (req, res, next) => {
                 ? await userModel.findOne({ email: req.body.userId })
                 : await userModel.findOne({ mobile: req.body.userId });
             if (!obtainUser) {
-                return res.status(500).send({ message: "oldUserId does not Exist" });
+                res.status(500).send({ message: "userId does not Exist" });
             }
 
             let findOtp = await otpModel.findOne({ userId: req.body.userId })
