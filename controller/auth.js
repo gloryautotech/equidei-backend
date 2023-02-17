@@ -1140,7 +1140,7 @@ let verifyOTP = async (req, res, next) => {
                 res.status(200).send(apiResponse);
             } else {
                 apiResponse = response.generate1(
-                    constants.SUCCESS,
+                    constants.ERROR,
                     obtainUser.adminName,
                     `OTP did not matched`,
                     constants.HTTP_UNAUTHORIZED,
@@ -1175,7 +1175,7 @@ let verifyOTP = async (req, res, next) => {
 
             } else {
                 apiResponse = response.generate1(
-                    constants.SUCCESS,
+                    constants.ERROR,
                     obtainUser.adminName,
                     `OTP did not matched`,
                     constants.HTTP_UNAUTHORIZED,
