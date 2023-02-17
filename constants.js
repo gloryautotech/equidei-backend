@@ -1,7 +1,7 @@
 let constants = {
   "SUCCESS": false,
   "ERROR": true,
-  "HTTP_CREATED":201,//CREATED
+  "HTTP_CREATED": 201,//CREATED
   "HTTP_SUCCESS": 200, // Success
   "HTTP_NOT_FOUND": 404, // Not Found
   "HTTP_UNAUTHORIZED": 401,
@@ -107,17 +107,22 @@ let messages = {
   "NOTFOUNDHANDLER": {
     "SUCCESS": "Route not found in the application"
   },
-  "asset":{
+  "asset": {
     "FAILURE": "Some error occured while adding asset",
     "SUCCESS": "asset added successfully",
-    "UPDATE":"asset updated successfully",
-    "GETASSETLIST":"asset list"
+    "UPDATE": "asset updated successfully",
+    "GETASSETLIST": "asset list"
   },
   "cin": {
     "FAILURE": "axiox error",
     "serverError": "server error",
     "SUCCESS": "successfully fetched"
   },
+  "udhyam": {
+    "FAILURE": "axiox error",
+    "serverError": "server error",
+    "SUCCESS": "successfully fetched"
+  }
 }
 module.exports = {
   constants,
