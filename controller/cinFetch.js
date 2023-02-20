@@ -20,8 +20,14 @@ const fetchDataWithCin = async function (req, res) {
 
 
         axios.request(options).then(function (responseFromAxios) {
-            let apiResponse = response.generate(constants.SUCCESS, messages.cin.SUCCESS, constants.HTTP_SUCCESS, responseFromAxios.data,);
-            res.status(200).send(apiResponse);
+            let result = responseFromAxios.data.result.statusCode
+            if (result == 404) {
+                let apiResponse = response.generate(constants.ERROR, messages.cin.notFund, constants.HTTP_NOT_FOUND, responseFromAxios.data.result);
+                res.status(404).send(apiResponse)
+            } else {
+                let apiResponse = response.generate(constants.SUCCESS, messages.cin.SUCCESS, constants.HTTP_SUCCESS, responseFromAxios.data,);
+                res.status(200).send(apiResponse);
+            }
         }).catch(function (err) {
             let apiResponse = response.generate(
                 constants.ERROR,

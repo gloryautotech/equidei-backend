@@ -116,7 +116,8 @@ let messages = {
   "cin": {
     "FAILURE": "axiox error",
     "serverError": "server error",
-    "SUCCESS": "successfully fetched"
+    "SUCCESS": "successfully fetched",
+    "notFund":"wrong cin number"
   },
   "udhyam": {
     "FAILURE": "axiox error",
