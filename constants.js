@@ -121,7 +121,7 @@ let messages = {
   "udhyam": {
     "FAILURE": "axiox error",
     "serverError": "server error",
-    "SUCCESS": "successfully fetched"
+    "SUCCESS": "valid udyam number"
   }
 }
 module.exports = {

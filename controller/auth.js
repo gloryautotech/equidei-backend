@@ -1125,9 +1125,8 @@ let verifyOTP = async (req, res, next) => {
                 res.status(500).send({ message: "oldUserId does not Exist" });
             }
 
-            let findOTP = await otpModel.findOne({ userId: req.body.oldUserId })
+            let findOTP = await otpModel.findOne({ userId: req.body.userId })
             if (findOTP.otp == req.body.otp) {
-                obtainUser.isMobile = true;
                 obtainUser.otpVerified = true;
                 obtainUser = await obtainUser.save();
                 apiResponse = response.generate1(
@@ -1161,7 +1160,11 @@ let verifyOTP = async (req, res, next) => {
             let findOtp = await otpModel.findOne({ userId: req.body.userId })
             if (findOtp.otp == req.body.otp) {
                 let token = jwtToken(req.body.userId)
-                obtainUser.isMobile = true;
+                if(isTrue){
+                    obtainUser.isEmail=true
+                }else{
+                    obtainUser.isMobile=true
+                }
                 obtainUser.otpVerified = true;
                 obtainUser = await obtainUser.save();
                 apiResponse = response.generate1(
