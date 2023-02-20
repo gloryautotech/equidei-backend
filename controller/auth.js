@@ -1127,10 +1127,11 @@ let verifyOTP = async (req, res, next) => {
 
             let findOTP = await otpModel.findOne({ userId: req.body.userId })
             if (findOTP.otp == req.body.otp) {
-                if(isTrue){
-                    obtainUser.isEmail=true
-                }else{
-                    obtainUser.isMobile=true
+                let isTrueUserId = regex.test(req.body.userId)
+                if (isTrueUserId) {
+                    obtainUser.isEmail = true
+                } else {
+                    obtainUser.isMobile = true
                 }
                 obtainUser.otpVerified = true;
                 obtainUser = await obtainUser.save();
@@ -1165,10 +1166,10 @@ let verifyOTP = async (req, res, next) => {
             let findOtp = await otpModel.findOne({ userId: req.body.userId })
             if (findOtp.otp == req.body.otp) {
                 let token = jwtToken(req.body.userId)
-                if(isTrue){
-                    obtainUser.isEmail=true
-                }else{
-                    obtainUser.isMobile=true
+                if (isTrue) {
+                    obtainUser.isEmail = true
+                } else {
+                    obtainUser.isMobile = true
                 }
                 obtainUser.otpVerified = true;
                 obtainUser = await obtainUser.save();

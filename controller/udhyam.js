@@ -23,7 +23,7 @@ let udyamDetails = async function (req, res) {
         res.status(200).send(apiResponse);
       } else {
         let obj = { valid: false }
-        let apiResponse = response.generate(constants.ERROR, messages.udhyam.SUCCESS, constants.HTTP_SUCCESS, obj);
+        let apiResponse = response.generate(constants.ERROR, messages.udhyam.notFetch, constants.HTTP_SUCCESS, obj);
         res.status(400).send(apiResponse);
       }
     }).catch(function (err) {
