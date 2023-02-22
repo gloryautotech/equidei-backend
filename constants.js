@@ -124,6 +124,11 @@ let messages = {
     "serverError": "server error",
     "SUCCESS": "valid udyam number",
     "notFetch":"not valid udyam number"
+  },
+  "payment":{
+    "FAILURE": "axiox error",
+    "serverError": "server error",
+  "SUCCESS":"payment token is created"
   }
 }
 module.exports = {
