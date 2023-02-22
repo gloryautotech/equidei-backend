@@ -316,6 +316,11 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails?.state == ""
                     ? ""
                     : data.companyDetails.state;
+            data.companyDetails.cin = req.body.companyDetails.cin
+                ? req.body.companyDetails.cin
+                : req.body.companyDetails?.cin == ""
+                    ? ""
+                    : data.companyDetails.cin;
             if (
                 data.companyDetails.name &&
                 data.companyDetails.product &&
@@ -1127,7 +1132,6 @@ let verifyOTP = async (req, res, next) => {
 
             let findOTP = await otpModel.findOne({ userId: req.body.userId })
             if (findOTP.otp == req.body.otp) {
-               
                 obtainUser.otpVerified = true;
                 obtainUser = await obtainUser.save();
                 apiResponse = response.generate1(
@@ -1161,7 +1165,11 @@ let verifyOTP = async (req, res, next) => {
             let findOtp = await otpModel.findOne({ userId: req.body.userId })
             if (findOtp.otp == req.body.otp) {
                 let token = jwtToken(req.body.userId)
-                
+                if (isTrue) {
+                    obtainUser.isEmail = true
+                } else {
+                    obtainUser.isMobile = true
+                }
                 obtainUser.otpVerified = true;
                 obtainUser = await obtainUser.save();
                 apiResponse = response.generate1(
