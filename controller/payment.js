@@ -10,7 +10,7 @@ let paymentTokenCreate = async function (req, res) {
       method: 'POST',
       url: 'https://sandbox-icp-api.bankopen.co/api/payment_token',
       headers: {
-        Authorization: 'Bearer a59e44c0-b118-11ed-b46b-25c110f10234:d948d042718007136ac3199f32bffcd01e66841f'
+        Authorization: `Bearer ${process.env.OPENMONEY_ACCESS_KEY}:${process.env.OPENMONEY_SECRET_KEY}`
       },
       data: req.body
     };
@@ -18,11 +18,14 @@ let paymentTokenCreate = async function (req, res) {
     axios
       .request(options)
       .then(function (responseFromAxios) {
-        let apiResponse = response.generate(constants.SUCCESS, messages.payment.SUCCESS, constants.HTTP_CREATED, responseFromAxios.data);
+        let data = responseFromAxios.data
+        data.accessKey = process.env.OPENMONEY_ACCESS_KEY
+        let apiResponse = response.generate(constants.SUCCESS, messages.payment.SUCCESS, constants.HTTP_CREATED, data);
         res.send(apiResponse)
       })
       .catch(function (error) {
-        console.error(error);
+        let apiResponse = response.generate(constants.ERROR, messages.payment.FAILURE, constants.HTTP_NOT_FOUND)
+    res.send(apiResponse)
       });
   } catch (err) {
     let apiResponse = response.generate(constants.ERROR, messages.payment.serverError, constants.HTTP_SERVER_ERROR)
