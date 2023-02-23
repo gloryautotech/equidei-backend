@@ -38,7 +38,7 @@ let paymentTokenCreate = async function (req, res) {
       let b = new Date().getTime();
       let a = `${contactNumber}_${b}`
       let obj = {
-        amount: process.env.ASSET_AMOUNT,
+        amount: process.env.BILLING_AMOUNT,
         contact_number: `${contactNumber}`,
         email_id: `${email}`,
         currency: `INR`,
