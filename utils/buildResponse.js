@@ -29,6 +29,7 @@ function buildResponse(body) {
     data.companyInformation.zip = body.companyDetails.zip;
     data.companyInformation.city = body.companyDetails.city;
     data.companyInformation.state = body.companyDetails.state;
+    data.companyInformation.cin= body.companyDetails.cin
 
     data.document.personalKYC.PAN = body.PAN;
     data.document.personalKYC.PAN.isPANSubmitted = body.KYCPersonal.isPANSubmitted;
