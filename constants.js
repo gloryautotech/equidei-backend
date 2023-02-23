@@ -117,18 +117,26 @@ let messages = {
     "FAILURE": "axiox error",
     "serverError": "server error",
     "SUCCESS": "successfully fetched",
-    "notFund":"wrong cin number"
+    "notFund": "wrong cin number"
   },
   "udhyam": {
     "FAILURE": "axiox error",
     "serverError": "server error",
     "SUCCESS": "valid udyam number",
-    "notFetch":"not valid udyam number"
+    "notFetch": "not valid udyam number"
   },
-  "payment":{
+  "payment": {
     "FAILURE": "axiox error",
     "serverError": "server error",
-  "SUCCESS":"payment token is created"
+    "SUCCESS": "payment token is created",
+    "EMAIL":" please add and verify email ",
+    "MOBILE":" please add and verify mobile number"
+  },
+  "BANKSTATEMENT": {
+    "FAILURE": "axiox error",
+    "SERVERERROR": "server error",
+    "SUCCESS": "bank statement is verified",
+    "NOTMATCH":" bank statement is not verified"
   }
 }
 module.exports = {
