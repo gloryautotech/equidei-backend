@@ -24,10 +24,10 @@ let paymentTokenCreate = async function (req, res) {
       findUser = await userModel.findOne({ mobile: userId })
     }
     if (findUser.isMobile == false) {
-      let apiResponse = response.generate(constants.ERROR, messages.payment.EMAIL, constants.HTTP_NOT_FOUND,);
+      let apiResponse = response.generate(constants.ERROR, messages.payment.MOBILE, constants.HTTP_NOT_FOUND,);
       res.send(apiResponse)
     } else if (findUser.isEmail == false) {
-      let apiResponse = response.generate(constants.ERROR, messages.payment.MOBILE, constants.HTTP_NOT_FOUND,);
+      let apiResponse = response.generate(constants.ERROR, messages.payment.EMAIL, constants.HTTP_NOT_FOUND,);
       res.send(apiResponse)
     } else if (findUser.isMobile == true && findUser.isEmail == true) {
       if (isTrue) {
@@ -100,12 +100,22 @@ const getPaymentStatus = async function (req, res) {
 
     axios
       .request(options)
-      .then(function (response) {
-        console.log(response);
-        res.send(response)
+      .then(async function (response) {
+        console.log(response.data);
+        let data = response.data
+        let message;
+        if (data.payment_token.status == "paid") {
+          message = "payment successfully done"
+          await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, message: message }, { new: true })
+          res.send(response.data)
+        } else {
+          await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status }, { new: true })
+          res.send(response.data)
+        }
+
       })
-      .catch(function (error) {
-        console.error(error);
+      .catch(function (err) {
+        console.error(err);
       });
   } catch (err) {
 

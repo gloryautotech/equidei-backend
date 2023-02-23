@@ -9,7 +9,9 @@ const transaction = mongoose.Schema({
     currency: { type: String },
     mtx: { type: String },
     message:{type:String,default:"payment successfully created"},
-    status: { type: String }
+    status: { type: String },
+    paymentStatus:{type:String},
+    paymentTokenId:{type:String}
 }, {
     timestamps: { createdAt: true },
 }
