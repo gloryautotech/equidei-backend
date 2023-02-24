@@ -7,13 +7,13 @@ const bankModel = require('../model/bankName')
 
 let allBankList = async function (req, res) {
     try {
-        
+
         let data = await bankModel.find().select({ name: 1, _id: 0 })
-        let apiResponse = response.generate(constants.SUCCESS, constants.HTTP_SUCCESS, data)
+        let apiResponse = response.generate(constants.SUCCESS, messages.BANKSTATEMENT.FETCH, constants.HTTP_SUCCESS, data)
         res.status(200).send(apiResponse)
-        res.send(data)
     } catch (err) {
-        console.log(err)
+        let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.SERVERERROR, err)
+        res.status(500).send(apiResponse)
     }
 }
 
@@ -61,9 +61,7 @@ let bankVerify = async function (req, res) {
                     }
                 };
                 axios.request(optionsForBankStatement).then(function (responseFromAxios) {
-                    console.log("response statement ", responseFromAxios.data);
                     let responseData = responseFromAxios.data
-
                     if (responseData.result.accountNo == accountNumber && responseData.result.ifsCode == ifscNumber) {
                         let apiResponse = response.generate(constants.SUCCESS, messages.BANKSTATEMENT.SUCCESS, constants.HTTP_SUCCESS, responseData)
                         res.status(200).send(apiResponse)
