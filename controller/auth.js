@@ -296,6 +296,19 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails.bankDetails?.branchName == ""
                     ? ""
                     : data.companyDetails.bankDetails.branchName;
+
+            data.companyDetails.bankDetails.bankName = req.body.companyDetails
+                .bankDetails?.bankName
+                ? req.body.companyDetails.bankDetails.bankName
+                : req.body.companyDetails.bankDetails?.bankName == ""
+                    ? ""
+                    : data.companyDetails.bankDetails.bankName;
+            data.companyDetails.bankDetails.accountType = req.body.companyDetails
+                .bankDetails?.accountType
+                ? req.body.companyDetails.bankDetails.accountType
+                : req.body.companyDetails.bankDetails?.accountType == ""
+                    ? ""
+                    : data.companyDetails.bankDetails.accountType;
             data.companyDetails.address = req.body.companyDetails.address
                 ? req.body.companyDetails.address
                 : req.body.companyDetails?.address == ""
