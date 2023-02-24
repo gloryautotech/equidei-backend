@@ -76,6 +76,10 @@ const userSchema = mongoose.Schema({
             type: String,
             default: ''
         },
+        companyType: {
+            type: String,
+            default:''
+        },
         cin: {
             type: String,
             default: ''

@@ -30,6 +30,7 @@ function buildResponse(body) {
     data.companyInformation.city = body.companyDetails.city;
     data.companyInformation.state = body.companyDetails.state;
     data.companyInformation.cin= body.companyDetails.cin
+    data.companyInformation.companyType=body.companyDetails.companyType
 
     data.document.personalKYC.PAN = body.PAN;
     data.document.personalKYC.PAN.isPANSubmitted = body.KYCPersonal.isPANSubmitted;

@@ -256,6 +256,11 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails?.name == ""
                     ? ""
                     : data.companyDetails.name;
+                    data.companyDetails.companyType = req.body.companyDetails.companyType
+                    ? req.body.companyDetails.companyType
+                    : req.body.companyDetails?.companyType == ""
+                        ? ""
+                        : data.companyDetails.companyType;     
             data.companyDetails.product = req.body.companyDetails.product
                 ? req.body.companyDetails.product
                 : req.body.companyDetails?.product == ""
