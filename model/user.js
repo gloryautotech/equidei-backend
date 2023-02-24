@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
     role: {
         type: String,
         default: 'User',
-        enum:['SuperAdmin','Admin','User']
+        enum: ['SuperAdmin', 'Admin', 'User']
     },
     orgName: {
         type: String,
@@ -76,9 +76,9 @@ const userSchema = mongoose.Schema({
             type: String,
             default: ''
         },
-        cin:{
-            type:String,
-            default:''
+        cin: {
+            type: String,
+            default: ''
         },
         PAN: {
             type: {
@@ -97,11 +97,11 @@ const userSchema = mongoose.Schema({
                 },
                 status: {
                     type: String,
-                    enum:['Verified','Rejected','Updated By MSME']
+                    enum: ['Verified', 'Rejected', 'Updated By MSME']
                 },
-                hasAdminChecked:{
-                    type:Boolean,
-                    default:false
+                hasAdminChecked: {
+                    type: Boolean,
+                    default: false
                 },
                 message: {
                     type: String,
@@ -127,11 +127,11 @@ const userSchema = mongoose.Schema({
                 },
                 status: {
                     type: String,
-                    enum:['Verified','Rejected','Updated By MSME']
+                    enum: ['Verified', 'Rejected', 'Updated By MSME']
                 },
-                hasAdminChecked:{
-                    type:Boolean,
-                    default:false
+                hasAdminChecked: {
+                    type: Boolean,
+                    default: false
                 },
                 message: {
                     type: String,
@@ -157,11 +157,11 @@ const userSchema = mongoose.Schema({
                 },
                 status: {
                     type: String,
-                    enum:['Verified','Rejected','Updated By MSME']
+                    enum: ['Verified', 'Rejected', 'Updated By MSME']
                 },
-                hasAdminChecked:{
-                    type:Boolean,
-                    default:false
+                hasAdminChecked: {
+                    type: Boolean,
+                    default: false
                 },
                 message: {
                     type: String,
@@ -183,11 +183,11 @@ const userSchema = mongoose.Schema({
                 },
                 status: {
                     type: String,
-                    enum:['Verified','Rejected','Updated By MSME']
+                    enum: ['Verified', 'Rejected', 'Updated By MSME']
                 },
-                hasAdminChecked:{
-                    type:Boolean,
-                    default:false
+                hasAdminChecked: {
+                    type: Boolean,
+                    default: false
                 },
                 message: {
                     type: String,
@@ -213,6 +213,10 @@ const userSchema = mongoose.Schema({
                 type: String,
                 default: ''
             },
+            accountType: {
+                type: String,
+                default: ''
+            },
             bankStatement: {
                 type: {
                     _id: false,
@@ -226,11 +230,11 @@ const userSchema = mongoose.Schema({
                     },
                     status: {
                         type: String,
-                        enum:['Verified','Rejected','Updated By MSME']
+                        enum: ['Verified', 'Rejected', 'Updated By MSME']
                     },
-                    hasAdminChecked:{
-                        type:Boolean,
-                        default:false
+                    hasAdminChecked: {
+                        type: Boolean,
+                        default: false
                     },
                     message: {
                         type: String,
@@ -253,11 +257,11 @@ const userSchema = mongoose.Schema({
                 },
                 status: {
                     type: String,
-                    enum:['Verified','Rejected','Updated By MSME']
+                    enum: ['Verified', 'Rejected', 'Updated By MSME']
                 },
-                hasAdminChecked:{
-                    type:Boolean,
-                    default:false
+                hasAdminChecked: {
+                    type: Boolean,
+                    default: false
                 },
                 message: {
                     type: String,
@@ -279,11 +283,11 @@ const userSchema = mongoose.Schema({
                 },
                 status: {
                     type: String,
-                    enum:['Verified','Rejected','Updated By MSME']
+                    enum: ['Verified', 'Rejected', 'Updated By MSME']
                 },
-                hasAdminChecked:{
-                    type:Boolean,
-                    default:false
+                hasAdminChecked: {
+                    type: Boolean,
+                    default: false
                 },
                 message: {
                     type: String,
@@ -319,11 +323,11 @@ const userSchema = mongoose.Schema({
             },
             status: {
                 type: String,
-                enum:['Verified','Rejected','Updated By MSME']
+                enum: ['Verified', 'Rejected', 'Updated By MSME']
             },
-            hasAdminChecked:{
-                type:Boolean,
-                default:false
+            hasAdminChecked: {
+                type: Boolean,
+                default: false
             },
             message: {
                 type: String,
@@ -349,11 +353,11 @@ const userSchema = mongoose.Schema({
             },
             status: {
                 type: String,
-                enum:['Verified','Rejected','Updated By MSME']
+                enum: ['Verified', 'Rejected', 'Updated By MSME']
             },
-            hasAdminChecked:{
-                type:Boolean,
-                default:false
+            hasAdminChecked: {
+                type: Boolean,
+                default: false
             },
             message: {
                 type: String,
@@ -382,7 +386,7 @@ const userSchema = mongoose.Schema({
     isAllCompanyInfoAvailable: {
         type: Boolean,
         default: false
-    }, 
+    },
     isAllPersonalInfoAvailable: {
         type: Boolean,
         default: false
@@ -394,7 +398,7 @@ const userSchema = mongoose.Schema({
     isKYCVerificationInProgress: {
         type: String,
         default: 'INITIAL',
-        enum:['PROGRESS','FAILED','DONE','INITIAL']
+        enum: ['PROGRESS', 'FAILED', 'DONE', 'INITIAL']
     },
     profileCompletion: {
         type: Number,

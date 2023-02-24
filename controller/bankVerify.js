@@ -70,23 +70,21 @@ let bankVerify = async function (req, res) {
                         res.status(404).send(apiResponse)
                     }
                 }).catch(function (err) {
-                    let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE, err)
+                    let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE,constants.HTTP_NOT_FOUND, err)
                     res.status(400).send(apiResponse)
                 });
             }).catch(function (err) {
-                let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE, err)
+                let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE,constants.HTTP_NOT_FOUND, err)
                 res.status(400).send(apiResponse)
             });
         }).catch((err) => {
-            let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE, err)
+            let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE,constants.HTTP_NOT_FOUND, err)
             res.status(400).send(apiResponse)
         })
     } catch (err) {
-        let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.SERVERERROR, err)
+        let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.SERVERERROR,constants.HTTP_SERVER_ERROR, err)
         res.status(500).send(apiResponse)
     }
 }
-
-
 
 module.exports = { bankVerify, allBankList }
