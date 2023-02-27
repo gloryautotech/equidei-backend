@@ -3,7 +3,7 @@ const express = require("express")
 const { udyamDetails } = require('../controller/udhyam')
 const { fetchDataWithCin } = require('../controller/cinFetch')
 const { bankVerify, allBankList } = require("../controller/bankVerify")
-
+const { gstVerify } = require("../controller/gstVerify")
 const router = express.Router()
 
 const multer = require('multer')
@@ -26,6 +26,10 @@ router.post('/udhyamData', udyamDetails)
 router.post('/bankVerify', mul, bankVerify)
 router.get('/bankList', allBankList)
 
+
+
+// GST verify
+router.post('/gstVerify', gstVerify)
 
 
 module.exports = router;

@@ -136,7 +136,20 @@ let messages = {
     "FAILURE": "axiox error",
     "SERVERERROR": "server error",
     "SUCCESS": "bank statement is verified",
-    "NOTMATCH":" bank statement is not verified"
+    "NOTMATCH":"bank statement is not verified",
+    "FETCH":"All Bank list"
+  },
+  "PAN":{
+    "FAILURE":"axiox error",
+    "SERVERERROR": "server error",
+    "SUCCESS": "PAN Number is verified",
+    "NOTMATCH":"PAN Number is not verified"
+  },
+  "GST":{
+    "FAILURE":"axiox error",
+    "SERVERERROR": "server error",
+    "SUCCESS": "GST Number is verified",
+    "NOTMATCH":"GST Number is not verified"
   }
 }
 module.exports = {
