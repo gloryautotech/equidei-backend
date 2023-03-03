@@ -130,7 +130,7 @@ const assetSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        default: "pending registration"
+        default: "Pending Registration"
     },
     assetType: {
         type: String,
