@@ -107,7 +107,7 @@ const getPaymentStatus = async function (req, res) {
         let data = response.data
         let message;
         if (data.payment_token.status == "paid") {
-          await assetModel.findOneAndUpdate({_id:assetId},{isPayment:true,status:"panding verification"})
+          await assetModel.findOneAndUpdate({_id:assetId},{isPayment:true,status:"Pending Verification"})
           message = "payment successfully done"
           await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, message: message }, { new: true })
           res.send(response.data)
