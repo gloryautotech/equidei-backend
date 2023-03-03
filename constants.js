@@ -111,7 +111,9 @@ let messages = {
     "FAILURE": "Some error occured while adding asset",
     "SUCCESS": "asset added successfully",
     "UPDATE": "asset updated successfully",
-    "GETASSETLIST": "asset list"
+    "GETASSETLIST": "asset list",
+    "NOTFOUND":"asset not found",
+    "VERIFY":" verify asset successfully "
   },
   "cin": {
     "FAILURE": "axiox error",

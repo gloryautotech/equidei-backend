@@ -24,31 +24,45 @@ const assetSchema = mongoose.Schema({
     },
     purchaseBill: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     taxInvoice: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     insuranceDoc: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     fixedAssetRegister: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     chargesPending: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     assetInvoice: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     technicalSpecifications: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     landOwner: {
         type: String
@@ -64,38 +78,59 @@ const assetSchema = mongoose.Schema({
     },
     propertyTax: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     insuranceDocument: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     powerOfAttorney: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     invoice: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     clearanceCertificate: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     fixedAssetregister: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     oldValuationReport: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
     },
     pendingCharges: {
         name: { type: String },
-        url: { type: String }
+        url: { type: String },
+        message: { type: String, default: "" },
+        status: { type: String, enum: ["Verified","Rejected"] }
+    },
+    isPayment: {
+        type: Boolean,
+        default:false
     },
     status: {
-        type: String
+        type: String,
+        default: "pending registration"
     },
     assetType: {
         type: String,
