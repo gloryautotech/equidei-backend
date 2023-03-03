@@ -2,8 +2,10 @@ const axios = require('axios');
 const userModel = require('../model/user')
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
+const assetModel= require('../model/asset')
 const jwt = require("jsonwebtoken");
 const transactionHistroy = require('../model/transaction.js');
+const { translateAliases } = require('../model/user');
 const regex = new RegExp(
   /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
 );
@@ -87,7 +89,7 @@ let paymentTokenCreate = async function (req, res) {
 
 const getPaymentStatus = async function (req, res) {
   try {
-    let { button, payment_id, payment_token_id, status } = req.body
+    let { button, payment_id, payment_token_id, status,assetId } = req.body
 
     const options = {
       method: 'GET',
@@ -105,6 +107,7 @@ const getPaymentStatus = async function (req, res) {
         let data = response.data
         let message;
         if (data.payment_token.status == "paid") {
+          await assetModel.findOneAndUpdate({_id:assetId},{isPayment:true})
           message = "payment successfully done"
           await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, message: message }, { new: true })
           res.send(response.data)
@@ -122,4 +125,14 @@ const getPaymentStatus = async function (req, res) {
   }
 }
 
-module.exports = { paymentTokenCreate, getPaymentStatus }
+
+const history = async function (req, res) {
+  try {
+    let data = await transactionHistroy.find().populate('userId', "email , address -_id")
+    console.log(data)
+    res.send(data)
+  } catch (err) {
+    console.log(err)
+  }
+}
+module.exports = { paymentTokenCreate, getPaymentStatus, history }
