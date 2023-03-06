@@ -139,6 +139,9 @@ const assetSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    valuationReport:{
+        type:String
+    }
 }, {
     timestamps: { createdAt: true },
 }

@@ -135,7 +135,7 @@ const getPaidAsset = async function (req, res) {
 
 const verify = async function (req, res) {
     try {
-        let id = req.body.id
+        let id = req.body.assetId
         let asset = await assetModel.findById(id)
         if (!asset) {
             let apiResponse = response.generate(constants.ERROR, messages.asset.NOTFOUND, constants.HTTP_NOT_FOUND, null)
@@ -159,7 +159,7 @@ const verify = async function (req, res) {
                 asset.assetInvoice.message = req.body.assetInvoice.message ? req.body.assetInvoice : " ";
                 asset.technicalSpecifications.status = req.body.technicalSpecifications.status;
                 asset.technicalSpecifications.message = req.body.technicalSpecifications.message ? req.body.technicalSpecifications.message : " ";
-
+                asset.valuationReport = req.body.valuationReport
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
                 res.status(200).send(apiResponse);
@@ -180,7 +180,7 @@ const verify = async function (req, res) {
                 asset.oldValuationReport.message = req.body.oldValuationReport.message ? req.body.oldValuationReport.message : " ";
                 asset.pendingCharges.status = req.body.pendingCharges.status;
                 asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
-
+                asset.valuationReport = req.body.valuationReport
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
                 res.status(200).send(apiResponse);
