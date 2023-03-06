@@ -159,8 +159,8 @@ const verify = async function (req, res) {
                 asset.assetInvoice.message = req.body.assetInvoice.message ? req.body.assetInvoice : " ";
                 asset.technicalSpecifications.isVerified = req.body.technicalSpecifications.isVerified;
                 asset.technicalSpecifications.message = req.body.technicalSpecifications.message ? req.body.technicalSpecifications.message : " ";
-                asset.valuationReport = req.body.valuationReport
-                asset.estimatedValuation=req.body.estimatedValuation ? req.body.estimatedValuation:0
+                asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
+                asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
                 if (asset.purchaseBill.isVerified &&
                     asset.taxInvoice.isVerified &&
                     asset.insuranceDoc.isVerified &&
@@ -171,8 +171,8 @@ const verify = async function (req, res) {
                     asset.technicalSpecifications.isVerified
                 ) {
                     asset.status = "Verification Complete"
-                }else{
-                    asset.status="Rejected"
+                } else {
+                    asset.status = "Rejected"
                 }
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
@@ -194,8 +194,8 @@ const verify = async function (req, res) {
                 asset.oldValuationReport.message = req.body.oldValuationReport.message ? req.body.oldValuationReport.message : " ";
                 asset.pendingCharges.isVerified = req.body.pendingCharges.isVerified;
                 asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
-                asset.valuationReport = req.body.valuationReport
-                asset.estimatedValuation=req.body.estimatedValuation ? req.body.estimatedValuation:0
+                asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
+                asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
                 if (asset.propertyTax.isVerified &&
                     asset.insuranceDoc.isVerified &&
                     asset.powerOfAttorney.isVerified &&
@@ -206,8 +206,8 @@ const verify = async function (req, res) {
                     asset.pendingCharges.isVerified
                 ) {
                     asset.status = "Verification Complete"
-                }else{
-                    asset.status="Rejected"
+                } else {
+                    asset.status = "Rejected"
                 }
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
