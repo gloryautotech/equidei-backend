@@ -26,43 +26,43 @@ const assetSchema = mongoose.Schema({
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     taxInvoice: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     insuranceDoc: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     fixedAssetRegister: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     chargesPending: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     assetInvoice: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     technicalSpecifications: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     landOwner: {
         type: String
@@ -80,53 +80,53 @@ const assetSchema = mongoose.Schema({
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     insuranceDocument: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     powerOfAttorney: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     invoice: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     clearanceCertificate: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     fixedAssetregister: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     oldValuationReport: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     pendingCharges: {
         name: { type: String },
         url: { type: String },
         message: { type: String, default: "" },
-        status: { type: String, enum: ["Verified","Rejected"] }
+        isVerified: { type: Boolean, default: false }
     },
     isPayment: {
         type: Boolean,
-        default:false
+        default: false
     },
     status: {
         type: String,
@@ -139,8 +139,8 @@ const assetSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    valuationReport:{
-        type:String
+    valuationReport: {
+        type: String
     }
 }, {
     timestamps: { createdAt: true },
