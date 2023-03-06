@@ -128,6 +128,9 @@ const assetSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    estimatedValuation: {
+        type: Number, default: 0,
+    },
     status: {
         type: String,
         default: "Pending Registration"
