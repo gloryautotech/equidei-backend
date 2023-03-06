@@ -160,6 +160,20 @@ const verify = async function (req, res) {
                 asset.technicalSpecifications.isVerified = req.body.technicalSpecifications.isVerified;
                 asset.technicalSpecifications.message = req.body.technicalSpecifications.message ? req.body.technicalSpecifications.message : " ";
                 asset.valuationReport = req.body.valuationReport
+                asset.estimatedValuation=req.body.estimatedValuation ? req.body.estimatedValuation:0
+                if (asset.purchaseBill.isVerified &&
+                    asset.taxInvoice.isVerified &&
+                    asset.insuranceDoc.isVerified &&
+                    asset.fixedAssetRegister.isVerified &&
+                    asset.oldValuationReport.isVerified &&
+                    asset.chargesPending.isVerified &&
+                    asset.assetInvoice.isVerified &&
+                    asset.technicalSpecifications.isVerified
+                ) {
+                    asset.status = "Verification Complete"
+                }else{
+                    asset.status="Rejected"
+                }
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
                 res.status(200).send(apiResponse);
@@ -181,6 +195,20 @@ const verify = async function (req, res) {
                 asset.pendingCharges.isVerified = req.body.pendingCharges.isVerified;
                 asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
                 asset.valuationReport = req.body.valuationReport
+                asset.estimatedValuation=req.body.estimatedValuation ? req.body.estimatedValuation:0
+                if (asset.propertyTax.isVerified &&
+                    asset.insuranceDoc.isVerified &&
+                    asset.powerOfAttorney.isVerified &&
+                    asset.invoice.isVerified &&
+                    asset.clearanceCertificate.isVerified &&
+                    asset.fixedAssetRegister.isVerified &&
+                    asset.oldValuationReport.isVerified &&
+                    asset.pendingCharges.isVerified
+                ) {
+                    asset.status = "Verification Complete"
+                }else{
+                    asset.status="Rejected"
+                }
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
                 res.status(200).send(apiResponse);
