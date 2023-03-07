@@ -4,6 +4,10 @@ const assetSchema = mongoose.Schema({
     assetName: {
         type: String
     },
+    email: {
+		type: String,
+		ref: 'User'
+	},
     tenure: {
         type: String
     },
@@ -25,44 +29,51 @@ const assetSchema = mongoose.Schema({
     purchaseBill: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     taxInvoice: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     insuranceDoc: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     fixedAssetRegister: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     chargesPending: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     assetInvoice: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     technicalSpecifications: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     landOwner: {
         type: String
@@ -79,50 +90,58 @@ const assetSchema = mongoose.Schema({
     propertyTax: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     insuranceDocument: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     powerOfAttorney: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     invoice: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     clearanceCertificate: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     fixedAssetregister: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     oldValuationReport: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String},
+        isVerified: { type: Boolean }
     },
     pendingCharges: {
         name: { type: String },
         url: { type: String },
-        message: { type: String, default: "" },
-        isVerified: { type: Boolean, default: false }
+        ipfsHash:{type:String},
+        message: { type: String },
+        isVerified: { type: Boolean }
     },
     isPayment: {
         type: Boolean,
@@ -146,7 +165,7 @@ const assetSchema = mongoose.Schema({
         type: String
     }
 }, {
-    timestamps: { createdAt: true },
+    timestamps: { createdAt: true },Strict:false
 }
 );
 
