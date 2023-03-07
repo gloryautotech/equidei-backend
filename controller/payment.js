@@ -2,7 +2,7 @@ const axios = require('axios');
 const userModel = require('../model/user')
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
-const assetModel= require('../model/asset')
+const assetModel = require('../model/asset')
 const jwt = require("jsonwebtoken");
 const transactionHistroy = require('../model/transaction.js');
 const { translateAliases } = require('../model/user');
@@ -71,25 +71,22 @@ let paymentTokenCreate = async function (req, res) {
           }
           await transactionHistroy.create(objectToAddTransaction)
           let apiResponse = response.generate(constants.SUCCESS, messages.payment.SUCCESS, constants.HTTP_CREATED, data);
-          res.send(apiResponse)
+          res.status(201).send(apiResponse)
         })
         .catch(function (err) {
           let apiResponse = response.generate(constants.ERROR, messages.payment.FAILURE, constants.HTTP_NOT_FOUND, err)
-          res.send(apiResponse)
+          res.status(400).send(apiResponse)
         });
-
-
     }
   } catch (err) {
     let apiResponse = response.generate(constants.ERROR, messages.payment.serverError, constants.HTTP_SERVER_ERROR, err)
-    res.send(apiResponse)
+    res.status(500).send(apiResponse)
   }
-
 }
 
 const getPaymentStatus = async function (req, res) {
   try {
-    let { button, payment_id, payment_token_id, status,assetId } = req.body
+    let { button, payment_id, payment_token_id, status, assetId } = req.body
 
     const options = {
       method: 'GET',
@@ -99,40 +96,42 @@ const getPaymentStatus = async function (req, res) {
         Authorization: `Bearer ${process.env.OPENMONEY_ACCESS_KEY}:${process.env.OPENMONEY_SECRET_KEY}`
       }
     };
-
     axios
       .request(options)
-      .then(async function (response) {
-        console.log(response.data);
-        let data = response.data
+      .then(async function (responseFromAxios) {
+        let data = responseFromAxios.data
         let message;
         if (data.payment_token.status == "paid") {
-          await assetModel.findOneAndUpdate({_id:assetId},{isPayment:true,status:"Pending Verification"})
+          await assetModel.findOneAndUpdate({ _id: assetId }, { isPayment: true, status: "Pending Verification" })
           message = "payment successfully done"
           await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, message: message }, { new: true })
-          res.send(response.data)
+          let apiResponse = response.generate(constants.SUCCESS, messages.payment.GET, constants.HTTP_SUCCESS, data);
+          res.status(200).send(apiResponse)
         } else {
           await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status }, { new: true })
-          res.send(response.data)
+          let apiResponse = response.generate(constants.SUCCESS, messages.payment.GET, constants.HTTP_SUCCESS, responseFromAxios.data);
+          res.status(200).send(apiResponse)
         }
-
       })
       .catch(function (err) {
-        console.error(err);
+        let apiResponse = response.generate(constants.ERROR, messages.payment.FAILURE, constants.HTTP_NOT_FOUND, err)
+        res.status(400).send(apiResponse)
       });
   } catch (err) {
-
+    let apiResponse = response.generate(constants.ERROR, messages.payment.serverError, constants.HTTP_SERVER_ERROR, err)
+    res.status(500).send(apiResponse)
   }
 }
 
 
 const history = async function (req, res) {
   try {
-    let data = await transactionHistroy.find().populate('userId', "email , address -_id")
-    console.log(data)
-    res.send(data)
+    let data = await transactionHistroy.find().populate('userId', "email")
+    let apiResponse = response.generate(constants.SUCCESS, messages.payment.HISTORY, constants.HTTP_SUCCESS, data);
+    res.status(200).send(apiResponse)
   } catch (err) {
-    console.log(err)
+    let apiResponse = response.generate(constants.ERROR, messages.payment.serverError, constants.HTTP_SERVER_ERROR, err)
+    res.status(500).send(apiResponse)
   }
 }
 module.exports = { paymentTokenCreate, getPaymentStatus, history }
