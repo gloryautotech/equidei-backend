@@ -4,6 +4,7 @@ const { udyamDetails } = require('../controller/udhyam')
 const { fetchDataWithCin } = require('../controller/cinFetch')
 const { bankVerify, allBankList } = require("../controller/bankVerify")
 const { gstVerify } = require("../controller/gstVerify")
+const { pinataPinning ,fetchIpfsFile} = require('../controller/pinata')
 const router = express.Router()
 
 const multer = require('multer')
@@ -30,6 +31,8 @@ router.get('/bankList', allBankList)
 
 // GST verify
 router.post('/gstVerify', gstVerify)
-
+// pinat ipfs file upload 
+router.post('/pinataIpfs', mul, pinataPinning)
+router.get('/getIpfsData/:cid',fetchIpfsFile)
 
 module.exports = router;
