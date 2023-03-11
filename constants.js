@@ -132,7 +132,9 @@ let messages = {
     "serverError": "server error",
     "SUCCESS": "payment token is created",
     "EMAIL":" please add and verify email ",
-    "MOBILE":" please add and verify mobile number"
+    "MOBILE":" please add and verify mobile number",
+    "HISTORY":"transaction history",
+    "GET":" payment status"
   },
   "BANKSTATEMENT": {
     "FAILURE": "axiox error",
@@ -151,7 +153,9 @@ let messages = {
     "FAILURE":"axiox error",
     "SERVERERROR": "server error",
     "SUCCESS": "GST Number is verified",
-    "NOTMATCH":"GST Number is not verified"
+    "NOTMATCH":"GST Number is not verified",
+    "OTP":"otp send successfully",
+    "OTPVERIFY":" otp verified"
   }
 }
 module.exports = {

@@ -17,8 +17,6 @@ const fetchDataWithCin = async function (req, res) {
                 essentials: { cin: `${cin}` }
             }
         };
-
-
         axios.request(options).then(function (responseFromAxios) {
             let result = responseFromAxios.data.result.statusCode
             if (result == 404) {

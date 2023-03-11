@@ -4,6 +4,7 @@ const fs = require('fs')
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
 const bankModel = require('../model/bankName')
+const userModel = require('../model/user')
 
 let allBankList = async function (req, res) {
     try {
@@ -48,7 +49,9 @@ let bankVerify = async function (req, res) {
             axios.request(optionsConvert).then(async function (responseFromAxios) {
                 console.log("data from convert ", responseFromAxios.data)
                 let pdfUrl = responseFromAxios.data.result.result.convertedFile
-                let { ifscNumber, accountType, accountNumber, bankName } = req.body
+                // let { ifscNumber, accountType, accountNumber, bankName } = req.body
+                let { email } = req.body
+                let user = await userModel.findOne({ email: email })
 
                 let optionsForBankStatement = {
                     method: 'POST',
@@ -57,12 +60,12 @@ let bankVerify = async function (req, res) {
                         Authorization: process.env.AUTHTOKEN
                     },
                     data: {
-                        essentials: { url: pdfUrl, bankName: bankName, accountType: accountType }
+                        essentials: { url: pdfUrl, bankName: user.companyDetails.bankDetails.bankName, accountType: user.companyDetails.bankDetails.accountType }
                     }
                 };
                 axios.request(optionsForBankStatement).then(function (responseFromAxios) {
                     let responseData = responseFromAxios.data
-                    if (responseData.result.accountNo == accountNumber && responseData.result.ifsCode == ifscNumber) {
+                    if (responseData.result.accountNo == user.companyDetails.bankDetails.accountNumber && responseData.result.ifsCode == user.companyDetails.bankDetails.IFSC) {
                         let apiResponse = response.generate(constants.SUCCESS, messages.BANKSTATEMENT.SUCCESS, constants.HTTP_SUCCESS, responseData)
                         res.status(200).send(apiResponse)
                     } else {
@@ -70,19 +73,19 @@ let bankVerify = async function (req, res) {
                         res.status(404).send(apiResponse)
                     }
                 }).catch(function (err) {
-                    let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE,constants.HTTP_NOT_FOUND, err)
+                    let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE, constants.HTTP_NOT_FOUND, err)
                     res.status(400).send(apiResponse)
                 });
             }).catch(function (err) {
-                let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE,constants.HTTP_NOT_FOUND, err)
+                let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE, constants.HTTP_NOT_FOUND, err)
                 res.status(400).send(apiResponse)
             });
         }).catch((err) => {
-            let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE,constants.HTTP_NOT_FOUND, err)
+            let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.FAILURE, constants.HTTP_NOT_FOUND, err)
             res.status(400).send(apiResponse)
         })
     } catch (err) {
-        let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.SERVERERROR,constants.HTTP_SERVER_ERROR, err)
+        let apiResponse = response.generate(constants.ERROR, messages.BANKSTATEMENT.SERVERERROR, constants.HTTP_SERVER_ERROR, err)
         res.status(500).send(apiResponse)
     }
 }
