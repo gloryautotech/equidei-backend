@@ -37,6 +37,7 @@
 		"swagger-ui-express": "^4.5.0",
 		"twilio": "^4.7.2",
 		"underscore": "^1.13.6",
-		"winston": "^3.8.2"
+		"winston": "^3.8.2",
+		"crypto-js": "^4.1.1"
 	}
 }
