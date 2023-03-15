@@ -17,7 +17,7 @@ const pinataPinning = async function (req, res) {
         const pdfBuffer = await fs.readFile(src.path)
         const byteArray = pdfBuffer.toJSON();
         const jsonString = JSON.stringify({ filename: 'pramit.pdf', data: byteArray['data'] });
-        const ciphertext = CryptoJS.AES.encrypt(jsonString, user.userId).toString();
+        const ciphertext = CryptoJS.AES.encrypt(jsonString, user.uniqueId).toString();
         await fs.writeFile("pramit.txt", ciphertext)
 
         const file = fs1.createReadStream('./pramit.txt');
@@ -66,7 +66,7 @@ const fetchIpfsFile = async function (req, res) {
             let { email } = req.body
             let user = await userModel.findOne({ email: email })
             let response = responseFromAxios.data
-            const bytes = CryptoJS.AES.decrypt(response, user.userId);
+            const bytes = CryptoJS.AES.decrypt(response, user.uniqueId);
             const plaintext = bytes.toString(CryptoJS.enc.Utf8);
             const data = JSON.parse(plaintext);
             await fs.writeFile(data.filename, Buffer.from(data.data))
