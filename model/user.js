@@ -7,6 +7,9 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    userId:{
+        type:String,
+    },
     role: {
         type: String,
         default: 'User',

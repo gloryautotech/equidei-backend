@@ -8,7 +8,7 @@ const passwordUtil = require("../utils/password");
 const buildResponse = require("../utils/buildResponse");
 const userModel = require("../model/user");
 const notificationModel = require("../model/notification-logger")
-    ; const userListModel = require("../model/userList");
+const userListModel = require("../model/userList");
 const zipCodeModel = require("../model/zipCode");
 const axios = require("axios");
 const sgMail = require("@sendgrid/mail");
@@ -17,6 +17,7 @@ const otpModel = require('../model/otpVerify')
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 let client = require('twilio')(accountSid, authToken);
+const { uid } = require('uid')
 
 const regex = new RegExp(
     /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
@@ -25,6 +26,7 @@ const regex = new RegExp(
 let registration = async (req, res) => {
     try {
         let isTrue = regex.test(req.body.userId);
+        let commonString = "equidei_"
         const isUserExist = isTrue
             ? await userModel.findOne({ email: req.body.userId }).lean()
             : await userModel.findOne({ mobile: req.body.userId }).lean();
@@ -33,6 +35,7 @@ let registration = async (req, res) => {
                 ? new userModel({
                     _id: new mongoose.Types.ObjectId(),
                     role: req.body.role ? req.body.role : "User",
+                    userId: commonString + uid(24),
                     password: req.body.password,
                     orgName: req.body.orgName,
                     product: req.body.product,
@@ -46,6 +49,7 @@ let registration = async (req, res) => {
                 : new userModel({
                     _id: new mongoose.Types.ObjectId(),
                     role: req.body.role ? req.body.role : "User",
+                    userId: commonString + uid(24),
                     password: req.body.password,
                     orgName: req.body.orgName,
                     product: req.body.product,
@@ -256,11 +260,11 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails?.name == ""
                     ? ""
                     : data.companyDetails.name;
-                    data.companyDetails.companyType = req.body.companyDetails.companyType
-                    ? req.body.companyDetails.companyType
-                    : req.body.companyDetails?.companyType == ""
-                        ? ""
-                        : data.companyDetails.companyType;     
+            data.companyDetails.companyType = req.body.companyDetails.companyType
+                ? req.body.companyDetails.companyType
+                : req.body.companyDetails?.companyType == ""
+                    ? ""
+                    : data.companyDetails.companyType;
             data.companyDetails.product = req.body.companyDetails.product
                 ? req.body.companyDetails.product
                 : req.body.companyDetails?.product == ""

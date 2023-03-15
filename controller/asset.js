@@ -65,7 +65,7 @@ const updateAsset = async (req, res) => {
 }
 const getAllAssetList = async (req, res) => {
     try {
-        let assetData = await assetModel.find()
+        let assetData = await assetModel.find().populate("userId",'companyDetails.name')
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.GETASSETLIST, constants.HTTP_SUCCESS, assetData);
         res.status(200).send(apiResponse);
     } catch (err) {

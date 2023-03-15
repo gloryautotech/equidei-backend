@@ -4,10 +4,10 @@ const assetSchema = mongoose.Schema({
     assetName: {
         type: String
     },
-    email: {
-		type: String,
-		ref: 'User'
-	},
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
     tenure: {
         type: String
     },
@@ -29,49 +29,49 @@ const assetSchema = mongoose.Schema({
     purchaseBill: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     taxInvoice: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     insuranceDoc: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     fixedAssetRegister: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     chargesPending: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     assetInvoice: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     technicalSpecifications: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
@@ -90,56 +90,56 @@ const assetSchema = mongoose.Schema({
     propertyTax: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     insuranceDocument: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     powerOfAttorney: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     invoice: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     clearanceCertificate: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     fixedAssetregister: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
     oldValuationReport: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
-        message: { type: String},
+        ipfsHash: { type: String },
+        message: { type: String },
         isVerified: { type: Boolean }
     },
     pendingCharges: {
         name: { type: String },
         url: { type: String },
-        ipfsHash:{type:String},
+        ipfsHash: { type: String },
         message: { type: String },
         isVerified: { type: Boolean }
     },
@@ -165,7 +165,7 @@ const assetSchema = mongoose.Schema({
         type: String
     }
 }, {
-    timestamps: { createdAt: true },Strict:false
+    timestamps: { createdAt: true }, Strict: false
 }
 );
 
