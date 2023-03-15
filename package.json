@@ -21,6 +21,7 @@
 		"cloudinary": "^1.32.0",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
+		"crypto-js": "^4.1.1",
 		"dotenv": "^16.0.3",
 		"express": "^4.18.2",
 		"form-data": "^4.0.0",
@@ -36,8 +37,8 @@
 		"swagger-autogen": "^2.22.0",
 		"swagger-ui-express": "^4.5.0",
 		"twilio": "^4.7.2",
+		"uid": "^2.0.1",
 		"underscore": "^1.13.6",
-		"winston": "^3.8.2",
-		"crypto-js": "^4.1.1"
+		"winston": "^3.8.2"
 	}
 }
