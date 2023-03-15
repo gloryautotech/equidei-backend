@@ -156,6 +156,16 @@ let messages = {
     "NOTMATCH":"GST Number is not verified",
     "OTP":"otp send successfully",
     "OTPVERIFY":" otp verified"
+  },
+  "PINATA":{
+    "SUCCESS":"successfully uploaded in ipfs",
+    "FAILURE":"Axios error"
+  },
+  "AADHAR":{
+    "SUCCESS":"aadhar number is verified",
+    "FAILURE":"Axios error",
+    "SERVERERROR":"server error"
+    
   }
 }
 module.exports = {
