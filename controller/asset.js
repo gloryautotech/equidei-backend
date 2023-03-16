@@ -9,6 +9,9 @@ const response = require('../lib/responseLib');
 const assetRegister = async (req, res) => {
     try {
         let data = req.body;
+        let {email}=req.body
+        let findAsset= await userModel.findOne({email:email})
+        data["userId"]=findAsset._id
         let addAsset = await assetModel.create(data)
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.SUCCESS, constants.HTTP_CREATED, addAsset);
         res.status(201).send(apiResponse);
