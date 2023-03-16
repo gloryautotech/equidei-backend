@@ -1,4 +1,5 @@
 const assetModel = require("../model/asset")
+const userModel = require("../model/user")
 const APIFeatures = require('../utils/apiFeatures');
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
@@ -28,6 +29,10 @@ const updateAsset = async (req, res) => {
         let assetId = req.query.registerId;
         let data = req.body
 
+        let findAsset = await assetModel.findOne({ _id: assetId });
+        if (findAsset.status == "Rejected") {
+            data.status = "Updated By MSME";
+        }
         let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
         updatedAsset = updatedAsset.toObject();
         if (updatedAsset.assetType == "plantAndMachinery") {
@@ -51,6 +56,8 @@ const updateAsset = async (req, res) => {
                 return res.status(200).send(apiResponse);
             }
         }
+
+
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
         res.status(200).send(apiResponse);
     } catch (err) {
@@ -65,7 +72,9 @@ const updateAsset = async (req, res) => {
 }
 const getAllAssetList = async (req, res) => {
     try {
-        let assetData = await assetModel.find().populate("userId",'companyDetails.name')
+        const { email } = req.params;
+        let user = await userModel.findOne({ email: email })
+        let assetData = await assetModel.find({ userId: user._id }).populate("userId", 'companyDetails.name')
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.GETASSETLIST, constants.HTTP_SUCCESS, assetData);
         res.status(200).send(apiResponse);
     } catch (err) {

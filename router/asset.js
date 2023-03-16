@@ -5,7 +5,7 @@ const { assetRegister, updateAsset, getAllAssetListByQuery, getAssetListById, ge
 
 router.post('/register', assetRegister)
 router.post('/getAllAssetListByQuery', getAllAssetListByQuery)
-router.get('/getAllAssetList', getAllAssetList)
+router.get('/getAllAssetList/:email', getAllAssetList)
 router.get('/getAllAssetListById', getAssetListById)
 router.put('/updateAsset', updateAsset)
 router.get('/paidAssetList', getPaidAsset)
