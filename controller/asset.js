@@ -65,13 +65,7 @@ const updateAsset = async (req, res) => {
                     updatedAsset.fixedAssetregister.status = "Updated By MSME"
                 }
 
-            } else if (findAsset.msmeStatus == "Pending Registration") {
-                if (updatedAsset.purchaseBill && updatedAsset.taxInvoice && updatedAsset.insuranceDoc && updatedAsset.assetInvoice && updatedAsset.technicalSpecifications && updatedAsset.assetName && updatedAsset.tenure && updatedAsset.yearOfManufacture && updatedAsset.serialNumber && updatedAsset.assetMake && updatedAsset.assetModel && updatedAsset.assetValue && updatedAsset.technicalSpecifications) {
-                    const newUpdatedAsset = await assetModel.findByIdAndUpdate(assetId, { msmeStatus: "Registered" }, { upsert: true, new: true },)
-                    let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, newUpdatedAsset);
-                    return res.status(200).send(apiResponse);
-                }
-            }
+            } 
         } else if (updatedAsset.msmeStatus == "realEsate") {
             if (findAsset.msmeStatus == "Rejected") {
                 updatedAsset.msmeStatus = "Pending Verification";
@@ -100,14 +94,7 @@ const updateAsset = async (req, res) => {
                 if (req.body.pendingCharges) {
                     updatedAsset.pendingCharges.status = "Upadted By MSME"
                 }
-
-            } else if (findAsset.msmeStatus == "Pending Registration") {
-                if (updatedAsset.propertyTax && updatedAsset.oldValuationReport && updatedAsset.assetName && updatedAsset.tenure && updatedAsset.landOwner && updatedAsset.titleDeed && updatedAsset.landRegistry && updatedAsset.assetValue && updatedAsset.otpVerification) {
-                    let newUpdatedAsset = await assetModel.findByIdAndUpdate(assetId, { msmeStatus: "Registered" }, { upsert: true, new: true },)
-                    let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, newUpdatedAsset);
-                    return res.status(200).send(apiResponse);
-                }
-            }
+            } 
         }
 
         updatedAsset = await updatedAsset.save();
