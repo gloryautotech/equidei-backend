@@ -36,7 +36,7 @@ const updateAsset = async (req, res) => {
         let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
         // updatedAsset = updatedAsset.toObject();
 
-        if (updatedAsset.assetType == "plantAndMachinery") {
+        if (updatedAsset.assetType == "plantAndMachinary") {
             if (findAsset.msmeStatus == "Rejected") {
                 updatedAsset.msmeStatus = "Pending Verification";
                 updatedAsset.adminStatus="Upadted By MSME";
@@ -204,7 +204,7 @@ const verify = async function (req, res) {
             res.status(400).send(apiResponse);
         }
         else {
-            if (asset.assetType == "plantAndMachinery") {
+            if (asset.assetType == "plantAndMachinary") {
                 if (req.body.purchaseBill.isVerified == true) {
                     asset.purchaseBill.isVerified = true;
                     asset.purchaseBill.status = "Verified";
