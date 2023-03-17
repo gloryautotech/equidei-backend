@@ -170,7 +170,8 @@ const assetSchema = mongoose.Schema({
         default: "Pending Registration"
     },
     adminStatus: {
-        type: String
+        type: String,
+        default:"Pending Verification"
     },
     assetType: {
         type: String,
