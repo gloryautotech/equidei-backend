@@ -10,6 +10,8 @@ const userModel = require("../model/user")
 const assetModel = require("../model/asset")
 let objTemplate = require("../contract.json")
 let { jsPDF } = require("jspdf")
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const pinataPinning = async function (req, res) {
     try {
@@ -156,7 +158,6 @@ const approve = async function (req, res) {
             }
             return template;
         };
-
         for (let key in objTemplate) {
             if (key == "heading") {
                 doc.setFontSize(20);
@@ -176,7 +177,29 @@ const approve = async function (req, res) {
             }
         }
 
-        doc.save("test.pdf");
+        doc.save("test.pdf")
+        const pdfFile = fs1.readFileSync('test.pdf');
+        const msg = {
+            to: "saivishwak40@gmail.com", 
+            from: "joincensorblack@gmail.com",
+            subject: "E-Stamping document",
+            html: '<p>Please see the attached PDF file.</p>',
+            attachments: [
+                {
+                    content: pdfFile.toString('base64'),
+                    filename: 'file.pdf',
+                    type: 'application/pdf',
+                    disposition: 'attachment',
+                },
+            ],
+        };
+        await sgMail
+            .send(msg)
+            .then(async () => {
+                console.log("Email sent");
+            }).catch((err) => {
+                console.log(err)
+            })
 
     } catch (err) {
         let apiResponse = response.generate(
