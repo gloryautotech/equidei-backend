@@ -100,52 +100,66 @@ const approve = async function (req, res) {
     try {
         const doc = new jsPDF();
         let asset = await assetModel.findOne({ _id: req.params.assetId })
-        let array = ["jhihuyftdsfrghhj", "yutrsedfghjk", "lkjhuiytrsedfxgcjh"]
+        let array = []
         if (asset == "plantAndMachinary") {
-            if (asset.purchaseBill.IpfsHash) {
-                array.push(asset.purchaseBill.IpfsHash)
-            } else if (asset.taxInvoice.IpfsHash) {
-                array.push(asset.taxInvoice.IpfsHash)
-            } else if (asset.insuranceDoc.IpfsHash) {
-                array.push(asset.insuranceDoc.IpfsHash)
-            } else if (asset.fixedAssetRegister.IpfsHash) {
-                array.push(asset.fixedAssetRegister.IpfsHash)
-            } else if (asset.oldValuationReport.IpfsHash) {
-                array.push(asset.oldValuationReport.IpfsHash)
-            } else if (asset.chargesPending.IpfsHash) {
-                array.push(asset.chargesPending.IpfsHash)
-            } else if (asset.assetInvoice.IpfsHash) {
-                array.push(asset.assetInvoice.IpfsHash)
-            } else if (asset.technicalSpecifications.IpfsHash) {
-                array.push(asset.technicalSpecifications.IpfsHash)
+            if (asset.purchaseBill.ipfsHash) {
+                array.push("\n"+asset.purchaseBill.pfsHash)
+            }
+            if (asset.taxInvoice.ipfsHash) {
+                array.push("\n"+asset.taxInvoice.ipfsHash)
+            }
+            if (asset.insuranceDoc.ipfsHash) {
+                array.push("\n"+asset.insuranceDoc.ipfsHash)
+            }
+            if (asset.fixedAssetRegister.ipfsHash) {
+                array.push("\n"+asset.fixedAssetRegister.ipfsHash)
+            }
+            if (asset.oldValuationReport.ipfsHash) {
+                array.push("\n"+asset.oldValuationReport.ipfsHash)
+            }
+            if (asset.chargesPending.ipfsHash) {
+                array.push("\n"+asset.chargesPending.ipfsHash)
+            }
+            if (asset.assetInvoice.ipfsHash) {
+                array.push("\n"+asset.assetInvoice.ipfsHash)
+            }
+            if (asset.technicalSpecifications.ipfsHash) {
+                array.push("\n"+asset.technicalSpecifications.ipfsHash)
             }
         } else {
-            if (asset.propertyTax.IpfsHash) {
-                array.push(asset.propertyTax.IpfsHash)
-            } else if (asset.insuranceDoc.IpfsHash) {
-                array.push(asset.insuranceDoc.IpfsHash)
-            } else if (asset.powerOfAttorney.IpfsHash) {
-                array.push(asset.powerOfAttorney.IpfsHash)
-            } else if (asset.invoice.IpfsHash) {
-                array.push(asset.invoice.IpfsHash)
-            } else if (asset.clearanceCertificate.IpfsHash) {
-                array.push(asset.clearanceCertificate.IpfsHash)
-            } else if (asset.fixedAssetRegister.IpfsHash) {
-                array.push(asset.fixedAssetRegister.IpfsHash)
-            } else if (asset.oldValuationReport.IpfsHash) {
-                array.push(asset.oldValuationReport.IpfsHash)
-            } else if (asset.pendingCharges.IpfsHash) {
-                array.push(asset.pendingCharges.IpfsHash)
+            if (asset.propertyTax.ipfsHash) {
+                array.push("\n"+asset.propertyTax.ipfsHash)
+            }
+            if (asset.insuranceDoc.ipfsHash) {
+                array.push("\n"+asset.insuranceDoc.ipfsHash)
+            }
+            if (asset.powerOfAttorney.ipfsHash) {
+                array.push("\n"+asset.powerOfAttorney.ipfsHash)
+            }
+            if (asset.invoice.ipfsHash) {
+                array.push("\n"+asset.invoice.ipfsHash)
+            }
+            if (asset.clearanceCertificate.ipfsHash) {
+                array.push("\n"+asset.clearanceCertificate.ipfsHash)
+            }
+            if (asset.fixedAssetRegister.ipfsHash) {
+                array.push("\n"+asset.fixedAssetRegister.ipfsHash)
+            }
+            if (asset.oldValuationReport.ipfsHash) {
+                array.push("\n"+asset.oldValuationReport.ipfsHash)
+            }
+            if (asset.pendingCharges.ipfsHash) {
+                array.push("\n"+asset.pendingCharges.ipfsHash)
             }
         }
-        // let findUser = await userModel.findOne({ _id: asset.userId })
-        // let aadhar = findUser.aadhar.aadharNumber
-        // let pan = findUser.PAN.panNumber
-        // let name = findUser.name
+        let findUser = await userModel.findOne({ _id: asset.userId })
+        let aadhar = findUser.aadhar.aadharNumber
+        let pan = findUser.PAN.panNumber
+        let name = findUser.adminName
         let objForAddData = {
-            name: "pramit",
-            aadhar: 123434,
-            pan: 1234567,
+            name: name,
+            aadhar: aadhar,
+            pan: pan,
             array: array,
             trId: "pr123456789"
         }

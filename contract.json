@@ -3,6 +3,6 @@
         "value": "ADDENDUM TO THE TRUST DEED"
     },
     "pararaph": {
-        "value": "Mr, {name},\n\n your aadhar number is '{aadhar}' and the pan number is '{pan}' and all asset hases are {array} and newrl transaction id is '{trId}'  "
+        "value": "Mr, {name},\n\n your aadhar number is '{aadhar}' and the pan number is '{pan}' and all asset hases are :-\n{array} \n\nand newrl transaction id is '{trId}'  "
     }
 }
