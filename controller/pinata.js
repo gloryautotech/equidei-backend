@@ -180,7 +180,7 @@ const approve = async function (req, res) {
         doc.save("test.pdf")
         const pdfFile = fs1.readFileSync('test.pdf');
         const msg = {
-            to: "saivishwak40@gmail.com", 
+            to: "saivishwak40@gmail.com",
             from: "joincensorblack@gmail.com",
             subject: "E-Stamping document",
             html: '<p>Please see the attached PDF file.</p>',
@@ -196,7 +196,7 @@ const approve = async function (req, res) {
         await sgMail
             .send(msg)
             .then(async () => {
-                console.log("Email sent");
+                res.send({ data: "Email sent" })
             }).catch((err) => {
                 console.log(err)
             })
