@@ -97,7 +97,7 @@ const updateAsset = async (req, res) => {
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
                 res.status(200).send(apiResponse);
             }
-        } else if (updatedAsset.msmeStatus == "realEsate") {
+        } else if (findAsset.assetType == "realEstate") {
             if (findAsset.msmeStatus == "Rejected") {
                 findAsset.msmeStatus = "Pending Verification";
                 findAsset.adminStatus = "Updated By MSME"
