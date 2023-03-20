@@ -33,73 +33,133 @@ const updateAsset = async (req, res) => {
         let data = req.body
 
         let findAsset = await assetModel.findOne({ _id: assetId });
-        let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
+
+        let updatedAsset;
         // updatedAsset = updatedAsset.toObject();
 
-        if (updatedAsset.assetType == "plantAndMachinary") {
+        if (findAsset.assetType == "plantAndMachinary") {
             if (findAsset.msmeStatus == "Rejected") {
-                updatedAsset.msmeStatus = "Pending Verification";
-                updatedAsset.adminStatus="Upadted By MSME";
+                findAsset.msmeStatus = "Pending Verification";
+                findAsset.adminStatus = "Updated By MSME";
                 if (req.body.purchaseBill) {
-                    updatedAsset.purchaseBill.status = "Updated By MSME"
+                    findAsset.purchaseBill.status = "Updated By MSME";
+                    findAsset.purchaseBill.name = req.body.purchaseBill.name
+                    findAsset.purchaseBill.url = req.body.purchaseBill.url
+                    findAsset.purchaseBill.ipfsHash = req.body.purchaseBill.ipfsHash
                 }
                 if (req.body.taxInvoice) {
-                    updatedAsset.taxInvoice.status = "Updated By MSME"
+                    findAsset.taxInvoice.status = "Updated By MSME"
+                    findAsset.taxInvoice.name = req.body.taxInvoice.name
+                    findAsset.taxInvoice.url = req.body.taxInvoice.url
+                    findAsset.taxInvoice.ipfsHash = req.body.taxInvoice.ipfsHash
                 }
                 if (req.body.insuranceDoc) {
-                    updatedAsset.insuranceDoc.status = "Updated By MSME"
+                    findAsset.insuranceDoc.status = "Updated By MSME"
+                    findAsset.insuranceDoc.name = req.body.insuranceDoc.name
+                    findAsset.insuranceDoc.url = req.body.insuranceDoc.url
+                    findAsset.insuranceDoc.ipfsHash = req.body.insuranceDoc.ipfsHash
                 }
                 if (req.body.assetInvoice) {
-                    updatedAsset.assetInvoice.status = "Updated By MSME";
+                    findAsset.assetInvoice.status = "Updated By MSME";
+                    findAsset.assetInvoice.name = req.body.assetInvoice.name
+                    findAsset.assetInvoice.url = req.body.assetInvoice.url
+                    findAsset.assetInvoice.ipfsHash = req.body.assetInvoice.ipfsHash
                 }
                 if (req.body.technicalSpecifications) {
-                    updatedAsset.technicalSpecifications.status = "Updated By MSME"
+                    findAsset.technicalSpecifications.status = "Updated By MSME"
+                    findAsset.technicalSpecifications.name = req.body.technicalSpecifications.name
+                    findAsset.technicalSpecifications.url = req.body.technicalSpecifications.url
+                    findAsset.technicalSpecifications.ipfsHash = req.body.technicalSpecifications.ipfsHash
                 }
                 if (req.body.chargesPending) {
-                    updatedAsset.chargesPending.status = "Updated By MSME"
+                    findAsset.chargesPending.status = "Updated By MSME"
+                    findAsset.chargesPending.name = req.body.chargesPending.name
+                    findAsset.chargesPending.url = req.body.chargesPending.url
+                    findAsset.chargesPending.ipfsHash = req.body.chargesPending.ipfsHash
                 }
                 if (req.body.oldValuationReport) {
-                    updatedAsset.oldValuationReport.status = "Updated By MSME";
+                    findAsset.oldValuationReport.status = "Updated By MSME";
+                    findAsset.oldValuationReport.name = req.body.oldValuationReport.name
+                    findAsset.oldValuationReport.url = req.body.oldValuationReport.url
+                    findAsset.oldValuationReport.ipfsHash = req.body.oldValuationReport.ipfsHash
                 }
                 if (req.body.fixedAssetregister) {
-                    updatedAsset.fixedAssetregister.status = "Updated By MSME"
+                    findAsset.fixedAssetregister.status = "Updated By MSME"
+                    findAsset.fixedAssetregister.name = req.body.fixedAssetregister.name
+                    findAsset.fixedAssetregister.url = req.body.fixedAssetregister.url
+                    findAsset.fixedAssetregister.ipfsHash = req.body.fixedAssetregister.ipfsHash
                 }
-
-            } 
+                findAsset = await findAsset.save();
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, findAsset);
+                res.status(200).send(apiResponse);
+            } else {
+                updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+                res.status(200).send(apiResponse);
+            }
         } else if (updatedAsset.msmeStatus == "realEsate") {
             if (findAsset.msmeStatus == "Rejected") {
-                updatedAsset.msmeStatus = "Pending Verification";
-                updatedAsset.adminStatus="Upadted By MSME"
+                findAsset.msmeStatus = "Pending Verification";
+                findAsset.adminStatus = "Updated By MSME"
                 if (req.body.propertyTax) {
-                    updatedAsset.propertyTax.status = "Upadted By MSME"
+                    findAsset.propertyTax.status = "Updated By MSME"
+                    findAsset.propertyTax.name = req.body.propertyTax.name
+                    findAsset.propertyTax.url = req.body.propertyTax.url
+                    findAsset.propertyTax.ipfsHash = req.body.propertyTax.ipfsHash
                 }
                 if (req.body.insuranceDocument) {
-                    updatedAsset.insuranceDocument.status = "Upadted By MSME"
+                    findAsset.insuranceDocument.status = "Updated By MSME"
+                    findAsset.insuranceDocument.name = req.body.insuranceDocument.name
+                    findAsset.insuranceDocument.url = req.body.insuranceDocument.url
+                    findAsset.insuranceDocument.ipfsHash = req.body.insuranceDocument.ipfsHash
                 }
                 if (req.body.powerOfAttorney) {
-                    updatedAsset.powerOfAttorney.status = "Upadted By MSME"
+                    findAsset.powerOfAttorney.status = "Updated By MSME"
+                    findAsset.powerOfAttorney.name = req.body.powerOfAttorney.name
+                    findAsset.powerOfAttorney.url = req.body.powerOfAttorney.url
+                    findAsset.powerOfAttorney.ipfsHash = req.body.powerOfAttorney.ipfsHash
                 }
                 if (req.body.invoice) {
-                    updatedAsset.invoice.status = "Upadted By MSME"
+                    findAsset.invoice.status = "Updated By MSME"
+                    findAsset.invoice.name = req.body.invoice.name
+                    findAsset.invoice.url = req.body.invoice.url
+                    findAsset.invoice.ipfsHash = req.body.invoice.ipfsHash
                 }
                 if (req.body.clearanceCertificate) {
-                    updatedAsset.clearanceCertificate.status = "Upadted By MSME"
+                    findAsset.clearanceCertificate.status = "Updated By MSME"
+                    findAsset.clearanceCertificate.name = req.body.clearanceCertificate.name
+                    findAsset.clearanceCertificate.url = req.body.clearanceCertificate.url
+                    findAsset.clearanceCertificate.ipfsHash = req.body.clearanceCertificate.ipfsHash
                 }
                 if (req.body.fixedAssetregister) {
-                    updatedAsset.fixedAssetregister.status = "Upadted By MSME"
+                    findAsset.fixedAssetregister.status = "Updated By MSME"
+                    findAsset.fixedAssetregister.name = req.body.fixedAssetregister.name
+                    findAsset.fixedAssetregister.url = req.body.fixedAssetregister.url
+                    findAsset.fixedAssetregister.ipfsHash = req.body.fixedAssetregister.ipfsHash
                 }
                 if (req.body.oldValuationReport) {
-                    updatedAsset.oldValuationReport.status = "Upadted By MSME"
+                    findAsset.oldValuationReport.status = "Updated By MSME"
+                    findAsset.oldValuationReport.name = req.body.oldValuationReport.name
+                    findAsset.oldValuationReport.url = req.body.oldValuationReport.url
+                    findAsset.oldValuationReport.ipfsHash = req.body.oldValuationReport.ipfsHash
                 }
                 if (req.body.pendingCharges) {
-                    updatedAsset.pendingCharges.status = "Upadted By MSME"
+                    findAsset.pendingCharges.status = "Updated By MSME"
+                    findAsset.pendingCharges.name = req.body.pendingCharges.name
+                    findAsset.pendingCharges.url = req.body.pendingCharges.url
+                    findAsset.pendingCharges.ipfsHash = req.body.pendingCharges.ipfsHash
                 }
-            } 
+                findAsset = await findAsset.save();
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, findAsset);
+                res.status(200).send(apiResponse);
+            } else {
+                updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+                res.status(200).send(apiResponse);
+            }
         }
 
-        updatedAsset = await updatedAsset.save();
-        let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-        res.status(200).send(apiResponse);
+
     } catch (err) {
         let apiResponse = response.generate(
             constants.ERROR,
@@ -199,7 +259,7 @@ const verify = async function (req, res) {
                     asset.purchaseBill.isVerified = false;
                     asset.purchaseBill.status = "Rejected";
                 }
-                req.body.purchaseBill.message ? req.body.purchaseBill.message : " ";
+                asset.purchaseBill.message = req.body.purchaseBill.message ? req.body.purchaseBill.message : " ";
                 if (req.body.taxInvoice.isVerified == true) {
                     asset.taxInvoice.status = "Verified";
                     asset.taxInvoice.isVerified = true
