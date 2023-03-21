@@ -12,7 +12,7 @@ const assetSchema = mongoose.Schema({
         type: String
     },
     yearOfManufacture: {
-        type: Number
+        type: String
     },
     serialNumber: {
         type: Number
@@ -92,7 +92,7 @@ const assetSchema = mongoose.Schema({
         type: String
     },
     assetValue: {
-        type: String
+        type: Number
     },
     propertyTax: {
         name: { type: String },
