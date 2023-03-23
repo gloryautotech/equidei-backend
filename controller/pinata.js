@@ -159,7 +159,7 @@ const approve = async function (req, res) {
         let pan = findUser.PAN.panNumber
         let name = findUser.adminName
         let transactionId = asset.transactionId
-       
+
 
 
 
@@ -199,37 +199,31 @@ const approve = async function (req, res) {
             }
         }
 
-       await pdf.create(output, config).toFile('output.pdf', function (err, res) {
-            if (err) return console.log(err);
-            // { filename: '/path/to/output.pdf' }
-        });
-
-
-        const pdfFile = fs1.readFileSync('./output.pdf');
-        const msg = {
-            to: "pramitchoudhury0205@gmail.com",
-            from: "joincensorblack@gmail.com",
-            subject: "E-Stamping document",
-            html: '<p>Please see the attached PDF file.</p>',
-            attachments: [
-                {
-                    content: pdfFile.toString('base64'),
-                    filename: 'file.pdf',
-                    type: 'application/pdf',
-                    disposition: 'attachment',
-                },
-            ],
-        };
-        await sgMail
-            .send(msg)
-            .then(async () => {
-                await fs.unlink('./output.pdf')
-                res.send({ data: "Email sent" })
-            }).catch((err) => {
-                console.log(err)
-            })
-
-
+        pdf.create(output, config).toFile('output.pdf', async () => {
+            const pdfFile = fs1.readFileSync('./output.pdf');
+            const msg = {
+                to: "pramitchoudhury0205@gmail.com",
+                from: "joincensorblack@gmail.com",
+                subject: "E-Stamping document",
+                html: '<p>Please see the attached PDF file.</p>',
+                attachments: [
+                    {
+                        content: pdfFile.toString('base64'),
+                        filename: 'file.pdf',
+                        type: 'application/pdf',
+                        disposition: 'attachment',
+                    },
+                ],
+            };
+            await sgMail
+                .send(msg)
+                .then(async () => {
+                    await fs.unlink('./output.pdf')
+                    res.send({ data: "Email sent" })
+                }).catch((err) => {
+                    console.log(err)
+                })
+        })
     } catch (err) {
         let apiResponse = response.generate(
             constants.ERROR,
