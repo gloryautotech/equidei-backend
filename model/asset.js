@@ -171,7 +171,7 @@ const assetSchema = mongoose.Schema({
     },
     adminStatus: {
         type: String,
-        default:"Pending Verification"
+        default: "Pending Verification"
     },
     assetType: {
         type: String,
@@ -181,6 +181,9 @@ const assetSchema = mongoose.Schema({
         default: false
     },
     valuationReport: {
+        type: String
+    },
+    transactionId: {
         type: String
     }
 }, {

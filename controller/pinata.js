@@ -13,6 +13,8 @@ let { jsPDF } = require("jspdf")
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+const pdf = require('html-pdf');
+
 const pinataPinning = async function (req, res) {
     try {
         let { email } = req.body
@@ -103,98 +105,109 @@ const approve = async function (req, res) {
         let array = []
         if (asset == "plantAndMachinary") {
             if (asset.purchaseBill.ipfsHash) {
-                array.push("\n"+asset.purchaseBill.pfsHash)
+                array.push("\n" + asset.purchaseBill.pfsHash)
             }
             if (asset.taxInvoice.ipfsHash) {
-                array.push("\n"+asset.taxInvoice.ipfsHash)
+                array.push("\n" + asset.taxInvoice.ipfsHash)
             }
             if (asset.insuranceDoc.ipfsHash) {
-                array.push("\n"+asset.insuranceDoc.ipfsHash)
+                array.push("\n" + asset.insuranceDoc.ipfsHash)
             }
             if (asset.fixedAssetRegister.ipfsHash) {
-                array.push("\n"+asset.fixedAssetRegister.ipfsHash)
+                array.push("\n" + asset.fixedAssetRegister.ipfsHash)
             }
             if (asset.oldValuationReport.ipfsHash) {
-                array.push("\n"+asset.oldValuationReport.ipfsHash)
+                array.push("\n" + asset.oldValuationReport.ipfsHash)
             }
             if (asset.chargesPending.ipfsHash) {
-                array.push("\n"+asset.chargesPending.ipfsHash)
+                array.push("\n" + asset.chargesPending.ipfsHash)
             }
             if (asset.assetInvoice.ipfsHash) {
-                array.push("\n"+asset.assetInvoice.ipfsHash)
+                array.push("\n" + asset.assetInvoice.ipfsHash)
             }
             if (asset.technicalSpecifications.ipfsHash) {
-                array.push("\n"+asset.technicalSpecifications.ipfsHash)
+                array.push("\n" + asset.technicalSpecifications.ipfsHash)
             }
         } else {
             if (asset.propertyTax.ipfsHash) {
-                array.push("\n"+asset.propertyTax.ipfsHash)
+                array.push("\n" + asset.propertyTax.ipfsHash)
             }
             if (asset.insuranceDoc.ipfsHash) {
-                array.push("\n"+asset.insuranceDoc.ipfsHash)
+                array.push("\n" + asset.insuranceDoc.ipfsHash)
             }
             if (asset.powerOfAttorney.ipfsHash) {
-                array.push("\n"+asset.powerOfAttorney.ipfsHash)
+                array.push("\n" + asset.powerOfAttorney.ipfsHash)
             }
             if (asset.invoice.ipfsHash) {
-                array.push("\n"+asset.invoice.ipfsHash)
+                array.push("\n" + asset.invoice.ipfsHash)
             }
             if (asset.clearanceCertificate.ipfsHash) {
-                array.push("\n"+asset.clearanceCertificate.ipfsHash)
+                array.push("\n" + asset.clearanceCertificate.ipfsHash)
             }
             if (asset.fixedAssetRegister.ipfsHash) {
-                array.push("\n"+asset.fixedAssetRegister.ipfsHash)
+                array.push("\n" + asset.fixedAssetRegister.ipfsHash)
             }
             if (asset.oldValuationReport.ipfsHash) {
-                array.push("\n"+asset.oldValuationReport.ipfsHash)
+                array.push("\n" + asset.oldValuationReport.ipfsHash)
             }
             if (asset.pendingCharges.ipfsHash) {
-                array.push("\n"+asset.pendingCharges.ipfsHash)
+                array.push("\n" + asset.pendingCharges.ipfsHash)
             }
         }
         let findUser = await userModel.findOne({ _id: asset.userId })
         let aadhar = findUser.aadhar.aadharNumber
         let pan = findUser.PAN.panNumber
         let name = findUser.adminName
-        let objForAddData = {
+        let transactionId = asset.transactionId
+       
+
+
+
+
+        const html = fs1.readFileSync('./trust_deed.html', 'utf8');
+        const companyDetails = {
             name: name,
             aadhar: aadhar,
             pan: pan,
             array: array,
-            trId: "pr123456789"
-        }
-
-
-        let padding = 10;
+            address: "INDIA",
+            date: "10/11/2022",
+            data: "table"
+        };
         const templateParser = (template, companyDetails) => {
             for (let key in companyDetails) {
-                template = template.replace(`{${key}}`, companyDetails[key]);
+                template = template.replaceAll(`{${key}}`, companyDetails[key]);
             }
             return template;
         };
-        for (let key in objTemplate) {
-            if (key == "heading") {
-                doc.setFontSize(20);
-                // Calculate x and y positions to center the heading
-                var pageWidth = doc.internal.pageSize.width;
-                var textWidth = doc.getStringUnitWidth(objTemplate[key].value) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-                var xPos = (pageWidth - textWidth) / 2;
-                var yPos = 30; // Adjust as needed
-                doc.text(objTemplate[key].value, xPos, yPos);
-            } else if (key == "pararaph") {
-                let contentWidth = doc.internal.pageSize.width - (padding * 2);
-                let contentHeight = doc.internal.pageSize.height - (padding * 2);
-                let contentX = padding;
-                doc.setFontSize(15)
-                let parsedTemplate = templateParser(objTemplate[key].value, objForAddData);
-                doc.text(parsedTemplate, contentX, 50, { maxWidth: 190 }, { width: contentWidth, height: contentHeight });
+        let output = templateParser(html, companyDetails)
+        const options = { format: 'A4' };
+        let config = {
+            format: 'A4',
+            orientation: 'potrait',
+            border: {
+                top: "1in",
+                right: "0.75in",
+                bottom: "1in",
+                left: "1in"
+            },
+            footer: {
+                height: "10mm",
+                contents: {
+                    default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
+                }
             }
         }
 
-        doc.save("test.pdf")
-        const pdfFile = fs1.readFileSync('test.pdf');
+        pdf.create(output, config).toFile('output.pdf', function (err, res) {
+            if (err) return console.log(err);
+            res.send(res); // { filename: '/path/to/output.pdf' }
+        });
+
+
+        const pdfFile = fs1.readFileSync('output.pdf');
         const msg = {
-            to: "saivishwak40@gmail.com",
+            to: "pramitchoudhury0205@gmail.com",
             from: "joincensorblack@gmail.com",
             subject: "E-Stamping document",
             html: '<p>Please see the attached PDF file.</p>',
@@ -210,10 +223,12 @@ const approve = async function (req, res) {
         await sgMail
             .send(msg)
             .then(async () => {
+                await fs.unlink('./output.pdf')
                 res.send({ data: "Email sent" })
             }).catch((err) => {
                 console.log(err)
             })
+
 
     } catch (err) {
         let apiResponse = response.generate(
