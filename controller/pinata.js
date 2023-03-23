@@ -159,11 +159,7 @@ const approve = async function (req, res) {
         let pan = findUser.PAN.panNumber
         let name = findUser.adminName
         let transactionId = asset.transactionId
-
-
-
-
-
+        
         const html = fs1.readFileSync('./trust_deed.html', 'utf8');
         const companyDetails = {
             name: name,
@@ -171,12 +167,16 @@ const approve = async function (req, res) {
             pan: pan,
             array: array,
             address: "INDIA",
-            date: "10/11/2022",
+            date: "11/11/2022",
             data: "table"
         };
+        function replaceAll(string, search, replace) {
+            return string.split(search).join(replace);
+          }
         const templateParser = (template, companyDetails) => {
             for (let key in companyDetails) {
-                template = template.replaceAll(`{${key}}`, companyDetails[key]);
+                // template = template.replaceAll(`{${key}}`, companyDetails[key]);
+               template = replaceAll(template,`{${key}}`,companyDetails[key])
             }
             return template;
         };
