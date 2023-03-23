@@ -237,6 +237,7 @@ const approve = async function (req, res) {
             constants.HTTP_SERVER_ERROR,
             err
         );
+        console.log(err)
         res.status(500).send(apiResponse);
     }
 }
