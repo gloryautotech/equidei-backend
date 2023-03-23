@@ -159,7 +159,7 @@ const approve = async function (req, res) {
         let pan = findUser.PAN.panNumber
         let name = findUser.adminName
         let transactionId = asset.transactionId
-        
+
         const html = fs1.readFileSync('./trust_deed.html', 'utf8');
         const companyDetails = {
             name: name,
@@ -172,11 +172,11 @@ const approve = async function (req, res) {
         };
         function replaceAll(string, search, replace) {
             return string.split(search).join(replace);
-          }
+        }
         const templateParser = (template, companyDetails) => {
             for (let key in companyDetails) {
                 // template = template.replaceAll(`{${key}}`, companyDetails[key]);
-               template = replaceAll(template,`{${key}}`,companyDetails[key])
+                template = replaceAll(template, `{${key}}`, companyDetails[key])
             }
             return template;
         };
@@ -199,31 +199,34 @@ const approve = async function (req, res) {
             }
         }
 
-        pdf.create(output, config).toFile('output.pdf', async () => {
-            const pdfFile = fs1.readFileSync('./output.pdf');
-            const msg = {
-                to: "pramitchoudhury0205@gmail.com",
-                from: "joincensorblack@gmail.com",
-                subject: "E-Stamping document",
-                html: '<p>Please see the attached PDF file.</p>',
-                attachments: [
-                    {
-                        content: pdfFile.toString('base64'),
-                        filename: 'file.pdf',
-                        type: 'application/pdf',
-                        disposition: 'attachment',
-                    },
-                ],
-            };
-            await sgMail
-                .send(msg)
-                .then(async () => {
-                    await fs.unlink('./output.pdf')
-                    res.send({ data: "Email sent" })
-                }).catch((err) => {
-                    console.log(err)
-                })
-        })
+        let fileData = await new Promise((resolve, reject) => {
+            pdf.create(output, config).toFile('output.pdf', (err, res) => {
+                resolve(res);
+            });
+        });
+        const pdfFile = fs1.readFileSync('./output.pdf');
+        const msg = {
+            to: "pramitchoudhury0205@gmail.com",
+            from: "joincensorblack@gmail.com",
+            subject: "E-Stamping document",
+            html: '<p>Please see the attached PDF file.</p>',
+            attachments: [
+                {
+                    content: pdfFile.toString('base64'),
+                    filename: 'file.pdf',
+                    type: 'application/pdf',
+                    disposition: 'attachment',
+                },
+            ],
+        };
+        await sgMail
+            .send(msg)
+            .then(async () => {
+                await fs.unlink('./output.pdf')
+                res.send({ data: "Email sent" })
+            }).catch((err) => {
+                console.log(err)
+            })
     } catch (err) {
         let apiResponse = response.generate(
             constants.ERROR,
