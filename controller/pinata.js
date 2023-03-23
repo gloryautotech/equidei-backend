@@ -199,13 +199,13 @@ const approve = async function (req, res) {
             }
         }
 
-        pdf.create(output, config).toFile('output.pdf', function (err, res) {
+       await pdf.create(output, config).toFile('output.pdf', function (err, res) {
             if (err) return console.log(err);
-            res.send(res); // { filename: '/path/to/output.pdf' }
+            // { filename: '/path/to/output.pdf' }
         });
 
 
-        const pdfFile = fs1.readFileSync('output.pdf');
+        const pdfFile = fs1.readFileSync('./output.pdf');
         const msg = {
             to: "pramitchoudhury0205@gmail.com",
             from: "joincensorblack@gmail.com",
