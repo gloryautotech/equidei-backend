@@ -343,27 +343,79 @@ let companyDetails = async (req, res) => {
                 : req.body.companyDetails?.cin == ""
                     ? ""
                     : data.companyDetails.cin;
-            if (
-                data.companyDetails.name &&
-                data.companyDetails.product &&
-                data.companyDetails.yearOfIncorporation &&
-                data.companyDetails.industryType &&
-                data.companyDetails.licenseNumber &&
-                data.companyDetails.GST.GSTNumber &&
-                data.companyDetails.PAN.panNumber &&
-                data.companyDetails.udhyamDetails.udhyamNumber &&
-                data.companyDetails.bankDetails.accountNumber &&
-                data.companyDetails.bankDetails.IFSC &&
-                data.companyDetails.bankDetails.branchName &&
-                data.companyDetails.address &&
-                data.companyDetails.zip &&
-                data.companyDetails.city &&
-                data.companyDetails.state
-            ) {
-                //&& data.companyDetails.bankDetails.bankName
-                data["isAllCompanyInfoAvailable"] = true;
-                // data.profileCompletion = 75;
+
+            if(data.companyDetails.companyType == "LLP"){
+                if (
+                    data.companyDetails.name &&
+                    data.companyDetails.product &&
+                    data.companyDetails.yearOfIncorporation &&
+                    data.companyDetails.industryType &&
+                    data.companyDetails.licenseNumber &&
+                    data.companyDetails.GST.GSTNumber &&
+                    data.companyDetails.udhyamDetails.udhyamNumber &&
+                    data.companyDetails.bankDetails.accountNumber &&
+                    data.companyDetails.bankDetails.bankName&&
+                    data.companyDetails.bankDetails.accountType&&
+                    data.companyDetails.bankDetails.IFSC &&
+                    data.companyDetails.bankDetails.branchName &&
+                    data.companyDetails.address &&
+                    data.companyDetails.zip &&
+                    data.companyDetails.city &&
+                    data.companyDetails.state
+                ) {
+                    //&& data.companyDetails.bankDetails.bankName
+                    data["isAllCompanyInfoAvailable"] = true;
+                    // data.profileCompletion = 75;
+                }
+            }else if(data.companyDetails.companyType == "privateLimited"){
+                if (
+                    data.companyDetails.name &&
+                    data.companyDetails.product &&
+                    data.companyDetails.yearOfIncorporation &&
+                    data.companyDetails.industryType &&
+                    data.companyDetails.cin &&
+                    data.companyDetails.GST.GSTNumber &&
+                    data.companyDetails.udhyamDetails.udhyamNumber &&
+                    data.companyDetails.bankDetails.accountNumber &&
+                    data.companyDetails.bankDetails.bankName&&
+                    data.companyDetails.bankDetails.accountType&&
+                    data.companyDetails.bankDetails.IFSC &&
+                    data.companyDetails.bankDetails.branchName &&
+                    data.companyDetails.address &&
+                    data.companyDetails.zip &&
+                    data.companyDetails.city &&
+                    data.companyDetails.state
+                ) {
+                    //&& data.companyDetails.bankDetails.bankName
+                    data["isAllCompanyInfoAvailable"] = true;
+                    // data.profileCompletion = 75;
+                }
+            }else if(data.companyDetails.companyType == "partnership" ||data.companyDetails.companyType == "soleproprietary" ){
+                if (
+                    data.companyDetails.name &&
+                    data.companyDetails.product &&
+                    data.companyDetails.yearOfIncorporation &&
+                    data.companyDetails.industryType &&
+                    data.companyDetails.GST.GSTNumber &&
+                    data.companyDetails.PAN.panNumber&&
+                    data.companyDetails.udhyamDetails.udhyamNumber &&
+                    data.companyDetails.bankDetails.accountNumber &&
+                    data.companyDetails.bankDetails.bankName&&
+                    data.companyDetails.bankDetails.accountType&&
+                    data.companyDetails.bankDetails.IFSC &&
+                    data.companyDetails.bankDetails.branchName &&
+                    data.companyDetails.address &&
+                    data.companyDetails.zip &&
+                    data.companyDetails.city &&
+                    data.companyDetails.state
+                ) {
+                    //&& data.companyDetails.bankDetails.bankName
+                    data["isAllCompanyInfoAvailable"] = true;
+                    // data.profileCompletion = 75;
+                }
+
             }
+           
 
             if (data.isKYCVerificationInProgress == "DONE") {
                 data.profileCompletion = 100
