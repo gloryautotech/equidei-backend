@@ -4,6 +4,7 @@ const fs = require('fs')
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
 const userModel = require('../model/user')
+const bankModel=require("../model/bankName")
 const contentDisposition = require("content-disposition")
 
 const panVerify = async function (req, res) {
@@ -57,7 +58,6 @@ const panVerify = async function (req, res) {
                 };
                 axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
                     autoRecognition = responseFromAxios.data
-                    console.log(autoRecognition)
                     // varify
                     let optionsForVerify = {
                         method: 'POST',
@@ -218,7 +218,7 @@ let bankVerify = async function (req, res) {
         let uploadResponse;
         let user = await userModel.findOne({ email: req.body.email })
         const form = new formData()
-        const response = await axios.get(user.PAN.file, { responseType: 'arraybuffer' })
+        const response = await axios.get(user.companyDetails.bankDetails.bankStatement.file, { responseType: 'arraybuffer' })
         const buffer = Buffer.from(response.data, "utf-8")
         let fileName = contentDisposition.parse(response.headers["content-disposition"])
         form.append('file', buffer, fileName.parameters.filename)
