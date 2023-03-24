@@ -1,10 +1,9 @@
 const express = require("express")
 const { udyamDetails } = require('../controller/udhyam')
 const { fetchDataWithCin } = require('../controller/cinFetch')
-const { bankVerify, allBankList } = require("../controller/bankVerify")
+const { bankVerify, allBankList, panVerify, aadharVerify } = require("../controller/documentVerify")
 const { gstVerify } = require("../controller/gstVerify")
 const { pinataPinning, fetchIpfsFile, approve } = require('../controller/pinata')
-const { panVerify, aadharVerify } = require("../controller/parsonalDocumentVerify")
 const router = express.Router()
 
 const multer = require('multer')
@@ -24,7 +23,7 @@ router.post('/cinFetchData', fetchDataWithCin)
 router.post('/udhyamData', udyamDetails)
 
 // bank verify 
-router.post('/bankVerify', mul, bankVerify)
+router.post('/bankVerify', bankVerify)
 router.get('/bankList', allBankList)
 
 // aadhar and pan verify
@@ -39,5 +38,7 @@ router.post('/gstVerify', gstVerify)
 router.post('/pinataIpfs', mul, pinataPinning)
 router.get('/getIpfsData/:cid', fetchIpfsFile)
 router.get('/approvePdf/:assetId', approve)
+
+
 
 module.exports = router;
