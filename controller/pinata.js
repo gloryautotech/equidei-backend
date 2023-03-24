@@ -14,6 +14,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const pdf = require('html-pdf');
+var html_to_pdf = require('html-pdf-node');
 
 const pinataPinning = async function (req, res) {
     try {
@@ -198,18 +199,15 @@ const approve = async function (req, res) {
                 }
             }
         }
+        let file = { content: output };
+        html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
+            let arrayBuffer = pdfBuffer.toJSON().data
+            let apiResponse = response.generate(constants.SUCCESS, "pdf generate successfully ", constants.HTTP_CREATED, arrayBuffer);
+            res.send(apiResponse)
 
-        pdf.create(output, config).toBuffer((err, buffer) => {
-            if (err) {
-                console.log(err);
-            } else {  
-                let arrayBuffer=buffer.toJSON().data
-                let apiResponse = response.generate(constants.SUCCESS, "pdf generate successfully ", constants.HTTP_CREATED, arrayBuffer);
-                res.send(apiResponse)
-               
-            }
-        })
+        });
         
+
     } catch (err) {
         let apiResponse = response.generate(
             constants.ERROR,
