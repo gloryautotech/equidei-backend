@@ -1208,9 +1208,9 @@ let verifyOTP = async (req, res, next) => {
             if (findOTP.otp == req.body.otp) {
                 obtainUser.otpVerified = true;
                 if (isTrue) {
-                    obtainUser.isEmail = true
-                } else {
                     obtainUser.isMobile = true
+                } else {
+                    obtainUser.isEmail = true
                 }
                 obtainUser = await obtainUser.save();
                 apiResponse = response.generate1(
