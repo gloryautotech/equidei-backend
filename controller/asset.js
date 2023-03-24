@@ -291,9 +291,6 @@ const verify = async function (req, res) {
                 if (asset.purchaseBill.isVerified &&
                     asset.taxInvoice.isVerified &&
                     asset.insuranceDoc.isVerified &&
-                    asset.fixedAssetRegister.isVerified &&
-                    asset.oldValuationReport.isVerified &&
-                    asset.chargesPending.isVerified &&
                     asset.assetInvoice.isVerified &&
                     asset.technicalSpecifications.isVerified
                 ) {
@@ -375,11 +372,7 @@ const verify = async function (req, res) {
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
                 if (asset.propertyTax.isVerified &&
-                    asset.insuranceDoc.isVerified &&
-                    asset.powerOfAttorney.isVerified &&
                     asset.invoice.isVerified &&
-                    asset.clearanceCertificate.isVerified &&
-                    asset.fixedAssetRegister.isVerified &&
                     asset.oldValuationReport.isVerified &&
                     asset.pendingCharges.isVerified
                 ) {
