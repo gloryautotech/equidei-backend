@@ -199,34 +199,17 @@ const approve = async function (req, res) {
             }
         }
 
-        let fileData = await new Promise((resolve, reject) => {
-            pdf.create(output, config).toFile('output.pdf', (err, res) => {
-                resolve(res);
-            });
-        });
-        const pdfFile = fs1.readFileSync('./output.pdf');
-        const msg = {
-            to: "pramitchoudhury0205@gmail.com",
-            from: "joincensorblack@gmail.com",
-            subject: "E-Stamping document",
-            html: '<p>Please see the attached PDF file.</p>',
-            attachments: [
-                {
-                    content: pdfFile.toString('base64'),
-                    filename: 'file.pdf',
-                    type: 'application/pdf',
-                    disposition: 'attachment',
-                },
-            ],
-        };
-        await sgMail
-            .send(msg)
-            .then(async () => {
-                await fs.unlink('./output.pdf')
-                res.send({ data: "Email sent" })
-            }).catch((err) => {
-                console.log(err)
-            })
+        pdf.create(output, config).toBuffer((err, buffer) => {
+            if (err) {
+                console.log(err);
+            } else {  
+                let arrayBuffer=buffer.toJSON().data
+                let apiResponse = response.generate(constants.SUCCESS, "pdf generate successfully ", constants.HTTP_CREATED, arrayBuffer);
+                res.send(apiResponse)
+               
+            }
+        })
+        
     } catch (err) {
         let apiResponse = response.generate(
             constants.ERROR,
