@@ -39,87 +39,87 @@ const updateAsset = async (req, res) => {
             if (findAsset.msmeStatus == "Rejected") {
                 data.msmeStatus = "Pending Verification";
                 data.adminStatus = "Updated By MSME";
-                if (data.purchaseBill.ipfsHash) {
+                if (data.purchaseBill.ipfsHash != "") {
                     data.purchaseBill.status = "Updated By MSME";
                     data.purchaseBill.message = findAsset.purchaseBill.message
                     data.purchaseBill.isVerified = findAsset.purchaseBill.isVerified
                 }
-                if (data.taxInvoice.ipfsHash) {
+                if (data.taxInvoice.ipfsHash != "") {
                     data.purchaseBill.status = "Updated By MSME";
                     data.purchaseBill.message = findAsset.purchaseBill.message
                     data.purchaseBill.isVerified = findAsset.purchaseBill.isVerified
                 }
-                if (data.insuranceDoc.ipfsHash) {
+                if (data.insuranceDoc.ipfsHash != "") {
                     data.taxInvoice.status = "Updated By MSME";
                     data.taxInvoice.message = findAsset.taxInvoice.message
                     data.taxInvoice.isVerified = findAsset.taxInvoice.isVerified
                 }
-                if (data.assetInvoice.ipfsHash) {
+                if (data.assetInvoice.ipfsHash != "") {
                     data.assetInvoice.status = "Updated By MSME";
                     data.assetInvoice.message = findAsset.assetInvoice.message
                     data.assetInvoice.isVerified = findAsset.assetInvoice.isVerified
                 }
-                if (data.technicalSpecifications.ipfsHash) {
+                if (data.technicalSpecifications.ipfsHash != "") {
                     data.technicalSpecifications.status = "Updated By MSME";
                     data.technicalSpecifications.message = findAsset.technicalSpecifications.message
                     data.technicalSpecifications.isVerified = findAsset.technicalSpecifications.isVerified
                 }
-                if (data.chargesPending.ipfsHash) {
+                if (data.chargesPending.ipfsHash != "") {
                     data.chargesPending.status = "Updated By MSME";
                     data.chargesPending.message = findAsset.chargesPending.message
                     data.chargesPending.isVerified = findAsset.chargesPending.isVerified
                 }
-                if (data.oldValuationReport.ipfsHash) {
+                if (data.oldValuationReport.ipfsHash != "") {
                     data.oldValuationReport.status = "Updated By MSME";
                     data.oldValuationReport.message = findAsset.oldValuationReport.message
                     data.oldValuationReport.isVerified = findAsset.oldValuationReport.isVerified
                 }
-                if (data.fixedAssetregister.ipfsHash) {
-                    data.fixedAssetregister.status = "Updated By MSME";
-                    data.fixedAssetregister.message = findAsset.fixedAssetregister.message
-                    data.fixedAssetregister.isVerified = findAsset.fixedAssetregister.isVerified
+                if (data.fixedAssetRegister.ipfsHash != "") {
+                    data.fixedAssetRegister.status = "Updated By MSME";
+                    data.fixedAssetRegister.message = findAsset.fixedAssetregister.message
+                    data.fixedAssetRegister.isVerified = findAsset.fixedAssetregister.isVerified
                 }
             }
         } else if (findAsset.assetType == "realEstate") {
             if (findAsset.msmeStatus == "Rejected") {
                 data.msmeStatus = "Pending Verification";
                 data.adminStatus = "Updated By MSME"
-                if (data.propertyTax.ipfsHash) {
+                if (data.propertyTax.ipfsHash != "") {
                     data.propertyTax.status = "Updated By MSME";
                     data.propertyTax.message = findAsset.propertyTax.message
                     data.propertyTax.isVerified = findAsset.propertyTax.isVerified
                 }
-                if (data.insuranceDocument.ipfsHash) {
+                if (data.insuranceDocument.ipfsHash != "") {
                     data.insuranceDocument.status = "Updated By MSME";
                     data.insuranceDocument.message = findAsset.insuranceDocument.message
                     data.insuranceDocument.isVerified = findAsset.insuranceDocument.isVerified
                 }
-                if (data.powerOfAttorney.ipfsHash) {
+                if (data.powerOfAttorney.ipfsHash != "") {
                     data.powerOfAttorney.status = "Updated By MSME";
                     data.powerOfAttorney.message = findAsset.powerOfAttorney.message
                     data.powerOfAttorney.isVerified = findAsset.powerOfAttorney.isVerified
                 }
-                if (data.invoice.ipfsHash) {
+                if (data.invoice.ipfsHash != "") {
                     data.invoice.status = "Updated By MSME";
                     data.invoice.message = findAsset.invoice.message
                     data.invoice.isVerified = findAsset.invoice.isVerified
                 }
-                if (data.clearanceCertificate.ipfsHash) {
+                if (data.clearanceCertificate.ipfsHash != "") {
                     data.clearanceCertificate.status = "Updated By MSME";
                     data.clearanceCertificate.message = findAsset.clearanceCertificate.message
                     data.clearanceCertificate.isVerified = findAsset.clearanceCertificate.isVerified
                 }
-                if (data.fixedAssetregister.ipfsHash) {
-                    data.fixedAssetregister.status = "Updated By MSME";
-                    data.fixedAssetregister.message = findAsset.fixedAssetregister.message
-                    data.fixedAssetregister.isVerified = findAsset.fixedAssetregister.isVerified
+                if (data.fixedAssetRegister.ipfsHash != "") {
+                    data.fixedAssetRegister.status = "Updated By MSME";
+                    data.fixedAssetRegister.message = findAsset.fixedAssetregister.message
+                    data.fixedAssetRegister.isVerified = findAsset.fixedAssetregister.isVerified
                 }
-                if (data.oldValuationReport.ipfsHash) {
+                if (data.oldValuationReport.ipfsHash != "") {
                     data.oldValuationReport.status = "Updated By MSME";
                     data.oldValuationReport.message = findAsset.oldValuationReport.message
                     data.oldValuationReport.isVerified = findAsset.oldValuationReport.isVerified
                 }
-                if (data.pendingCharges.ipfsHash) {
+                if (data.pendingCharges.ipfsHash != "") {
                     data.pendingCharges.status = "Updated By MSME";
                     data.pendingCharges.message = findAsset.pendingCharges.message
                     data.pendingCharges.isVerified = findAsset.pendingCharges.isVerified
