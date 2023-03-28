@@ -245,31 +245,37 @@ const verify = async function (req, res) {
                     asset.insuranceDoc.status = "Rejected"
                 };
                 asset.insuranceDoc.message = req.body.insuranceDoc.message ? req.body.insuranceDoc.message : " ";
-                if (req.body.fixedAssetRegister.isVerified == true) {
-                    asset.fixedAssetRegister.status = "Verified";
-                    asset.fixedAssetRegister.isVerified = true
-                } else {
-                    asset.fixedAssetRegister.isVerified = false;
-                    asset.fixedAssetRegister.status = "Rejected"
-                };
-                asset.fixedAssetRegister.message = req.body.fixedAssetRegister.message ? req.body.fixedAssetRegister.message : " ";
-                if (req.body.oldValuationReport.isVerified == true) {
-                    asset.oldValuationReport.status = "Verified";
-                    asset.oldValuationReport.isVerified = true
-                } else {
-                    asset.oldValuationReport.isVerified = false;
-                    asset.oldValuationReport.status = "Rejected"
-                };
+                if (req.body.fixedAssetRegister) {
+                    if (req.body.fixedAssetRegister.isVerified == true) {
+                        asset.fixedAssetRegister.status = "Verified";
+                        asset.fixedAssetRegister.isVerified = true
+                    } else {
+                        asset.fixedAssetRegister.isVerified = false;
+                        asset.fixedAssetRegister.status = "Rejected"
+                    };
+                    asset.fixedAssetRegister.message = req.body.fixedAssetRegister.message ? req.body.fixedAssetRegister.message : " ";
+                }
+                if (req.body.oldValuationReport) {
+                    if (req.body.oldValuationReport.isVerified == true) {
+                        asset.oldValuationReport.status = "Verified";
+                        asset.oldValuationReport.isVerified = true
+                    } else {
+                        asset.oldValuationReport.isVerified = false;
+                        asset.oldValuationReport.status = "Rejected"
+                    };
 
-                asset.oldValuationReport.message = req.body.oldValuationReport.message ? req.body.oldValuationReport.message : " ";
-                if (req.body.chargesPending.isVerified == true) {
-                    asset.chargesPending.status = "Verified";
-                    asset.chargesPending.isVerified = true
-                } else {
-                    asset.chargesPending.isVerified = false;
-                    asset.chargesPending.status = "Rejected"
-                };
-                asset.chargesPending.message = req.body.chargesPending.message ? req.body.chargesPending.message : " ";
+                    asset.oldValuationReport.message = req.body.oldValuationReport.message ? req.body.oldValuationReport.message : " ";
+                }
+                if (req.body.chargesPending) {
+                    if (req.body.chargesPending.isVerified == true) {
+                        asset.chargesPending.status = "Verified";
+                        asset.chargesPending.isVerified = true
+                    } else {
+                        asset.chargesPending.isVerified = false;
+                        asset.chargesPending.status = "Rejected"
+                    };
+                    asset.chargesPending.message = req.body.chargesPending.message ? req.body.chargesPending.message : " ";
+                }
                 if (req.body.assetInvoice.isVerified == true) {
                     asset.assetInvoice.status = "Verified";
                     asset.assetInvoice.isVerified = true
@@ -312,22 +318,26 @@ const verify = async function (req, res) {
                     asset.propertyTax.status = "Rejected"
                 };
                 asset.propertyTax.message = req.body.propertyTax.message ? req.body.propertyTax.message : " ";
-                if (req.body.insuranceDoc.isVerified == true) {
-                    asset.insuranceDoc.status = "Verified";
-                    asset.insuranceDoc.isVerified = true
-                } else {
-                    asset.insuranceDoc.isVerified = false;
-                    asset.insuranceDoc.status = "Rejected"
-                };
-                asset.insuranceDoc.message = req.body.insuranceDoc.message ? req.body.insuranceDoc.message : " ";
-                if (req.body.powerOfAttorney.isVerified == true) {
-                    asset.powerOfAttorney.status = "Verified";
-                    asset.powerOfAttorney.isVerified = true
-                } else {
-                    asset.powerOfAttorney.isVerified = false;
-                    asset.powerOfAttorney.status = "Rejected"
-                };
-                asset.powerOfAttorney.message = req.body.powerOfAttorney.message ? req.body.powerOfAttorney.message : " ";
+                if (req.body.insuranceDoc) {
+                    if (req.body.insuranceDoc.isVerified == true) {
+                        asset.insuranceDoc.status = "Verified";
+                        asset.insuranceDoc.isVerified = true
+                    } else {
+                        asset.insuranceDoc.isVerified = false;
+                        asset.insuranceDoc.status = "Rejected"
+                    };
+                    asset.insuranceDoc.message = req.body.insuranceDoc.message ? req.body.insuranceDoc.message : " ";
+                }
+                if (req.body.powerOfAttorney) {
+                    if (req.body.powerOfAttorney.isVerified == true) {
+                        asset.powerOfAttorney.status = "Verified";
+                        asset.powerOfAttorney.isVerified = true
+                    } else {
+                        asset.powerOfAttorney.isVerified = false;
+                        asset.powerOfAttorney.status = "Rejected"
+                    };
+                    asset.powerOfAttorney.message = req.body.powerOfAttorney.message ? req.body.powerOfAttorney.message : " ";
+                }
                 if (req.body.invoice.isVerified == true) {
                     asset.invoice.status = "Verified";
                     asset.invoice.isVerified = true
@@ -337,22 +347,26 @@ const verify = async function (req, res) {
                     asset.invoice.status = "Rejected"
                 };
                 asset.invoice.message = req.body.invoice.message ? req.body.invoice.message : " ";
-                if (req.body.clearanceCertificate.isVerified == true) {
-                    asset.clearanceCertificate.status = "Verified";
-                    asset.clearanceCertificate.isVerified = true
-                } else {
-                    asset.clearanceCertificate.isVerified = false;
-                    asset.clearanceCertificate.status = "Rejected"
-                };
-                asset.clearanceCertificate.message = req.body.clearanceCertificate.message ? req.body.clearanceCertificate.message : " ";
-                if (req.body.fixedAssetRegister.isVerified == true) {
-                    asset.fixedAssetRegister.status = "Verified";
-                    asset.fixedAssetRegister.isVerified = true
-                } else {
-                    asset.fixedAssetRegister.isVerified = false;
-                    asset.fixedAssetRegister.status = "Rejected"
-                };
-                asset.fixedAssetRegister.message = req.body.fixedAssetRegister.message ? req.body.fixedAssetRegister.message : " ";
+                if (req.body.clearanceCertificate) {
+                    if (req.body.clearanceCertificate.isVerified == true) {
+                        asset.clearanceCertificate.status = "Verified";
+                        asset.clearanceCertificate.isVerified = true
+                    } else {
+                        asset.clearanceCertificate.isVerified = false;
+                        asset.clearanceCertificate.status = "Rejected"
+                    };
+                    asset.clearanceCertificate.message = req.body.clearanceCertificate.message ? req.body.clearanceCertificate.message : " ";
+                }
+                if (req.body.fixedAssetRegister) {
+                    if (req.body.fixedAssetRegister.isVerified == true) {
+                        asset.fixedAssetRegister.status = "Verified";
+                        asset.fixedAssetRegister.isVerified = true
+                    } else {
+                        asset.fixedAssetRegister.isVerified = false;
+                        asset.fixedAssetRegister.status = "Rejected"
+                    };
+                    asset.fixedAssetRegister.message = req.body.fixedAssetRegister.message ? req.body.fixedAssetRegister.message : " ";
+                }
                 if (req.body.oldValuationReport.isVerified == true) {
                     asset.oldValuationReport.status = "Verified";
                     asset.oldValuationReport.isVerified = true
