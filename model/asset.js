@@ -102,7 +102,7 @@ const assetSchema = mongoose.Schema({
         isVerified: { type: Boolean },
         status: { type: String, enum: ["Rejected", "Updated By MSME", "Verified", "Pending"] }
     },
-    insuranceDocument: {
+    insuranceDoc: {
         name: { type: String },
         url: { type: String },
         ipfsHash: { type: String },
@@ -150,7 +150,7 @@ const assetSchema = mongoose.Schema({
         isVerified: { type: Boolean },
         status: { type: String, enum: ["Rejected", "Updated By MSME", "Verified", "Pending"] }
     },
-    pendingCharges: {
+    chargesPending: {
         name: { type: String },
         url: { type: String },
         ipfsHash: { type: String },
