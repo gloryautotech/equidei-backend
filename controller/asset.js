@@ -173,13 +173,13 @@ const updateAsset = async (req, res) => {
                     findAsset.oldValuationReport.url = req.body.oldValuationReport.url
                     findAsset.oldValuationReport.ipfsHash = req.body.oldValuationReport.ipfsHash
                 }
-                if (data.chargesPending.ipfsHash != "") {
-                    findAsset.chargesPending.status = "Updated By MSME";
-                    findAsset.chargesPending.message = findAsset.chargesPending.message
-                    findAsset.chargesPending.isVerified = findAsset.chargesPending.isVerified
-                    findAsset.chargesPending.name = req.body.chargesPending.name
-                    findAsset.chargesPending.url = req.body.chargesPending.url
-                    findAsset.chargesPending.ipfsHash = req.body.chargesPending.ipfsHash
+                if (data.pendingCharges.ipfsHash != "") {
+                    findAsset.pendingCharges.status = "Updated By MSME";
+                    findAsset.pendingCharges.message = findAsset.pendingCharges.message
+                    findAsset.pendingCharges.isVerified = findAsset.pendingCharges.isVerified
+                    findAsset.pendingCharges.name = req.body.pendingCharges.name
+                    findAsset.pendingCharges.url = req.body.pendingCharges.url
+                    findAsset.pendingCharges.ipfsHash = req.body.pendingCharges.ipfsHash
                 }
                 let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: findAsset }, { upsert: true, new: true },)
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
@@ -436,20 +436,20 @@ const verify = async function (req, res) {
                     asset.oldValuationReport.status = "Rejected"
                 };
                 asset.oldValuationReport.message = req.body.oldValuationReport.message ? req.body.oldValuationReport.message : " ";
-                if (req.body.chargesPending.isVerified == true) {
-                    asset.chargesPending.status = "Verified";
-                    asset.chargesPending.isVerified = true
+                if (req.body.pendingCharges.isVerified == true) {
+                    asset.pendingCharges.status = "Verified";
+                    asset.pendingCharges.isVerified = true
                 } else {
-                    asset.chargesPending.isVerified = false;
-                    asset.chargesPending.status = "Rejected"
+                    asset.pendingCharges.isVerified = false;
+                    asset.pendingCharges.status = "Rejected"
                 }
-                asset.chargesPending.message = req.body.chargesPending.message ? req.body.chargesPending.message : " ";
+                asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
                 if (asset.propertyTax.isVerified &&
                     asset.invoice.isVerified &&
                     asset.oldValuationReport.isVerified &&
-                    asset.chargesPending.isVerified
+                    asset.pendingCharges.isVerified
                 ) {
                     asset.adminStatus = "Verification Complete"
                     asset.msmeStatus = "Verification Complete"
