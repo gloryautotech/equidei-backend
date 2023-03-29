@@ -103,7 +103,15 @@ const updateAsset = async (req, res) => {
                     findAsset.fixedAssetRegister.url = req.body.fixedAssetRegister.url
                     findAsset.fixedAssetRegister.ipfsHash = req.body.fixedAssetRegister.ipfsHash
                 }
+                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: findAsset }, { upsert: true, new: true },)
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+                res.status(200).send(apiResponse);
+            } else {
+                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+                res.status(200).send(apiResponse);
             }
+
         } else if (findAsset.assetType == "realEstate") {
             if (findAsset.msmeStatus == "Rejected") {
                 findAsset.msmeStatus = "Pending Verification";
@@ -173,11 +181,15 @@ const updateAsset = async (req, res) => {
                     findAsset.chargesPending.url = req.body.chargesPending.url
                     findAsset.chargesPending.ipfsHash = req.body.chargesPending.ipfsHash
                 }
+                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: findAsset }, { upsert: true, new: true },)
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+                res.status(200).send(apiResponse);
+            } else {
+                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
+                let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+                res.status(200).send(apiResponse);
             }
         }
-        let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: findAsset }, { upsert: true, new: true },)
-        let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-        res.status(200).send(apiResponse);
     } catch (err) {
         let apiResponse = response.generate(
             constants.ERROR,
