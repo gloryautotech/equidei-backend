@@ -34,7 +34,12 @@ const updateAsset = async (req, res) => {
 
         let findAsset = await assetModel.findOne({ _id: assetId }).lean();
         // updatedAsset = updatedAsset.toObject();
-
+        if(data.isAssetInfo){
+            let updatedAsset = await assetModel.findByIdAndUpdate(assetId, data, { upsert: true, new: true },)
+            let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
+            res.status(200).send(apiResponse);
+            return;
+        }
         if (findAsset.assetType == "plantAndMachinary") {
             if (findAsset.msmeStatus == "Rejected") {
                 findAsset.msmeStatus = "Pending Verification";
@@ -103,11 +108,11 @@ const updateAsset = async (req, res) => {
                     findAsset.fixedAssetRegister.url = req.body.fixedAssetRegister.url
                     findAsset.fixedAssetRegister.ipfsHash = req.body.fixedAssetRegister.ipfsHash
                 }
-                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: findAsset }, { upsert: true, new: true },)
+                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, findAsset , { upsert: true, new: true },)
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
                 res.status(200).send(apiResponse);
             } else {
-                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, { $set: data }, { upsert: true, new: true },)
+                let updatedAsset = await assetModel.findByIdAndUpdate(assetId, data , { upsert: true, new: true },)
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
                 res.status(200).send(apiResponse);
             }
