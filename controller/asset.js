@@ -436,20 +436,20 @@ const verify = async function (req, res) {
                     asset.oldValuationReport.status = "Rejected"
                 };
                 asset.oldValuationReport.message = req.body.oldValuationReport.message ? req.body.oldValuationReport.message : " ";
-                if (req.body.pendingCharges.isVerified == true) {
-                    asset.pendingCharges.status = "Verified";
-                    asset.pendingCharges.isVerified = true
+                if (req.body.chargesPending.isVerified == true) {
+                    asset.chargesPending.status = "Verified";
+                    asset.chargesPending.isVerified = true
                 } else {
-                    asset.pendingCharges.isVerified = false;
-                    asset.pendingCharges.status = "Rejected"
+                    asset.chargesPending.isVerified = false;
+                    asset.chargesPending.status = "Rejected"
                 }
-                asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
+                asset.chargesPending.message = req.body.chargesPending.message ? req.body.chargesPending.message : " ";
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
                 if (asset.propertyTax.isVerified &&
                     asset.invoice.isVerified &&
                     asset.oldValuationReport.isVerified &&
-                    asset.pendingCharges.isVerified
+                    asset.chargesPending.isVerified
                 ) {
                     asset.adminStatus = "Verification Complete"
                     asset.msmeStatus = "Verification Complete"
