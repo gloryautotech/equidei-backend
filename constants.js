@@ -112,8 +112,8 @@ let messages = {
     "SUCCESS": "asset added successfully",
     "UPDATE": "asset updated successfully",
     "GETASSETLIST": "asset list",
-    "NOTFOUND":"asset not found",
-    "VERIFY":" verify asset successfully "
+    "NOTFOUND": "asset not found",
+    "VERIFY": "successfully asset verified"
   },
   "cin": {
     "FAILURE": "axiox error",
@@ -131,41 +131,41 @@ let messages = {
     "FAILURE": "axiox error",
     "serverError": "server error",
     "SUCCESS": "payment token is created",
-    "EMAIL":" please add and verify email ",
-    "MOBILE":" please add and verify mobile number",
-    "HISTORY":"transaction history",
-    "GET":" payment status"
+    "EMAIL": " please add and verify email ",
+    "MOBILE": " please add and verify mobile number",
+    "HISTORY": "transaction history",
+    "GET": " payment status"
   },
   "BANKSTATEMENT": {
     "FAILURE": "axiox error",
     "SERVERERROR": "server error",
     "SUCCESS": "bank statement is verified",
-    "NOTMATCH":"bank statement is not verified",
-    "FETCH":"All Bank list"
+    "NOTMATCH": "bank statement is not verified",
+    "FETCH": "All Bank list"
   },
-  "PAN":{
-    "FAILURE":"axiox error",
+  "PAN": {
+    "FAILURE": "axiox error",
     "SERVERERROR": "server error",
     "SUCCESS": "PAN Number is verified",
-    "NOTMATCH":"PAN Number is not verified"
+    "NOTMATCH": "PAN Number is not verified"
   },
-  "GST":{
-    "FAILURE":"axiox error",
+  "GST": {
+    "FAILURE": "axiox error",
     "SERVERERROR": "server error",
     "SUCCESS": "GST Number is verified",
-    "NOTMATCH":"GST Number is not verified",
-    "OTP":"otp send successfully",
-    "OTPVERIFY":" otp verified"
+    "NOTMATCH": "GST Number is not verified",
+    "OTP": "otp send successfully",
+    "OTPVERIFY": " otp verified"
   },
-  "PINATA":{
-    "SUCCESS":"successfully uploaded in ipfs",
-    "FAILURE":"Axios error"
+  "PINATA": {
+    "SUCCESS": "successfully uploaded in ipfs",
+    "FAILURE": "Axios error"
   },
-  "AADHAR":{
-    "SUCCESS":"aadhar number is verified",
-    "FAILURE":"Axios error",
-    "SERVERERROR":"server error"
-    
+  "AADHAR": {
+    "SUCCESS": "aadhar number is verified",
+    "FAILURE": "Axios error",
+    "SERVERERROR": "server error"
+
   }
 }
 module.exports = {
