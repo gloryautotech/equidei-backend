@@ -240,11 +240,11 @@ const updateAsset = async (req, res) => {
             return;
         }
         const updatedAsset = await assetModel.findByIdAndUpdate(assetId, data, { upsert: true, new: true });
-        const apiResponse = response.generate(constants.FAILED, messages.asset.INVALID_ASSET_TYPE, constants.HTTP_SUCCESS, updatedAsset);
+        const apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
         res.status(400).send(apiResponse);
     } catch (err) {
         console.error(err);
-        const apiResponse = response.generate(constants.FAILED, messages.asset.UPDATE_FAILED, constants.HTTP_SERVER_ERROR);
+        const apiResponse = response.generate(constants.FAILED, messages.asset.FAILURE, constants.HTTP_SERVER_ERROR);
         res.status(500).send(apiResponse);
     }
 };
