@@ -223,7 +223,7 @@ const updateAsset = async (req, res) => {
             findAsset.msmeStatus = 'Pending Verification';
             findAsset.adminStatus = 'Updated By MSME';
             for (const [key, value] of Object.entries(data)) {
-                if (value.url) {
+                if (value.url != "") {
                     const field = findAsset[key];
                     field.status = 'Updated By MSME';
                     field.message = value.message ?? field.message;
@@ -243,7 +243,6 @@ const updateAsset = async (req, res) => {
         const apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
         res.status(400).send(apiResponse);
     } catch (err) {
-        console.error(err);
         const apiResponse = response.generate(constants.FAILED, messages.asset.FAILURE, constants.HTTP_SERVER_ERROR);
         res.status(500).send(apiResponse);
     }
