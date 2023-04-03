@@ -12,10 +12,10 @@ const userListModel = require("../model/userList");
 const zipCodeModel = require("../model/zipCode");
 const axios = require("axios");
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY||"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");
 const otpModel = require('../model/otpVerify')
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_ACCOUNT_SID||'AC650df9c420ca563fb689cc38a8d4bd73';
+const authToken = process.env.TWILIO_AUTH_TOKEN||'7610ff4f7ec007ff65b30d3a80f1aee1';
 let client = require('twilio')(accountSid, authToken);
 const { uid } = require('uid')
 

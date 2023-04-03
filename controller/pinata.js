@@ -11,7 +11,7 @@ const assetModel = require("../model/asset")
 let objTemplate = require("../contract.json")
 let { jsPDF } = require("jspdf")
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || "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");
 
 const pdf = require('html-pdf');
 var html_to_pdf = require('html-pdf-node');
@@ -160,7 +160,6 @@ const approve = async function (req, res) {
         let pan = findUser.PAN.panNumber
         let name = findUser.adminName
         let transactionId = asset.transactionId
-
         const html = fs1.readFileSync('./trust_deed.html', 'utf8');
         const companyDetails = {
             name: name,
@@ -206,7 +205,7 @@ const approve = async function (req, res) {
             res.send(apiResponse)
 
         });
-        
+
 
     } catch (err) {
         let apiResponse = response.generate(
