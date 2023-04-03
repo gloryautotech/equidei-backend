@@ -185,6 +185,12 @@ const assetSchema = mongoose.Schema({
     },
     transactionId: {
         type: String
+    },
+    estamping:{
+        certificateNumber:{type:String},
+        certificateReferenceNumber:{type:String},
+        eStampedFile:{type:String},
+        message:{type:String}
     }
 }, {
     timestamps: { createdAt: true }, Strict: false

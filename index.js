@@ -120,8 +120,8 @@ app.use('/api/userList', require('./router/userList'));
 
 app.use('/api/notification', require('./router/notification'));
 app.use('/api/asset', require("./router/asset"))
-app.use('/api', require('./router/documentVarification'))
-app.use('/api',require('./router/payment'))
+app.use('/api/document', require('./router/documentVarification'))
+app.use('/api/payment',require('./router/payment'))
 app.use('/', image);
 
 app.all('*', (req, res, next) => {

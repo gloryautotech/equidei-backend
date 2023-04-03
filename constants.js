@@ -166,7 +166,13 @@ let messages = {
     "FAILURE": "Axios error",
     "SERVERERROR": "server error"
 
-  }
+  },
+  "eSign":{
+    "SUCCESS":"success",
+    "FAILURE":"axios error",
+    "SERVERERROR":"server error"
+  },
+  
 }
 module.exports = {
   constants,
