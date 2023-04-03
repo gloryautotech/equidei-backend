@@ -5,7 +5,8 @@ const SuccessResponse = require('../utils/successResponse');
 const APIFeatures = require('../utils/apiFeatures');
 const StudentModel = require('../model/student');
 const SchoolModel = require('../model/school');
-const OrderModel = require('../model/order');
+// const OrderModel = require('../model/order');
+const OrderModel= require("../model/razorpayPayment")
 
 async function amountWithGST(school_id) {
 	try {
@@ -21,7 +22,7 @@ async function createOrder(order, count, schoolId) {
 	try {
 		const startdate = new Date(Date());
 		startdate.setDate(startdate.getDate() + 30);
-		const orderModel = new OrderModel({
+		const razorpayOrderModel = new OrderModel({
 			order_id: order.id,
 			entity: order.entity,
 			amount: (order.amount / 100).toFixed(2),
@@ -38,21 +39,20 @@ async function createOrder(order, count, schoolId) {
 			notes: order.notes,
 			created_at: Date(order.created_at),
 		});
-		const orderData = await orderModel.save();
+		const orderData = await razorpayOrderModel.save();
 		return orderData;
 	} catch (err) {
 		return null;
 	}
 }
 exports.CreateOrder = catchAsync(async (req, res, next) => {
-	const schoolId = req.body.school_id;
+	const assetId = req.body.assetId;
 	const instance = new Razorpay({
 		key_id: process.env.key_id,
 		key_secret: process.env.key_secret,
 	});
-	const { amount, count } = await amountWithGST(schoolId);
 	const options = {
-		amount: amount * 100,
+		amount: req.body.amount,
 		currency: req.body.currency ? req.body.currency : 'INR',
 		receipt: crypto.randomBytes(10).toString('hex'),
 	};
@@ -61,12 +61,10 @@ exports.CreateOrder = catchAsync(async (req, res, next) => {
 		if (error) {
 			return res.status(500).json(error);
 		}
-		const orderData = await createOrder(order, count, schoolId);
-		const orderDetails = JSON.parse(JSON.stringify(orderData));
-		await SchoolModel.findByIdAndUpdate(schoolId, {
-			$push: { 'payment.orders': orderData._id },
-		});
-		res.status(200).json({ data: orderDetails });
+		order.assetId=assetId
+		await OrderModel.create(order)
+		
+		res.status(200).json({ data: order });
 	});
 });
 
@@ -100,7 +98,7 @@ exports.CreateOrderMany = catchAsync(async (req, res, next) => {
 });
 
 exports.VerifyOrder = catchAsync(async (req, res, next) => {
-	const { order_id, payment_id, signature, school_id } = req.body;
+	const { order_id, payment_id, signature, assetId } = req.body;
 	const sign = `${order_id}|${payment_id}`;
 	const expectedSign = crypto
 		.createHmac('sha256', process.env.key_secret)
@@ -111,15 +109,14 @@ exports.VerifyOrder = catchAsync(async (req, res, next) => {
 			{
 				$set: {
 					amount_paid: '$amount',
-					amount_due: 0,
 					status: 'Paid',
 					payment_date: Date(),
 					razorpay_payment_id: payment_id,
 				},
 			},
 		]);
-		if (req.body.school_id) {
-			await SchoolModel.findByIdAndUpdate(school_id, {
+		if (req.body.assetId) {
+			await OrderModel.findByIdAndUpdate(assetId, {
 				'payment.lastPayDone': Date(),
 			});
 		}

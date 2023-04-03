@@ -9,7 +9,7 @@ const ErrorResponse = require('../utils/errorResponse');
 
 // keep strings in lowercase
 const allowedRoutes = [
-	'/api/v1/otp'
+	'/api/v1/otp', '/api/auth/login', '/api/auth/signup'
 ];
 
 const protect = catchAsync(async (req, res, next) => {
@@ -38,14 +38,9 @@ const protect = catchAsync(async (req, res, next) => {
 	const selOpts = {
 		profileStatus: 1,
 		role: 1,
-		profile_type: 1,
-		secondary_profile_type: 1,
 		username: 1,
 		mobile: 1,
-		school_id: 1,
-		branch_id: 1,
-		primary_class: 1,
-		primary_section: 1,
+		email: 1,
 		name: 1,
 	};
 
