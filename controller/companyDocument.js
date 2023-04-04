@@ -483,4 +483,93 @@ const fetchDataWithCin = async function (req, res) {
     }
 
 }
-module.exports = { fetchDataWithCin }
+
+const gstVerify = async function (req, res) {
+    try {
+        let { gstNumber, companyName } = req.body
+        let options = {
+            method: 'POST',
+            url: `https://sm-gst.scoreme.in/gst//external/gstinbasicinfo`,
+            headers: {
+                clientId: process.env.SCOREMECLIENTID,
+                clientSecret: process.env.SCOREMECLIENTSECRET
+            },
+            data: {
+                gstin: [`${gstNumber}`]
+            }
+        }
+        axios.request(options).then(function (responseFromAxios) {
+            let result = responseFromAxios.data.data.tradeName
+            let check = result.includes(companyName)
+            if (check) {
+                let apiResponse = response.generate(constants.SUCCESS, messages.GST.SUCCESS, constants.HTTP_SUCCESS, responseFromAxios.data);
+                res.status(200).send(apiResponse)
+            } else {
+                let apiResponse = response.generate(constants.ERROR, messages.GST.NOTMATCH, constants.HTTP_NOT_FOUND, responseFromAxios.data,);
+                res.status(400).send(apiResponse);
+            }
+        }).catch(function (err) {
+            let apiResponse = response.generate(
+                constants.ERROR,
+                messages.GST.FAILURE,
+                constants.HTTP_SERVER_ERROR,
+                err
+            );
+            res.status(400).send(apiResponse);
+        });
+    } catch (err) {
+        let apiResponse = response.generate(
+            constants.ERROR,
+            messages.GST.SERVERERROR,
+            constants.HTTP_SERVER_ERROR,
+            err
+        );
+        res.status(500).send(apiResponse);
+    }
+}
+
+let udyamDetails = async function (req, res) {
+    try {
+        let udyamNumber = req.body.udyamNumber
+        let companyName = req.body.companyName
+        let optionsForudyam = {
+            method: 'POST',
+            url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/udyamregistrations`,
+            headers: {
+                Authorization: process.env.AUTHTOKEN
+            },
+            data: { essentials: { udyamNumber: `${udyamNumber}` } }
+        };
+        axios.request(optionsForudyam).then(function (responsefromUdyam) {
+            let name = responsefromUdyam.data.result.generalInfo.nameOfEnterprise
+            let check = name.includes(companyName)
+            if (check) {
+                let obj = { valid: true }
+                let apiResponse = response.generate(constants.SUCCESS, messages.udhyam.SUCCESS, constants.HTTP_SUCCESS, obj);
+                res.status(200).send(apiResponse);
+            } else {
+                let obj = { valid: false }
+                let apiResponse = response.generate(constants.ERROR, messages.udhyam.notFetch, constants.HTTP_SUCCESS, obj);
+                res.status(400).send(apiResponse);
+            }
+        }).catch(function (err) {
+            let apiResponse = response.generate(
+                constants.ERROR,
+                messages.udhyam.FAILURE,
+                constants.HTTP_SERVER_ERROR,
+                err
+            );
+            res.status(400).send(apiResponse);
+        });
+    } catch (err) {
+        let apiResponse = response.generate(
+            constants.ERROR,
+            messages.udhyam.serverError,
+            constants.HTTP_SERVER_ERROR,
+            err
+        );
+        res.status(500).send(apiResponse);
+    }
+}
+
+module.exports = { fetchDataWithCin, gstVerify, udyamDetails }

@@ -27,184 +27,6 @@ const assetRegister = async (req, res) => {
     }
 }
 
-// const updateAsset = async (req, res) => {
-//     try {
-//         let assetId = req.query.registerId;
-//         let data = req.body
-
-//         let findAsset = await assetModel.findOne({ _id: assetId }).lean();
-//         // updatedAsset = updatedAsset.toObject();
-//         if(data.isAssetInfo){
-//             let updatedAsset = await assetModel.findByIdAndUpdate(assetId, data, { upsert: true, new: true },)
-//             let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-//             res.status(200).send(apiResponse);
-//             return;
-//         }
-//         if (findAsset.assetType == "plantAndMachinary") {
-//             if (findAsset.msmeStatus == "Rejected") {
-//                 findAsset.msmeStatus = "Pending Verification";
-//                 findAsset.adminStatus = "Updated By MSME";
-//                 if (data.purchaseBill.ipfsHash != "") {
-//                     findAsset.purchaseBill.status = "Updated By MSME";
-//                     findAsset.purchaseBill["message"] = data.purchaseBill.message??findAsset.purchaseBill.message
-//                     findAsset.purchaseBill["isVerified"] = data.purchaseBill.isVerified??findAsset.purchaseBill.isVerified
-//                     findAsset.purchaseBill.name = req.body.purchaseBill.name
-//                     findAsset.purchaseBill.url = req.body.purchaseBill.url
-//                     findAsset.purchaseBill.ipfsHash = req.body.purchaseBill.ipfsHash
-//                 }
-//                 if (data.taxInvoice.ipfsHash != "") {
-//                     findAsset.taxInvoice.status = "Updated By MSME";
-//                     findAsset.taxInvoice["message"] = data.taxInvoice.message??findAsset.taxInvoice.message
-//                     findAsset.taxInvoice["isVerified"] = data.taxInvoice.isVerified??findAsset.taxInvoice.isVerified
-//                     findAsset.taxInvoice.name = req.body.taxInvoice.name
-//                     findAsset.taxInvoice.url = req.body.taxInvoice.url
-//                     findAsset.taxInvoice.ipfsHash = req.body.taxInvoice.ipfsHash
-//                 }
-//                 if (data.insuranceDoc.ipfsHash != "") {
-//                     findAsset.insuranceDoc.status = "Updated By MSME";
-//                     findAsset.insuranceDoc["message"] = data.insuranceDoc.message??findAsset.insuranceDoc.message
-//                     findAsset.insuranceDoc["isVerified"] = data.insuranceDoc.isVerified??findAsset.insuranceDoc.isVerified
-//                     findAsset.insuranceDoc.name = req.body.insuranceDoc.name
-//                     findAsset.insuranceDoc.url = req.body.insuranceDoc.url
-//                     findAsset.insuranceDoc.ipfsHash = req.body.insuranceDoc.ipfsHash
-//                 }
-//                 if (data.assetInvoice.ipfsHash != "") {
-//                     findAsset.assetInvoice.status = "Updated By MSME";
-//                     findAsset.assetInvoice["message"] = data.assetInvoice.message??findAsset.assetInvoice.message
-//                     findAsset.assetInvoice["isVerified"] = data.assetInvoice.isVerified??findAsset.assetInvoice.isVerified
-//                     findAsset.assetInvoice.name = req.body.assetInvoice.name
-//                     findAsset.assetInvoice.url = req.body.assetInvoice.url
-//                     findAsset.assetInvoice.ipfsHash = req.body.assetInvoice.ipfsHash
-//                 }
-//                 if (data.technicalSpecifications.ipfsHash != "") {
-//                     findAsset.technicalSpecifications.status = "Updated By MSME";
-//                     findAsset.technicalSpecifications["message"] = data.technicalSpecifications.message??findAsset.technicalSpecifications.message
-//                     findAsset.technicalSpecifications["isVerified"] = data.technicalSpecifications.isVerified??findAsset.technicalSpecifications.isVerified
-//                     findAsset.technicalSpecifications.name = req.body.technicalSpecifications.name
-//                     findAsset.technicalSpecifications.url = req.body.technicalSpecifications.url
-//                     findAsset.technicalSpecifications.ipfsHash = req.body.technicalSpecifications.ipfsHash
-//                 }
-//                 if (data.chargesPending.ipfsHash != "") {
-//                     findAsset.chargesPending.status = "Updated By MSME";
-//                     findAsset.chargesPending["message"] = data.chargesPending.message??findAsset.chargesPending.message
-//                     findAsset.chargesPending["isVerified"] = data.chargesPending.isVerified??findAsset.chargesPending.isVerified
-//                     findAsset.chargesPending.name = req.body.chargesPending.name
-//                     findAsset.chargesPending.url = req.body.chargesPending.url
-//                     findAsset.chargesPending.ipfsHash = req.body.chargesPending.ipfsHash
-//                 }
-//                 if (data.oldValuationReport.ipfsHash != "") {
-//                     findAsset.oldValuationReport.status = "Updated By MSME";
-//                     findAsset.oldValuationReport["message"] = data.oldValuationReport.message??findAsset.oldValuationReport.message
-//                     findAsset.oldValuationReport["isVerified"] = data.oldValuationReport.isVerified??findAsset.oldValuationReport.isVerified
-//                     findAsset.oldValuationReport.name = req.body.oldValuationReport.name
-//                     findAsset.oldValuationReport.url = req.body.oldValuationReport.url
-//                     findAsset.oldValuationReport.ipfsHash = req.body.oldValuationReport.ipfsHash
-//                 }
-//                 if (data.fixedAssetRegister.ipfsHash != "") {
-//                     findAsset.fixedAssetRegister.status = "Updated By MSME";
-//                     findAsset.fixedAssetRegister["message"] = data.fixedAssetRegister.message??findAsset.fixedAssetRegister.message
-//                     findAsset.fixedAssetRegister["isVerified"] = data.fixedAssetRegister.isVerified??findAsset.fixedAssetRegister.isVerified
-//                     findAsset.fixedAssetRegister.name = req.body.fixedAssetRegister.name
-//                     findAsset.fixedAssetRegister.url = req.body.fixedAssetRegister.url
-//                     findAsset.fixedAssetRegister.ipfsHash = req.body.fixedAssetRegister.ipfsHash
-//                 }
-//                 let updatedAsset = await assetModel.findByIdAndUpdate(assetId, findAsset , { upsert: true, new: true },)
-//                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-//                 res.status(200).send(apiResponse);
-//             } else {
-//                 let updatedAsset = await assetModel.findByIdAndUpdate(assetId, data , { upsert: true, new: true },)
-//                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-//                 res.status(200).send(apiResponse);
-//             }
-
-//         } else if (findAsset.assetType == "realEstate") {
-//             if (findAsset.msmeStatus == "Rejected") {
-//                 findAsset.msmeStatus = "Pending Verification";
-//                 findAsset.adminStatus = "Updated By MSME"
-//                 if (data.propertyTax.ipfsHash != "") {
-//                     findAsset.propertyTax.status = "Updated By MSME";
-//                     findAsset.propertyTax["message"] = data.propertyTax.message??findAsset.propertyTax.message
-//                     findAsset.propertyTax["isVerified"] = data.propertyTax.isVerified??findAsset.propertyTax.isVerified
-//                     findAsset.propertyTax.name = req.body.propertyTax.name
-//                     findAsset.propertyTax.url = req.body.propertyTax.url
-//                     findAsset.propertyTax.ipfsHash = req.body.propertyTax.ipfsHash
-
-//                 }
-//                 if (data.insuranceDoc.ipfsHash != "") {
-//                     findAsset.insuranceDoc.status = "Updated By MSME";
-//                     findAsset.insuranceDoc["message"] = data.insuranceDoc.message??findAsset.insuranceDoc.message
-//                     findAsset.insuranceDoc["isVerified"] = data.insuranceDoc.isVerified??findAsset.insuranceDoc.isVerified
-//                     findAsset.insuranceDoc.name = req.body.insuranceDoc.name
-//                     findAsset.insuranceDoc.url = req.body.insuranceDoc.url
-//                     findAsset.insuranceDoc.ipfsHash = req.body.insuranceDoc.ipfsHash
-//                 }
-//                 if (data.powerOfAttorney.ipfsHash != "") {
-//                     findAsset.powerOfAttorney.status = "Updated By MSME";
-//                     findAsset.powerOfAttorney["message"] = data.powerOfAttorney.message ?? findAsset.powerOfAttorney.message
-//                     findAsset.powerOfAttorney["isVerified"] = data.powerOfAttorney.isVerified ?? findAsset.powerOfAttorney.isVerified
-//                     findAsset.powerOfAttorney.name = req.body.powerOfAttorney.name
-//                     findAsset.powerOfAttorney.url = req.body.powerOfAttorney.url
-//                     findAsset.powerOfAttorney.ipfsHash = req.body.powerOfAttorney.ipfsHash
-//                 }
-//                 if (data.invoice.ipfsHash != "") {
-//                     findAsset.invoice.status = "Updated By MSME";
-//                     findAsset.invoice["message"] = data.invoice.message??findAsset.invoice.message
-//                     findAsset.invoice["isVerified"] = data.invoice.isVerified??findAsset.invoice.isVerified
-//                     findAsset.invoice.name = req.body.invoice.name
-//                     findAsset.invoice.url = req.body.invoice.url
-//                     findAsset.invoice.ipfsHash = req.body.invoice.ipfsHash
-//                 }
-//                 if (data.clearanceCertificate.ipfsHash != "") {
-//                     findAsset.clearanceCertificate.status = "Updated By MSME";
-//                     findAsset.clearanceCertificate["message"] = data.clearanceCertificate.message??findAsset.clearanceCertificate.message
-//                     findAsset.clearanceCertificate["isVerified"] = data.clearanceCertificate.isVerified??findAsset.clearanceCertificate.isVerified
-//                     findAsset.clearanceCertificate.name = req.body.clearanceCertificate.name
-//                     findAsset.clearanceCertificate.url = req.body.clearanceCertificate.url
-//                     findAsset.clearanceCertificate.ipfsHash = req.body.clearanceCertificate.ipfsHash
-//                 }
-//                 if (data.fixedAssetRegister.ipfsHash != "") {
-//                     findAsset.fixedAssetRegister.status = "Updated By MSME";
-//                     findAsset.fixedAssetRegister["message"] = data.fixedAssetRegister.message??findAsset.fixedAssetRegister.message
-//                     findAsset.fixedAssetRegister["isVerified"] = data.fixedAssetRegister.isVerified??findAsset.fixedAssetRegister.isVerified
-//                     findAsset.fixedAssetRegister.name = req.body.fixedAssetRegister.name
-//                     findAsset.fixedAssetRegister.url = req.body.fixedAssetRegister.url
-//                     findAsset.fixedAssetRegister.ipfsHash = req.body.fixedAssetRegister.ipfsHash
-//                 }
-//                 if (data.oldValuationReport.ipfsHash != "") {
-//                     findAsset.oldValuationReport.status = "Updated By MSME";
-//                     findAsset.oldValuationReport["message"] = data.oldValuationReport.message??findAsset.oldValuationReport.message
-//                     findAsset.oldValuationReport["isVerified"] = data.oldValuationReport.isVerified??findAsset.oldValuationReport.isVerified
-//                     findAsset.oldValuationReport.name = req.body.oldValuationReport.name
-//                     findAsset.oldValuationReport.url = req.body.oldValuationReport.url
-//                     findAsset.oldValuationReport.ipfsHash = req.body.oldValuationReport.ipfsHash
-//                 }
-//                 if (data.pendingCharges.ipfsHash != "") {
-//                     findAsset.pendingCharges.status = "Updated By MSME";
-//                     findAsset.pendingCharges["message"] = data.pendingCharges.message??findAsset.pendingCharges.message
-//                     findAsset.pendingCharges["isVerified"] = data.pendingCharges.isVerified??findAsset.pendingCharges.isVerified
-//                     findAsset.pendingCharges.name = req.body.pendingCharges.name
-//                     findAsset.pendingCharges.url = req.body.pendingCharges.url
-//                     findAsset.pendingCharges.ipfsHash = req.body.pendingCharges.ipfsHash
-//                 }
-//                 let updatedAsset = await assetModel.findByIdAndUpdate(assetId, findAsset, { upsert: true, new: true }).lean();
-//                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-//                 res.status(200).send(apiResponse);
-//             } else {
-//                 let updatedAsset = await assetModel.findByIdAndUpdate(assetId, data, { upsert: true, new: true }).lean();
-//                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, updatedAsset);
-//                 res.status(200).send(apiResponse);
-//             }
-//         }
-//     } catch (err) {
-//         let apiResponse = response.generate(
-//             constants.ERROR,
-//             messages.asset.FAILURE,
-//             constants.HTTP_SERVER_ERROR,
-//             err
-//         );
-//         res.status(500).send(apiResponse);
-//     }
-// }
 
 const updateAsset = async (req, res) => {
     try {
@@ -247,6 +69,8 @@ const updateAsset = async (req, res) => {
         res.status(500).send(apiResponse);
     }
 };
+
+
 const getAllAssetList = async (req, res) => {
     try {
         const { email } = req.params;
@@ -264,6 +88,8 @@ const getAllAssetList = async (req, res) => {
         res.status(500).send(apiResponse);
     }
 }
+
+
 const getAllAssetListByQuery = async (req, res) => {
     try {
         const features = new APIFeatures(assetModel.find({}), req.body)
@@ -286,6 +112,7 @@ const getAllAssetListByQuery = async (req, res) => {
     }
 }
 
+
 const getAssetListById = async (req, res) => {
     try {
         let getAssetData = await assetModel.findById(req.query.registerId)
@@ -297,6 +124,7 @@ const getAssetListById = async (req, res) => {
     }
 }
 
+
 const getPaidAsset = async function (req, res) {
     try {
         let asset = await assetModel.find({ isPayment: true })
@@ -307,6 +135,7 @@ const getPaidAsset = async function (req, res) {
         res.status(500).send(apiResponse);
     }
 }
+
 
 const verify = async function (req, res) {
     try {

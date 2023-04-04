@@ -8,10 +8,9 @@ const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
 const userModel = require("../model/user")
 const assetModel = require("../model/asset")
-let objTemplate = require("../contract.json")
 let { jsPDF } = require("jspdf")
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_API_KEY || "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");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY );
 
 const pdf = require('html-pdf');
 var html_to_pdf = require('html-pdf-node');
