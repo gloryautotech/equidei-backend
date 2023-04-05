@@ -1,8 +1,6 @@
 const express = require("express")
-const { udyamDetails } = require('../controller/udhyam')
-const { fetchDataWithCin } = require('../controller/cinFetch')
+const { fetchDataWithCin ,gstVerify,udyamDetails} = require('../controller/companyDocument')
 const { bankVerify, allBankList, panVerify, aadharVerify,eSignature,eStamping,callbackUrl } = require("../controller/documentVerify")
-const { gstVerify } = require("../controller/gstVerify")
 const { pinataPinning, fetchIpfsFile, approve } = require('../controller/pinata')
 const router = express.Router()
 
