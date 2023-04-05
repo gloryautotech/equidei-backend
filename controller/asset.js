@@ -4,8 +4,12 @@ const APIFeatures = require('../utils/apiFeatures');
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
 
-
-
+/*
+Controller function to register a new asset in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const assetRegister = async (req, res) => {
     try {
         let data = req.body;
@@ -27,7 +31,12 @@ const assetRegister = async (req, res) => {
     }
 }
 
-
+/*
+Controller function to update an existing asset in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const updateAsset = async (req, res) => {
     try {
         const assetId = req.query.registerId;
@@ -70,7 +79,12 @@ const updateAsset = async (req, res) => {
     }
 };
 
-
+/*
+Controller function to fetch  all assets in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const getAllAssetList = async (req, res) => {
     try {
         const { email } = req.params;
@@ -89,7 +103,12 @@ const getAllAssetList = async (req, res) => {
     }
 }
 
-
+/*
+Controller function to fetch all asset list in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const getAllAssetListByQuery = async (req, res) => {
     try {
         const features = new APIFeatures(assetModel.find({}), req.body)
@@ -112,7 +131,12 @@ const getAllAssetListByQuery = async (req, res) => {
     }
 }
 
-
+/*
+Controller function to fetch asset by id in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const getAssetListById = async (req, res) => {
     try {
         let getAssetData = await assetModel.findById(req.query.registerId)
@@ -124,7 +148,11 @@ const getAssetListById = async (req, res) => {
     }
 }
 
-
+/*
+Controller function to fetch all paid asset list asset in the system.
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const getPaidAsset = async function (req, res) {
     try {
         let asset = await assetModel.find({ isPayment: true })
@@ -136,7 +164,12 @@ const getPaidAsset = async function (req, res) {
     }
 }
 
-
+/*
+Controller function to verify the all paid asset in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const verify = async function (req, res) {
     try {
         let id = req.body.assetId

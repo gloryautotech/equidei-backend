@@ -10,6 +10,12 @@ const regex = new RegExp(
   /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
 );
 
+/*
+Controller function to create open money payment token for payment getway.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let paymentTokenCreate = async function (req, res) {
   try {
 
@@ -84,6 +90,12 @@ let paymentTokenCreate = async function (req, res) {
   }
 }
 
+/*
+Controller function to get payment status for transction.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const getPaymentStatus = async function (req, res) {
   try {
     let { button, payment_id, payment_token_id, status, assetId } = req.body
@@ -102,13 +114,13 @@ const getPaymentStatus = async function (req, res) {
         let data = responseFromAxios.data
         let message;
         if (data.payment_token.status == "paid") {
-          await assetModel.findOneAndUpdate({ _id: assetId }, { isPayment: true, msmeStatus: "Pending Verification" })
+          await assetModel.findOneAndUpdate({ _id: assetId }, { isPayment: true, msmeStatus: "Pending Verification", })
           message = "payment successfully done"
-          await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, message: message }, { new: true })
+          await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, payment_token_id: payment_token_id, message: message }, { new: true })
           let apiResponse = response.generate(constants.SUCCESS, messages.payment.GET, constants.HTTP_SUCCESS, data);
           res.status(200).send(apiResponse)
         } else {
-          await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status }, { new: true })
+          await transactionHistroy.findOneAndUpdate({ mtx: data.payment_token.mtx }, { status: data.status, paymentStatus: data.payment_token.status, payment_token_id: payment_token_id }, { new: true })
           let apiResponse = response.generate(constants.SUCCESS, messages.payment.GET, constants.HTTP_SUCCESS, responseFromAxios.data);
           res.status(200).send(apiResponse)
         }
@@ -124,6 +136,12 @@ const getPaymentStatus = async function (req, res) {
 }
 
 
+/*
+Controller function to get all payment histroy.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const history = async function (req, res) {
   try {
     let data = await transactionHistroy.find().populate('userId', "email")

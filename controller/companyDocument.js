@@ -2,6 +2,12 @@ let axios = require("axios").default;
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
 
+/*
+Controller function to fetch the data from cin number for the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const fetchDataWithCin = async function (req, res) {
     try {
 
@@ -484,6 +490,12 @@ const fetchDataWithCin = async function (req, res) {
 
 }
 
+/*
+Controller function to verify gst number for the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const gstVerify = async function (req, res) {
     try {
         let { gstNumber, companyName } = req.body
@@ -528,6 +540,12 @@ const gstVerify = async function (req, res) {
     }
 }
 
+/*
+Controller function to verify udhayam number for the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let udyamDetails = async function (req, res) {
     try {
         let udyamNumber = req.body.udyamNumber

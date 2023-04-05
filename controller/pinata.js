@@ -15,6 +15,12 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY );
 const pdf = require('html-pdf');
 var html_to_pdf = require('html-pdf-node');
 
+/*
+Controller function to pining file in pinata ipfs.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const pinataPinning = async function (req, res) {
     try {
         let { email } = req.body
@@ -61,8 +67,12 @@ const pinataPinning = async function (req, res) {
     }
 }
 
-
-
+/*
+Controller function to download file from ipfs.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const fetchIpfsFile = async function (req, res) {
     try {
         let cid = req.params.cid
@@ -97,7 +107,12 @@ const fetchIpfsFile = async function (req, res) {
         res.status(500).send(apiResponse);
     }
 }
-
+/*
+Controller function to approve the document.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const approve = async function (req, res) {
     try {
         const doc = new jsPDF();

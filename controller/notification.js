@@ -6,6 +6,12 @@ const notificationModel = require('../model/notification-logger');
 const userModel = require('../model/user');
 const mongoose = require("mongoose");
 
+/*
+Controller function to get all notification.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.getAll = async (req, res, next) => {
     try {
 
@@ -87,6 +93,12 @@ exports.getAll = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to delete a notification from system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.deleteNotification = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -119,6 +131,12 @@ exports.deleteNotification = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to alertNotification to msme.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.alertNotification = async (req, res, next) => {
     try {
 
@@ -163,7 +181,12 @@ exports.alertNotification = async (req, res, next) => {
         });
     }
 }
-
+/*
+Controller function to create notification for msme.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 function createNotificationData(data) {
 
     let dataModel = new notificationModel({

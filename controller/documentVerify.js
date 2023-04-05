@@ -8,6 +8,12 @@ const bankModel = require("../model/bankName")
 const assetModel = require("../model/asset")
 const contentDisposition = require("content-disposition")
 
+/*
+Controller function to verify pan document kyc.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const panVerify = async function (req, res) {
     try {
         // upload file
@@ -104,6 +110,12 @@ const panVerify = async function (req, res) {
     }
 }
 
+/*
+Controller function to verify aadhar document kyc.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const aadharVerify = async function (req, res) {
     try {
         // upload file
@@ -202,6 +214,12 @@ const aadharVerify = async function (req, res) {
 
 }
 
+/*
+Controller function to get all bank name list.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let allBankList = async function (req, res) {
     try {
         let data = await bankModel.find().select({ name: 1, _id: 0 })
@@ -213,6 +231,12 @@ let allBankList = async function (req, res) {
     }
 }
 
+/*
+Controller function to verify bank statement document.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let bankVerify = async function (req, res) {
     try {
         let uploadResponse;
@@ -283,7 +307,12 @@ let bankVerify = async function (req, res) {
     }
 }
 
-
+/*
+Controller function to eSignature for the document.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const eSignature = async function (req, res) {
     try {
         let assetId = req.params.assetId;
@@ -341,7 +370,12 @@ const eSignature = async function (req, res) {
     }
 }
 
-
+/*
+Controller function to eStamping of the document.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const eStamping = async function (req, res) {
     try {
         // upload file

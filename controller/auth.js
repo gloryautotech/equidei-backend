@@ -23,6 +23,12 @@ const regex = new RegExp(
     /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
 );
 
+/*
+Controller function to register a new msme in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let registration = async (req, res) => {
     try {
         let isTrue = regex.test(req.body.userId);
@@ -88,7 +94,12 @@ let registration = async (req, res) => {
         res.status(500).send(apiResponse);
     }
 };
-
+/*
+Controller function to update company details in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let companyDetails = async (req, res) => {
     try {
         let profileCompletion = 30;
@@ -508,6 +519,12 @@ let companyDetails = async (req, res) => {
     }
 };
 
+/*
+Controller function to update personal kyc in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let personalKYC = async (req, res) => {
     try {
         let isTrue = regex.test(req.body.userId);
@@ -632,6 +649,12 @@ let personalKYC = async (req, res) => {
     }
 };
 
+/*
+Controller function to update business kyc in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let businessKYC = async (req, res) => {
     try {
         let isTrue = regex.test(req.body.userId);
@@ -894,6 +917,12 @@ let businessKYC = async (req, res) => {
     }
 };
 
+/*
+Controller function for login.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let login = async (req, res) => {
     try {
         const { password } = req.body;
@@ -970,13 +999,18 @@ let login = async (req, res) => {
     }
 };
 
+/*
+Controller function for send otp.
+@param {object} req - The HTTP request object
+*/
 const sendMessage = async (email, token) => {
     try {
+        let otp = Math.floor(1000 + Math.random() * 9000);
         const msg = {
             to: email, // Change to your recipient
-            from: "kyalharshit@gmail.com", // Change to your verified sender
+            from: "joincensorblack@gmail.com", // Change to your verified sender
             subject: "OTP Form EQUIDEI",
-            text: `your OTP is ${process.env.OTP}`,
+            text: `your OTP is ${otp}`,
         };
         sgMail
             .send(msg)
@@ -991,6 +1025,12 @@ const sendMessage = async (email, token) => {
     }
 };
 
+/*
+Controller function to change the old password via email in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let forgotPassword = async (req, res) => {
     try {
         let userId = req.body.userId;
@@ -1024,6 +1064,12 @@ let forgotPassword = async (req, res) => {
     }
 };
 
+/*
+Controller function to change the old know password in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let resetPasswordKnownPass = async (req, res) => {
     try {
         let isTrue = regex.test(req.body.userId);
@@ -1061,7 +1107,12 @@ let resetPasswordKnownPass = async (req, res) => {
         res.status(500).send({ Error: err.message });
     }
 };
-
+/*
+Controller function to change the old password via email in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let resetPassword = async (req, res, next) => {
     try {
         let newPassword = req.body.newPassword;
@@ -1108,6 +1159,12 @@ let resetPassword = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to send otp for verify mobile number and email in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let sendOTP = async (req, res, next) => {
     try {
         let isTrue = regex.test(req.body.userId);
@@ -1130,7 +1187,6 @@ let sendOTP = async (req, res, next) => {
             obtainUser = buildResponse(obtainUser);
         if (isTrue) {
             let otp = Math.floor(1000 + Math.random() * 9000);
-            console.log(otp)
             const msg = {
                 to: req.body.userId, // Change to your recipient
                 from: "joincensorblack@gmail.com", // Change to your verified sender
@@ -1192,6 +1248,12 @@ let sendOTP = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to verify otp in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let verifyOTP = async (req, res, next) => {
     try {
         let apiResponse;
@@ -1276,6 +1338,12 @@ let verifyOTP = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to get user by id from the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let getById = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -1322,6 +1390,12 @@ let getById = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to validate ifsc number in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let ifscValidation = async (req, res, next) => {
     try {
         let apiResponse;
@@ -1364,6 +1438,12 @@ let ifscValidation = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to validate zip code number in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let zipValidation = async (req, res, next) => {
     try {
         let apiResponse;
@@ -1502,7 +1582,12 @@ let panValidation = async (req, res, next) => {
 //         }
 //     }
 // };
-
+/*
+Controller function to account of MSME in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let accountActivation = async (req, res, next) => {
     try {
         const id = req.body.userId;
@@ -1580,7 +1665,12 @@ let accountActivation = async (req, res, next) => {
         });
     }
 };
-
+/*
+Controller function to create notification in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 function createNotificationData(data) {
 
     let dataModel = new notificationModel({
@@ -1593,7 +1683,12 @@ function createNotificationData(data) {
 
     return dataModel;
 }
-
+/*
+Controller function to valid email on not for the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let checkEmail = async (req, res, next) => {
     try {
         let apiResponse;
@@ -1641,6 +1736,12 @@ let checkEmail = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to update existing user by id in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let UserUpdateById = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -1684,6 +1785,12 @@ let UserUpdateById = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to delete a existing user in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let DeleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -1719,7 +1826,12 @@ let DeleteUser = async (req, res, next) => {
         });
     }
 };
-
+/*
+Controller function to generate JWT token in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 function jwtToken(userId) {
     let token = jwt.sign(
         {

@@ -7,7 +7,12 @@ const userModel = require('../model/user');
 const moment = require('moment');
 const notificationModel = require("../model/notification-logger");
 
-
+/*
+Controller function to get all data from userlist model.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.getAll = async (req, res, next) => {
     try {
         const features = new APIFeatures(userListModel.find({}), req.query)
@@ -28,6 +33,12 @@ exports.getAll = async (req, res, next) => {
     }
 };
 
+/*
+Controller function to filter data from userlist model.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.filterData = async (req, res, next) => {
     try {
         const features = new APIFeatures(userListModel.find({}), req.body)
@@ -47,6 +58,13 @@ exports.filterData = async (req, res, next) => {
         });
     }
 };
+
+/*
+Controller function to get user data by id from userlist model.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.getUserById = async (req, res, next) => {
     try {
         const userData = await userModel.findOne({ _id: req.params.id }).select('-__v -_id').lean();
@@ -65,6 +83,13 @@ exports.getUserById = async (req, res, next) => {
         });
     }
 };
+
+/*
+Controller function to verify user document in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.verify = async (req, res, next) => {
     try {
         let apiResponse;
@@ -160,7 +185,12 @@ exports.verify = async (req, res, next) => {
         });
     }
 };
-
+/*
+Controller function to create Notification.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 function createNotificationData(data) {
 
     let dataModel = new notificationModel({
@@ -175,6 +205,12 @@ function createNotificationData(data) {
     return dataModel;
 }
 
+/*
+Controller function to check user document upload or not in the system.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 exports.checkUncheckDoc = async (req, res, next) => {
     try {
         let apiResponse;
