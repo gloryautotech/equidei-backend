@@ -1,8 +1,5 @@
 const jwt = require('jsonwebtoken');
-
 const UserModel = require('../model/user');
-
-const redisClient = require('../config/redisClient');
 
 const catchAsync = require('../utils/catchAsync');
 const ErrorResponse = require('../utils/errorResponse');

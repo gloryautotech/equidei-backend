@@ -1724,7 +1724,7 @@ function jwtToken(userId) {
     let token = jwt.sign(
         {
             userId: userId,
-            expiresIn: "20m",
+            expiresIn: "2d",
         },
         process.env.JWT_SECRET
     );
