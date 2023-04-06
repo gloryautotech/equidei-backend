@@ -52,6 +52,7 @@ const panVerify = async function (req, res) {
             axios.request(optionsForIdentity).then(function (responseFromAxios) {
                 identityResponse = responseFromAxios.data
                 console.log(identityResponse)
+                res.send(identityResponse)
                 //     // autoRecognition
                 //     let autoRecognition;
                 //     const optionsForAutoRecognition = {
