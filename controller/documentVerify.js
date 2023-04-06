@@ -45,14 +45,15 @@ const panVerify = async function (req, res) {
                 data: {
                     type: req.body.panType,
                     email: "pramit@polynomial.ai",
-                    callbackUrl: "https://equidei.onrender.com/api/documentVerify/callbackUrl",
+                    callbackUrl: "https://equidei.onrender.com/api/document/callbackUrl",
                     images: uploadResponse
                 }
             };
             axios.request(optionsForIdentity).then(function (responseFromAxios) {
                 identityResponse = responseFromAxios.data
                 console.log(identityResponse)
-                res.send(identityResponse)
+                let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, identityResponse)
+                res.status(200).send(apiResponse)
                 //     // autoRecognition
                 //     let autoRecognition;
                 //     const optionsForAutoRecognition = {
@@ -410,7 +411,7 @@ const eStamping = async function (req, res) {
                         purposeOfStampDuty: "eStamp",
                         articleCode: "123",
                         pdfUrl: uploadResponse,
-                        callbackUrl: `https://equidei.onrender.com/api/documentVerify/callbackUrl?token=${token}`
+                        callbackUrl: `https://equidei.onrender.com/api/document/callbackUrl?token=${token}`
                     }
                 }
             }
@@ -457,7 +458,8 @@ Controller function to store result came from estamping api.
 let callbackUrl = async function (response) {
     console.log(response)
     let result;
-    res.send(response)
+    let apiResponse = response.generate(constants.SUCCESS, "callback response", constants.HTTP_SUCCESS, response)
+    res.status(200).send(apiResponse)
     // const authHeader = req.params.token;
 
     // if (!authHeader) return next(new ErrorResponse('Not authorized', 401));
