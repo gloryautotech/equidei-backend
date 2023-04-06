@@ -10,7 +10,12 @@ const CryptoJS = require('crypto-js');
 const FormData = require('form-data');
 var html_to_pdf = require('html-pdf-node');
 
-
+/*
+Controller function to create newrl wallet.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 const pinataUpload = async function (req, res) {
     try {
         // Extract assetId from request body
@@ -39,38 +44,38 @@ const pinataUpload = async function (req, res) {
                 let secretKey = user.uniqueId + process.env.IPFSHASHsECRETKEY
                 const pdfBuffer = await fs.readFile(filePath)
                 const byteArray = pdfBuffer.toJSON();
-                const jsonString = JSON.stringify({ filename: 'document.pdf', data: byteArray['data'] });
+                const jsonString = JSON.stringify({ filename: 'contract.pdf', data: byteArray['data'] });
                 const ciphertext = CryptoJS.AES.encrypt(jsonString, secretKey).toString();
 
                 // Write the encrypted file to disk and create a FormData object with the file
-                await fs.writeFile("document.txt", ciphertext)
-                const formData = new FormData();
-                const file = fs1.createReadStream('./document.txt');
-                formData.append('file', file)
+                // await fs.writeFile("document.txt", ciphertext)
+                // const formData = new FormData();
+                // const file = fs1.createReadStream('./document.txt');
+                // formData.append('file', file)
 
-                const metadata = JSON.stringify({
-                    name: "hash file"
-                });
-                formData.append('pinataMetadata', metadata);
+                // const metadata = JSON.stringify({
+                //     name: "hash file"
+                // });
+                // formData.append('pinataMetadata', metadata);
 
-                const options = JSON.stringify({
-                    cidVersion: 0,
-                })
-                formData.append('pinataOptions', options);
-                const resIpfs = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-                    maxBodyLength: "Infinity",
-                    headers: {
-                        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
-                        Authorization: process.env.JWT
-                    }
-                });
+                // const options = JSON.stringify({
+                //     cidVersion: 0,
+                // })
+                // formData.append('pinataOptions', options);
+                // const resIpfs = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+                //     maxBodyLength: "Infinity",
+                //     headers: {
+                //         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                //         Authorization: process.env.JWT
+                //     }
+                // });
                 await fs.unlink('./document.txt')
                 await fs.unlink(filePath)
                 let ipfsHash = resIpfs.data.IpfsHash
                 findAsset[key].ipfsHash = ipfsHash
                 let obj = {
                     name: key,
-                    ipfsHash: ipfsHash
+                    file: ciphertext
                 }
                 arrayForNewrl.push(obj)
             }

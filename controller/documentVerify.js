@@ -44,63 +44,61 @@ const panVerify = async function (req, res) {
                 },
                 data:JSON.stringify({
                     type: req.body.panType,
-                    email: "pramit@polynomial.ai",
-                    callbackUrl: "https://equidei.onrender.com/api/document/callbackUrl",
+                    email: req.body.email,
+                    callbackUrl: "https://gorgeous-salmiakki-a58236.netlify.app/#/profile/641db74968ab14c9b89523cf",
                     images: uploadResponse
                 })
             };
             axios.request(optionsForIdentity).then(function (responseFromAxios) {
                 identityResponse = responseFromAxios.data
                 console.log(identityResponse)
-                let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, identityResponse)
-                res.status(200).send(apiResponse)
-                //     // autoRecognition
-                //     let autoRecognition;
-                //     const optionsForAutoRecognition = {
-                //         method: 'POST',
-                //         url: 'https://preproduction.signzy.tech/api/v2/snoops',
-                //         headers: { "Content-Type": "application/json" },
-                //         data: {
-                //             service: "Identity",
-                //             itemId: `${identityResponse.id}`,
-                //             task: "autoRecognition",
-                //             accessToken: `${identityResponse.accessToken}`,
-                //             "essentials": {}
-                //         }
-                //     };
-                //     axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
-                //         autoRecognition = responseFromAxios.data
-                //         // varify
-                //         let optionsForVerify = {
-                //             method: 'POST',
-                //             url: ' https://preproduction.signzy.tech/api/v2/snoops',
-                //             data: {
-                //                 service: 'Identity',
-                //                 itemId: `${autoRecognition.itemId}`,
-                //                 accessToken: `${identityResponse.accessToken}`,
-                //                 task: 'verification',
-                //                 essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
-                //             }
-                //         };
-                //         axios.request(optionsForVerify).then(async function (responseFromAxios) {
-                //             let data = responseFromAxios.data
-                //             if (data.verified == true) {
-                //                 user.PAN.status = "Verified"
-                //                 await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-                //             } else {
-                //                 user.PAN.status = "Rejected"
-                //                 await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-                //             }
-                //             let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, data)
-                //             res.status(200).send(apiResponse)
-                //         }).catch(function (err) {
-                //             let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
-                //             res.status(400).send(apiResponse)
-                //         });
-                //     }).catch(function (err) {
-                //         let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
-                //         res.status(400).send(apiResponse)
-                //     });
+                    // autoRecognition
+                    let autoRecognition;
+                    const optionsForAutoRecognition = {
+                        method: 'POST',
+                        url: 'https://preproduction.signzy.tech/api/v2/snoops',
+                        headers: { "Content-Type": "application/json" },
+                        data: {
+                            service: "Identity",
+                            itemId: `${identityResponse.id}`,
+                            task: "autoRecognition",
+                            accessToken: `${identityResponse.accessToken}`,
+                            "essentials": {}
+                        }
+                    };
+                    axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
+                        autoRecognition = responseFromAxios.data
+                        // varify
+                        let optionsForVerify = {
+                            method: 'POST',
+                            url: ' https://preproduction.signzy.tech/api/v2/snoops',
+                            data: {
+                                service: 'Identity',
+                                itemId: `${autoRecognition.itemId}`,
+                                accessToken: `${identityResponse.accessToken}`,
+                                task: 'verification',
+                                essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
+                            }
+                        };
+                        axios.request(optionsForVerify).then(async function (responseFromAxios) {
+                            let data = responseFromAxios.data
+                            if (data.verified == true) {
+                                user.PAN.status = "Verified"
+                                await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
+                            } else {
+                                user.PAN.status = "Rejected"
+                                await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
+                            }
+                            let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, data)
+                            res.status(200).send(apiResponse)
+                        }).catch(function (err) {
+                            let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
+                            res.status(400).send(apiResponse)
+                        });
+                    }).catch(function (err) {
+                        let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
+                        res.status(400).send(apiResponse)
+                    });
             }).catch(function (err) {
                 let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
                 res.status(400).send(apiResponse)
@@ -147,8 +145,8 @@ const aadharVerify = async function (req, res) {
                 headers: { "Content-Type": "application/json", Authorization: process.env.AUTHTOKEN },
                 data: {
                     type: "aadhaar",
-                    email: "pramit@polynomial.ai",
-                    callbackUrl: "https://equidei.onrender.com/api/document/callbackUrl",
+                    email: req.body.email,
+                    callbackUrl: "https://gorgeous-salmiakki-a58236.netlify.app/#/profile/641db74968ab14c9b89523cf",
                     images: uploadResponse
                 }
             };
@@ -456,30 +454,27 @@ Controller function to store result came from estamping api.
 @returns {Promise<void>}
 */
 let callbackUrl = async function (data) {
-    console.log(data)
     let result;
-    let apiResponse = response.generate(constants.SUCCESS, "callback response", constants.HTTP_SUCCESS, response)
-    res.status(200).send(apiResponse)
-    // const authHeader = req.params.token;
+    const authHeader = req.params.token;
 
-    // if (!authHeader) return next(new ErrorResponse('Not authorized', 401));
+    if (!authHeader) return next(new ErrorResponse('Not authorized', 401));
 
-    // const token = authHeader.split(' ')[1];
+    const token = authHeader.split(' ')[1];
 
-    // if (!token) return next(new ErrorResponse('Not authorized', 401));
+    if (!token) return next(new ErrorResponse('Not authorized', 401));
 
-    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // if (!decoded) return next(new ErrorResponse('Invalid token', 401));
-    // let findUser = await userModel.findById(decoded.userId)
-    // if (!findUser) {
-    //     return next(new ErrorResponse('invalid token', 401));
-    // }
-    // if (response.result) {
-    //     result = response.result
-    // } else if (response.error) {
-    //     result = response.error
-    // }
-    // await assetModel.findOneAndUpdate({ estampingTransactionId: response.transactionId }, { estamping: result }, { new: true, upsert: true })
+    if (!decoded) return next(new ErrorResponse('Invalid token', 401));
+    let findUser = await userModel.findById(decoded.userId)
+    if (!findUser) {
+        return next(new ErrorResponse('invalid token', 401));
+    }
+    if (data.result) {
+        result = data.result
+    } else if (data.error) {
+        result = data.error
+    }
+    await assetModel.findOneAndUpdate({ estampingTransactionId: response.transactionId }, { estamping: result }, { new: true, upsert: true })
 }
 module.exports = { panVerify, aadharVerify, bankVerify, allBankList, eSignature, eStamping, callbackUrl }
