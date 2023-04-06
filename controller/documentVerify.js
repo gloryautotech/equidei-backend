@@ -7,6 +7,8 @@ const userModel = require('../model/user')
 const bankModel = require("../model/bankName")
 const assetModel = require("../model/asset")
 const contentDisposition = require("content-disposition")
+const ErrorResponse = require('../utils/errorResponse');
+const jwt = require('jsonwebtoken');
 
 /*
 Controller function to verify pan document kyc.
@@ -42,60 +44,61 @@ const panVerify = async function (req, res) {
                 },
                 data: {
                     type: req.body.panType,
-                    email: "ankur.rand@signzy.com",
-                    callbackUrl: "https://www.w3schools.com",
+                    email: "pramit@polynomial.ai",
+                    callbackUrl: "https://equidei.onrender.com/api/documentVerify/callbackUrl",
                     images: uploadResponse
                 }
             };
             axios.request(optionsForIdentity).then(function (responseFromAxios) {
                 identityResponse = responseFromAxios.data
-                // autoRecognition
-                let autoRecognition;
-                const optionsForAutoRecognition = {
-                    method: 'POST',
-                    url: 'https://preproduction.signzy.tech/api/v2/snoops',
-                    headers: { "Content-Type": "application/json" },
-                    data: {
-                        service: "Identity",
-                        itemId: `${identityResponse.id}`,
-                        task: "autoRecognition",
-                        accessToken: `${identityResponse.accessToken}`,
-                        "essentials": {}
-                    }
-                };
-                axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
-                    autoRecognition = responseFromAxios.data
-                    // varify
-                    let optionsForVerify = {
-                        method: 'POST',
-                        url: ' https://preproduction.signzy.tech/api/v2/snoops',
-                        data: {
-                            service: 'Identity',
-                            itemId: `${autoRecognition.itemId}`,
-                            accessToken: `${identityResponse.accessToken}`,
-                            task: 'verification',
-                            essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
-                        }
-                    };
-                    axios.request(optionsForVerify).then(async function (responseFromAxios) {
-                        let data = responseFromAxios.data
-                        if (data.verified == true) {
-                            user.PAN.status = "Verified"
-                            await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-                        } else {
-                            user.PAN.status = "Rejected"
-                            await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-                        }
-                        let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, data)
-                        res.status(200).send(apiResponse)
-                    }).catch(function (err) {
-                        let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
-                        res.status(400).send(apiResponse)
-                    });
-                }).catch(function (err) {
-                    let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
-                    res.status(400).send(apiResponse)
-                });
+                console.log(identityResponse)
+                //     // autoRecognition
+                //     let autoRecognition;
+                //     const optionsForAutoRecognition = {
+                //         method: 'POST',
+                //         url: 'https://preproduction.signzy.tech/api/v2/snoops',
+                //         headers: { "Content-Type": "application/json" },
+                //         data: {
+                //             service: "Identity",
+                //             itemId: `${identityResponse.id}`,
+                //             task: "autoRecognition",
+                //             accessToken: `${identityResponse.accessToken}`,
+                //             "essentials": {}
+                //         }
+                //     };
+                //     axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
+                //         autoRecognition = responseFromAxios.data
+                //         // varify
+                //         let optionsForVerify = {
+                //             method: 'POST',
+                //             url: ' https://preproduction.signzy.tech/api/v2/snoops',
+                //             data: {
+                //                 service: 'Identity',
+                //                 itemId: `${autoRecognition.itemId}`,
+                //                 accessToken: `${identityResponse.accessToken}`,
+                //                 task: 'verification',
+                //                 essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
+                //             }
+                //         };
+                //         axios.request(optionsForVerify).then(async function (responseFromAxios) {
+                //             let data = responseFromAxios.data
+                //             if (data.verified == true) {
+                //                 user.PAN.status = "Verified"
+                //                 await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
+                //             } else {
+                //                 user.PAN.status = "Rejected"
+                //                 await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
+                //             }
+                //             let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, data)
+                //             res.status(200).send(apiResponse)
+                //         }).catch(function (err) {
+                //             let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
+                //             res.status(400).send(apiResponse)
+                //         });
+                //     }).catch(function (err) {
+                //         let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
+                //         res.status(400).send(apiResponse)
+                //     });
             }).catch(function (err) {
                 let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
                 res.status(400).send(apiResponse)
@@ -389,6 +392,8 @@ const eStamping = async function (req, res) {
         };
         await axios.request(optionsForUpload).then(async function (responseFromUploadAPi) {
             let uploadResponse = responseFromUploadAPi.data.file.directURL;
+            let findAsset = await assetModel.findById(req.params.assetId)
+            let token = jwtToken(findAsset.userId)
             let optionsForEstamping = {
                 method: 'POST',
                 url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/estamping`,
@@ -404,12 +409,12 @@ const eStamping = async function (req, res) {
                         purposeOfStampDuty: "eStamp",
                         articleCode: "123",
                         pdfUrl: uploadResponse,
-                        callbackUrl: "https://equidei.onrender.com/api/documentVerify/callbackUrl"
+                        callbackUrl: `https://equidei.onrender.com/api/documentVerify/callbackUrl?token=${token}`
                     }
                 }
             }
             axios.request(optionsForEstamping).then(async (responseFromEsatmpingApi) => {
-                await assetModel.findByIdAndUpdate(req.params.assetId, { msmeStatus: "Added to Inventory", adminStatus: "Added to Inventory" }, { new: true })
+                await assetModel.findByIdAndUpdate(req.params.assetId, { msmeStatus: "Added to Inventory", adminStatus: "Added to Inventory", estampingTransactionId: responseFromEsatmpingApi.transactionId }, { new: true })
                 let apiResponse = response.generate(constants.SUCCESS, messages.eSign.SUCCESS, constants.HTTP_SUCCESS, responseFromEsatmpingApi.data)
                 res.status(200).send(apiResponse)
             }).catch((err) => {
@@ -425,14 +430,53 @@ const eStamping = async function (req, res) {
         res.status(500).send(apiResponse)
     }
 }
-// callback url 
+
+/*
+Controller function to create token.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
+function jwtToken(userId) {
+    let token = jwt.sign(
+        {
+            userId: userId,
+            expiresIn: "15d",
+        },
+        process.env.JWT_SECRET
+    );
+    return token
+}
+/*
+Controller function to store result came from estamping api.
+@param {object} req - The HTTP request object
+@param {object} res - The HTTP response object
+@returns {Promise<void>}
+*/
 let callbackUrl = async function (response) {
-    let result
-    if (response.result) {
-        result = response.result
-    } else if (response.error) {
-        result = response.error
-    }
-    await assetModel.findOneAndUpdate({ transactionId: response.transactionId }, { estamping: result }, { new: true, upsert: true })
+    console.log(response)
+    let result;
+    res.send(response)
+    // const authHeader = req.params.token;
+
+    // if (!authHeader) return next(new ErrorResponse('Not authorized', 401));
+
+    // const token = authHeader.split(' ')[1];
+
+    // if (!token) return next(new ErrorResponse('Not authorized', 401));
+
+    // const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // if (!decoded) return next(new ErrorResponse('Invalid token', 401));
+    // let findUser = await userModel.findById(decoded.userId)
+    // if (!findUser) {
+    //     return next(new ErrorResponse('invalid token', 401));
+    // }
+    // if (response.result) {
+    //     result = response.result
+    // } else if (response.error) {
+    //     result = response.error
+    // }
+    // await assetModel.findOneAndUpdate({ estampingTransactionId: response.transactionId }, { estamping: result }, { new: true, upsert: true })
 }
 module.exports = { panVerify, aadharVerify, bankVerify, allBankList, eSignature, eStamping, callbackUrl }
