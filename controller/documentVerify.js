@@ -22,9 +22,9 @@ const panVerify = async function (req, res) {
         let uploadResponse = [];
         let user = await userModel.findOne({ email: req.body.email })
         const form = new formData()
-        const response = await axios.get(user.PAN.file, { responseType: 'arraybuffer' })
-        const buffer = Buffer.from(response.data, "utf-8")
-        let fileName = contentDisposition.parse(response.headers["content-disposition"])
+        const downloadDocument = await axios.get(user.PAN.file, { responseType: 'arraybuffer' })
+        const buffer = Buffer.from(downloadDocument.data, "utf-8")
+        let fileName = contentDisposition.parse(downloadDocument.headers["content-disposition"])
         form.append('file', buffer, fileName.parameters.filename)
         const optionsForUpload = {
             method: 'POST',
@@ -127,9 +127,9 @@ const aadharVerify = async function (req, res) {
         let uploadResponse = [];
         let user = await userModel.findOne({ email: req.body.email })
         const form = new formData()
-        const response = await axios.get(user.PAN.file, { responseType: 'arraybuffer' })
-        const buffer = Buffer.from(response.data, "utf-8")
-        let fileName = contentDisposition.parse(response.headers["content-disposition"])
+        const downloadDocument = await axios.get(user.PAN.file, { responseType: 'arraybuffer' })
+        const buffer = Buffer.from(downloadDocument.data, "utf-8")
+        let fileName = contentDisposition.parse(downloadDocument.headers["content-disposition"])
         form.append('file', buffer, fileName.parameters.filename)
         const optionsForUpload = {
             method: 'POST',
