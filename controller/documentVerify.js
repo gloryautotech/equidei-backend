@@ -42,12 +42,12 @@ const panVerify = async function (req, res) {
                     "Content-Type": "application/json",
                     Authorization: process.env.AUTHTOKEN
                 },
-                data: {
+                data:JSON.stringify({
                     type: req.body.panType,
                     email: "pramit@polynomial.ai",
                     callbackUrl: "https://equidei.onrender.com/api/document/callbackUrl",
                     images: uploadResponse
-                }
+                })
             };
             axios.request(optionsForIdentity).then(function (responseFromAxios) {
                 identityResponse = responseFromAxios.data
@@ -147,8 +147,8 @@ const aadharVerify = async function (req, res) {
                 headers: { "Content-Type": "application/json", Authorization: process.env.AUTHTOKEN },
                 data: {
                     type: "aadhaar",
-                    email: "ankur.rand@signzy.com",
-                    callbackUrl: "https://www.w3schools.com",
+                    email: "pramit@polynomial.ai",
+                    callbackUrl: "https://equidei.onrender.com/api/document/callbackUrl",
                     images: uploadResponse
                 }
             };
@@ -247,9 +247,9 @@ let bankVerify = async function (req, res) {
         let uploadResponse;
         let user = await userModel.findOne({ email: req.body.email })
         const form = new formData()
-        const response = await axios.get(user.companyDetails.bankDetails.bankStatement.file, { responseType: 'arraybuffer' })
-        const buffer = Buffer.from(response.data, "utf-8")
-        let fileName = contentDisposition.parse(response.headers["content-disposition"])
+        const downloadDocument = await axios.get(user.companyDetails.bankDetails.bankStatement.file, { responseType: 'arraybuffer' })
+        const buffer = Buffer.from(downloadDocument.data, "utf-8")
+        let fileName = contentDisposition.parse(downloadDocument.headers["content-disposition"])
         form.append('file', buffer, fileName.parameters.filename)
         const optionsForUpload = {
             method: 'POST',
@@ -455,8 +455,8 @@ Controller function to store result came from estamping api.
 @param {object} res - The HTTP response object
 @returns {Promise<void>}
 */
-let callbackUrl = async function (response) {
-    console.log(response)
+let callbackUrl = async function (data) {
+    console.log(data)
     let result;
     let apiResponse = response.generate(constants.SUCCESS, "callback response", constants.HTTP_SUCCESS, response)
     res.status(200).send(apiResponse)
