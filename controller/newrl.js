@@ -82,16 +82,13 @@ const pinataUpload = async function (req, res) {
         }
 
         // newrl api
-        const NODE_URL = 'https://lakeshore-testnetgw.newrl.net';
+        const NODE_URL = process.env.NEWRL_BASEURL;
         const WALLET = {
             public: '51017a461ecccdc082a49c3f6e17bb9a6259990f6c4d1c1dbb4e067878ddfa71cb4afbe6134bad588395edde20b92c6dd5abab4108d7e6aeb42a06229205cabb',
             private: '92a365e63db963a76c0aa1389aee1ae4d25a4539311595820b295d3a77e07618',
             address: '0x1342e0ae1664734cbbe522030c7399d6003a07a8',
         };
 
-        // const token_code = prompt('Enter token code: ');
-        // const amount = prompt('Issue amount: ');
-        // let first_owner = prompt('First owner[leave blank for custodian]: ');
 
         const token_code = req.body.token_code;
         const amount = req.body.amount;
@@ -128,18 +125,16 @@ const pinataUpload = async function (req, res) {
             })
             .then((response) => {
                 let signed_transaction = response.data;
-
                 return axios.post(NODE_URL + '/submit-transaction', signed_transaction);
             })
             .then((response) => {
-                console.log(response.data);
-                console.log(response.status);
                 if (response.status !== 200) {
                     throw new Error('Failed to validate transaction');
                 }
             })
-            .catch((error) => {
-                console.error(error);
+            .catch((err) => {
+                let apiResponse = response.generate(constants.ERROR, "axios error", constants.HTTP_NOT_FOUND, err)
+                res.status(400).send(apiResponse)
             });
         findAsset.transactionId = transactionId
         let updateAsset = await assetModel.findOneAndUpdate({ _id: assetId }, findAsset, { new: true })
@@ -261,8 +256,6 @@ const blockChain = async function (req, res) {
                 return axios.post(NODE_URL + '/validate-transaction', signed_transaction);
             })
             .then((response) => {
-                console.log(response.data);
-                console.log(response.status);
                 if (response.status !== 200) {
                     throw new Error('Failed to validate transaction');
                 }

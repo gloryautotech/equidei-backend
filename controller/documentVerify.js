@@ -28,21 +28,21 @@ const panVerify = async function (req, res) {
         form.append('file', buffer, fileName.parameters.filename)
         const optionsForUpload = {
             method: 'POST',
-            url: 'https://preproduction-persist.signzy.tech/api/files/upload',
+            url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
         await axios.request(optionsForUpload).then(function (responseFromAxios) {
-            uploadResponse.push(responseFromAxios.data.file.directURL)
+            uploadResponse.push(responseFromAxios?.data?.file?.directURL)
             // create identity
             let identityResponse;
             const optionsForIdentity = {
                 method: 'POST',
-                url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/identities`,
+                url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/identities`,
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: process.env.AUTHTOKEN
+                    Authorization: process.env.SIGNZY_AUTHTOKEN
                 },
-                data:JSON.stringify({
+                data: JSON.stringify({
                     type: req.body.panType,
                     email: req.body.email,
                     callbackUrl: "https://gorgeous-salmiakki-a58236.netlify.app/#/profile/641db74968ab14c9b89523cf",
@@ -50,55 +50,54 @@ const panVerify = async function (req, res) {
                 })
             };
             axios.request(optionsForIdentity).then(function (responseFromAxios) {
-                identityResponse = responseFromAxios.data
-                console.log(identityResponse)
-                    // autoRecognition
-                    let autoRecognition;
-                    const optionsForAutoRecognition = {
+                identityResponse = responseFromAxios?.data
+                // autoRecognition
+                let autoRecognition;
+                const optionsForAutoRecognition = {
+                    method: 'POST',
+                    url: `${process.env.SIGNZY_BASEURL}snoops`,
+                    headers: { "Content-Type": "application/json" },
+                    data: {
+                        service: "Identity",
+                        itemId: `${identityResponse.id}`,
+                        task: "autoRecognition",
+                        accessToken: `${identityResponse.accessToken}`,
+                        "essentials": {}
+                    }
+                };
+                axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
+                    autoRecognition = responseFromAxios?.data
+                    // varify
+                    let optionsForVerify = {
                         method: 'POST',
-                        url: 'https://preproduction.signzy.tech/api/v2/snoops',
-                        headers: { "Content-Type": "application/json" },
+                        url: `${process.env.SIGNZY_BASEURL}snoops`,
                         data: {
-                            service: "Identity",
-                            itemId: `${identityResponse.id}`,
-                            task: "autoRecognition",
+                            service: 'Identity',
+                            itemId: `${autoRecognition.itemId}`,
                             accessToken: `${identityResponse.accessToken}`,
-                            "essentials": {}
+                            task: 'verification',
+                            essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
                         }
                     };
-                    axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
-                        autoRecognition = responseFromAxios.data
-                        // varify
-                        let optionsForVerify = {
-                            method: 'POST',
-                            url: ' https://preproduction.signzy.tech/api/v2/snoops',
-                            data: {
-                                service: 'Identity',
-                                itemId: `${autoRecognition.itemId}`,
-                                accessToken: `${identityResponse.accessToken}`,
-                                task: 'verification',
-                                essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
-                            }
-                        };
-                        axios.request(optionsForVerify).then(async function (responseFromAxios) {
-                            let data = responseFromAxios.data
-                            if (data.verified == true) {
-                                user.PAN.status = "Verified"
-                                await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-                            } else {
-                                user.PAN.status = "Rejected"
-                                await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-                            }
-                            let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, data)
-                            res.status(200).send(apiResponse)
-                        }).catch(function (err) {
-                            let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
-                            res.status(400).send(apiResponse)
-                        });
+                    axios.request(optionsForVerify).then(async function (responseFromAxios) {
+                        let data = responseFromAxios?.data
+                        if (data.verified == true) {
+                            user.PAN.status = "Verified"
+                            await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
+                        } else {
+                            user.PAN.status = "Rejected"
+                            await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
+                        }
+                        let apiResponse = response.generate(constants.SUCCESS, messages.PAN.SUCCESS, constants.HTTP_SUCCESS, data.response.result)
+                        res.status(200).send(apiResponse)
                     }).catch(function (err) {
                         let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
                         res.status(400).send(apiResponse)
                     });
+                }).catch(function (err) {
+                    let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
+                    res.status(400).send(apiResponse)
+                });
             }).catch(function (err) {
                 let apiResponse = response.generate(constants.ERROR, messages.PAN.FAILURE, constants.HTTP_NOT_FOUND, err)
                 res.status(400).send(apiResponse)
@@ -131,32 +130,32 @@ const aadharVerify = async function (req, res) {
         form.append('file', buffer, fileName.parameters.filename)
         const optionsForUpload = {
             method: 'POST',
-            url: 'https://preproduction-persist.signzy.tech/api/files/upload',
+            url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
 
         await axios.request(optionsForUpload).then(function (responseFromUpload) {
-            uploadResponse.push(responseFromUpload.data.file.directURL)
+            uploadResponse.push(responseFromUpload?.data?.file?.directURL)
             // create identity
             let identityResponse;
             const optionsForIdentity = {
                 method: 'POST',
-                url: ' https://preproduction.signzy.tech/api/v2/patrons/63d0baac7486ee4822af0414/identities',
-                headers: { "Content-Type": "application/json", Authorization: process.env.AUTHTOKEN },
+                url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/identities`,
+                headers: { "Content-Type": "application/json", Authorization: process.env.SIGNZY_AUTHTOKEN },
                 data: {
                     type: "aadhaar",
                     email: req.body.email,
-                    callbackUrl: "https://gorgeous-salmiakki-a58236.netlify.app/#/profile/641db74968ab14c9b89523cf",
+                    callbackUrl: `${process.env.NETLIFY_URL}#/profile/641db74968ab14c9b89523cf`,
                     images: uploadResponse
                 }
             };
             axios.request(optionsForIdentity).then(function (responseIdentity) {
-                identityResponse = responseIdentity.data
+                identityResponse = responseIdentity?.data
                 // autoRecognition
 
                 const optionsForAutoRecognition = {
                     method: 'POST',
-                    url: 'https://preproduction.signzy.tech/api/v2/snoops',
+                    url: `${process.env.SIGNZY_BASEURL}snoops`,
                     headers: { "Content-Type": "application/json" },
                     data: {
                         service: "Identity",
@@ -167,11 +166,11 @@ const aadharVerify = async function (req, res) {
                     }
                 };
                 axios.request(optionsForAutoRecognition).then(async function (responseRecognition) {
-                    let autoRecognition = responseRecognition.data
+                    let autoRecognition = responseRecognition?.data
                     // varify
                     let optionsForVarify = {
                         method: 'POST',
-                        url: ' https://preproduction.signzy.tech/api/v2/snoops',
+                        url: `${process.env.SIGNZY_BASEURL}snoops`,
                         data: {
                             service: 'Identity',
                             itemId: `${identityResponse.id}`,
@@ -183,7 +182,7 @@ const aadharVerify = async function (req, res) {
                         }
                     };
                     axios.request(optionsForVarify).then(async function (responseFromverify) {
-                        let data = responseFromverify.data
+                        let data = responseFromverify?.data
                         if (data.verified == true) {
                             user.aadhar.status = "Verified";
                             await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
@@ -191,7 +190,7 @@ const aadharVerify = async function (req, res) {
                             user.aadhar.status = "Rejected";
                             await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
                         }
-                        let apiResponse = response.generate(constants.SUCCESS, messages.AADHAR.SUCCESS, constants.HTTP_SUCCESS, data)
+                        let apiResponse = response.generate(constants.SUCCESS, messages.AADHAR.SUCCESS, constants.HTTP_SUCCESS, data.response.result)
                         res.status(200).send(apiResponse)
                     }).catch(function (err) {
                         let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
@@ -251,17 +250,16 @@ let bankVerify = async function (req, res) {
         form.append('file', buffer, fileName.parameters.filename)
         const optionsForUpload = {
             method: 'POST',
-            url: 'https://preproduction-persist.signzy.tech/api/files/upload',
+            url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
         axios.request(optionsForUpload).then(function (responseFromAxios) {
-            uploadResponse = responseFromAxios.data.file.directURL
-            console.log(uploadResponse);
+            uploadResponse = responseFromAxios?.data?.file?.directURL
             var optionsConvert = {
                 method: 'POST',
-                url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/converters`,
+                url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/converters`,
                 headers: {
-                    Authorization: process.env.AUTHTOKEN
+                    Authorization: process.env.SIGNZY_AUTHTOKEN
                 },
                 data: {
                     task: "imageConverter",
@@ -272,19 +270,19 @@ let bankVerify = async function (req, res) {
                 }
             }
             axios.request(optionsConvert).then(async function (responseFromAxios) {
-                let pdfUrl = responseFromAxios.data.result.result.convertedFile
+                let pdfUrl = responseFromAxios?.data?.result?.result?.convertedFile
                 let optionsForBankStatement = {
                     method: 'POST',
-                    url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/bankstatements`,
+                    url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/bankstatements`,
                     headers: {
-                        Authorization: process.env.AUTHTOKEN
+                        Authorization: process.env.SIGNZY_AUTHTOKEN
                     },
                     data: {
                         essentials: { url: pdfUrl, bankName: user.companyDetails.bankDetails.bankName, accountType: user.companyDetails.bankDetails.accountType }
                     }
                 };
                 axios.request(optionsForBankStatement).then(function (responseFromAxios) {
-                    let responseData = responseFromAxios.data
+                    let responseData = responseFromAxios?.data
                     if (responseData.result.accountNo == user.companyDetails.bankDetails.accountNumber && responseData.result.ifsCode == user.companyDetails.bankDetails.IFSC) {
                         let apiResponse = response.generate(constants.SUCCESS, messages.BANKSTATEMENT.SUCCESS, constants.HTTP_SUCCESS, responseData)
                         res.status(200).send(apiResponse)
@@ -323,11 +321,11 @@ const eSignature = async function (req, res) {
         let user = await userModel.findById(asset.userId)
         let optionForLogin = {
             method: 'POST',
-            url: `https://esign-preproduction.signzy.tech/api/customers/login`,
-            data: { username: process.env.SIGNZYUSERNAME, password: process.env.SIGNZYPASSWORD }
+            url: `${process.env.SIGNZY_ESIGN_BASEURL}customers/login`,
+            data: { username: process.env.SIGNZY_USERNAME, password: process.env.SIGNZY_PASSWORD }
         }
         axios.request(optionForLogin).then(async function (responseFromLoginApi) {
-            let userId = responseFromLoginApi.data.userId
+            let userId = responseFromLoginApi?.data?.userId
             let accessToken = responseFromLoginApi.data.id
             // upload file
             const form = new formData()
@@ -335,14 +333,14 @@ const eSignature = async function (req, res) {
             form.append("file", file, { filename: "contract.pdf" })
             const optionsForUpload = {
                 method: 'POST',
-                url: 'https://preproduction-persist.signzy.tech/api/files/upload',
+                url: process.env.SIGNZY_FILE_UPLOAD,
                 data: form
             };
             await axios.request(optionsForUpload).then(async function (responseFromUploadAPi) {
-                let uploadResponse = responseFromUploadAPi.data.file.directURL;
+                let uploadResponse = responseFromUploadAPi?.data?.file?.directURL;
                 let optionForurl = {
                     method: 'POST',
-                    url: `https://esign-preproduction.signzy.tech/api/customers/${userId}/aadhaaresigns`,
+                    url: `${process.env.SIGNZY_ESIGN_BASEURL}customers/${userId}/aadhaaresigns`,
                     headers: {
                         Authorization: accessToken
                     },
@@ -387,16 +385,16 @@ const eStamping = async function (req, res) {
         form.append("file", file, { filename: "contract.pdf" })
         const optionsForUpload = {
             method: 'POST',
-            url: 'https://preproduction-persist.signzy.tech/api/files/upload',
+            url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
         await axios.request(optionsForUpload).then(async function (responseFromUploadAPi) {
-            let uploadResponse = responseFromUploadAPi.data.file.directURL;
+            let uploadResponse = responseFromUploadAPi?.data?.file?.directURL;
             let findAsset = await assetModel.findById(req.params.assetId)
             let token = jwtToken(findAsset.userId)
             let optionsForEstamping = {
                 method: 'POST',
-                url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/estamping`,
+                url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/estamping`,
                 data: {
                     "task": "eStamp",
                     essentials: {
@@ -409,7 +407,7 @@ const eStamping = async function (req, res) {
                         purposeOfStampDuty: "eStamp",
                         articleCode: "123",
                         pdfUrl: uploadResponse,
-                        callbackUrl: `https://equidei.onrender.com/api/document/callbackUrl?token=${token}`
+                        callbackUrl: `${process.env.RENDER_URL}api/document/callbackUrl?token=${token}`
                     }
                 }
             }
@@ -454,27 +452,32 @@ Controller function to store result came from estamping api.
 @returns {Promise<void>}
 */
 let callbackUrl = async function (data) {
-    let result;
-    const authHeader = req.params.token;
+    try {
+        let result;
+        const authHeader = req.params.token;
 
-    if (!authHeader) return next(new ErrorResponse('Not authorized', 401));
+        if (!authHeader) return next(new ErrorResponse('Not authorized', 401));
 
-    const token = authHeader.split(' ')[1];
+        const token = authHeader.split(' ')[1];
 
-    if (!token) return next(new ErrorResponse('Not authorized', 401));
+        if (!token) return next(new ErrorResponse('Not authorized', 401));
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (!decoded) return next(new ErrorResponse('Invalid token', 401));
-    let findUser = await userModel.findById(decoded.userId)
-    if (!findUser) {
-        return next(new ErrorResponse('invalid token', 401));
+        if (!decoded) return next(new ErrorResponse('Invalid token', 401));
+        let findUser = await userModel.findById(decoded.userId)
+        if (!findUser) {
+            return next(new ErrorResponse('invalid token', 401));
+        }
+        if (data.result) {
+            result = data.result
+        } else if (data.error) {
+            result = data.error
+        }
+        await assetModel.findOneAndUpdate({ estampingTransactionId: response.transactionId }, { estamping: result }, { new: true, upsert: true })
+    } catch (err) {
+        let apiResponse = response.generate(constants.ERROR, "Server Error", constants.HTTP_SERVER_ERROR, err)
+        res.status(500).send(apiResponse)
     }
-    if (data.result) {
-        result = data.result
-    } else if (data.error) {
-        result = data.error
-    }
-    await assetModel.findOneAndUpdate({ estampingTransactionId: response.transactionId }, { estamping: result }, { new: true, upsert: true })
 }
 module.exports = { panVerify, aadharVerify, bankVerify, allBankList, eSignature, eStamping, callbackUrl }

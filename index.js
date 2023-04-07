@@ -132,7 +132,7 @@ app.use((err, req, res, next) => {
 	errorHandler(err, req, res, next);
 });
 
-const port = process.env.PORT || 7777;
+const port = process.env.PORT ;
 // websocket
 // io.on('connection', (socket) => {
 // 	socket.on('chat message', (msg) => {

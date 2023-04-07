@@ -450,9 +450,9 @@ const fetchDataWithCin = async function (req, res) {
 
             let options = {
                 method: 'POST',
-                url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/companyconsolidated`,
+                url: `${process.env.SIGNZY_BASEURL}/patrons/${process.env.SIGNZY_PATRONID}/companyconsolidated`,
                 headers: {
-                    Authorization: process.env.AUTHTOKEN
+                    Authorization: process.env.SIGNZY_AUTHTOKEN
                 },
                 data: {
                     task: 'fetchRealtime',
@@ -460,7 +460,7 @@ const fetchDataWithCin = async function (req, res) {
                 }
             };
             axios.request(options).then(function (responseFromAxios) {
-                let result = responseFromAxios.data.result.statusCode
+                let result = responseFromAxios?.data?.result?.statusCode
                 if (result == 404) {
                     let apiResponse = response.generate(constants.ERROR, messages.cin.notFund, constants.HTTP_NOT_FOUND, responseFromAxios.data.result);
                     res.status(404).send(apiResponse)
@@ -511,7 +511,7 @@ const gstVerify = async function (req, res) {
             }
         }
         axios.request(options).then(function (responseFromAxios) {
-            let result = responseFromAxios.data.data.tradeName
+            let result = responseFromAxios?.data?.data?.tradeName
             let check = result.includes(companyName)
             if (check) {
                 let apiResponse = response.generate(constants.SUCCESS, messages.GST.SUCCESS, constants.HTTP_SUCCESS, responseFromAxios.data);
@@ -552,14 +552,14 @@ let udyamDetails = async function (req, res) {
         let companyName = req.body.companyName
         let optionsForudyam = {
             method: 'POST',
-            url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.PATRONID}/udyamregistrations`,
+            url: `${SIGNZY_BASEURL}/patrons/${process.env.SIGNZY_PATRONID}/udyamregistrations`,
             headers: {
-                Authorization: process.env.AUTHTOKEN
+                Authorization: process.env.SIGNZY_AUTHTOKEN
             },
             data: { essentials: { udyamNumber: `${udyamNumber}` } }
         };
         axios.request(optionsForudyam).then(function (responsefromUdyam) {
-            let name = responsefromUdyam.data.result.generalInfo.nameOfEnterprise
+            let name = responsefromUdyam?.data?.result?.generalInfo?.nameOfEnterprise
             let check = name.includes(companyName)
             if (check) {
                 let obj = { valid: true }
