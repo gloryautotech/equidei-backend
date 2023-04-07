@@ -56,7 +56,7 @@ let paymentTokenCreate = async function (req, res) {
 
       const options = {
         method: 'POST',
-        url: 'https://sandbox-icp-api.bankopen.co/api/payment_token',
+        url: `${process.env.OPENMONEY_BASEURL}/payment_token`,
         headers: {
           Authorization: `Bearer ${process.env.OPENMONEY_ACCESS_KEY}:${process.env.OPENMONEY_SECRET_KEY}`
         },
@@ -102,7 +102,7 @@ const getPaymentStatus = async function (req, res) {
 
     const options = {
       method: 'GET',
-      url: `https://sandbox-icp-api.bankopen.co/api/payment_token/${payment_token_id}/payment`,
+      url: `${process.env.OPENMONEY_BASEURL}/payment_token/${payment_token_id}/payment`,
       headers: {
         accept: 'application/json',
         Authorization: `Bearer ${process.env.OPENMONEY_ACCESS_KEY}:${process.env.OPENMONEY_SECRET_KEY}`

@@ -45,7 +45,7 @@ const panVerify = async function (req, res) {
                 data: JSON.stringify({
                     type: req.body.panType,
                     email: req.body.email,
-                    callbackUrl: "https://gorgeous-salmiakki-a58236.netlify.app/#/profile/641db74968ab14c9b89523cf",
+                    callbackUrl: `${process.env.NETLIFY_URL}#/profile/641db74968ab14c9b89523cf`,
                     images: uploadResponse
                 })
             };
