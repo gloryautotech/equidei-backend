@@ -28,6 +28,6 @@ router.post('/api/v1/file/upload', single, awsWorker.fileUpload);
 
 // router.delete('/api/v1/file/:link/delete', awsWorker.deleteObject);
 
-router.post('/api/v1/file/downloadZip/:assetId', awsWorker.downloadZip);
+router.get('/api/v1/file/downloadZip/:assetId', awsWorker.downloadZip);
 
 module.exports = router;
