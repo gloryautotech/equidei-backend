@@ -1,6 +1,7 @@
 const s3 = require('../config/s3.config');
 const coudinary = require('../config/coudinary');
 const _ = require('underscore');
+const assetModel=require("../model/asset")
 
 exports.doUpload = (req, res) => {
 	const { s3Client } = s3;
@@ -23,20 +24,20 @@ exports.doUpload = (req, res) => {
 	});
 };
 exports.fileUpload = async (req, res, next) => {
-    if (!req.file || _.isEmpty(req.file)) {
-        return res.status(400)
-            .json(vm.ApiResponse(false, 400, "No file uploaded'"))
-    }
-    try {
-        const { path } = req.file;
+	if (!req.file || _.isEmpty(req.file)) {
+		return res.status(400)
+			.json(vm.ApiResponse(false, 400, "No file uploaded'"))
+	}
+	try {
+		const { path } = req.file;
 		console.log(req.file);
-        let link = await coudinary.upload(path);
-        // let apiResponse = response.generate(false, 'Image uploaded', 200, link)
-        res.send({error:false,message:'Image uploaded',link})
-    } catch (e) {
-        console.log("err :", e);
-        return next(e);
-    }
+		let link = await coudinary.upload(path);
+		// let apiResponse = response.generate(false, 'Image uploaded', 200, link)
+		res.send({ error: false, message: 'Image uploaded', link })
+	} catch (e) {
+		console.log("err :", e);
+		return next(e);
+	}
 };
 
 exports.deleteObject = (req, res) => {
@@ -57,3 +58,21 @@ exports.deleteObject = (req, res) => {
 		});
 	});
 };
+
+exports.downloadZip = async (req, res) => {
+	let assetId = req.params.assetId
+	let findAsset = await assetModel.findById(assetId).lean();
+	let array = []
+	// Iterate through each key in the asset object
+	for (let key in findAsset) {
+		if (findAsset[key].url) {
+
+			array.push(findAsset[key].url)
+		}
+	}
+	let zipUrl = coudinary.downloadZip(array);
+	res.status(201).json({
+		status: 'success',
+		data: zipUrl,
+	});
+}
