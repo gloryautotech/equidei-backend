@@ -167,12 +167,20 @@ let messages = {
     "SERVERERROR": "server error"
 
   },
-  "eSign":{
-    "SUCCESS":"success",
-    "FAILURE":"axios error",
-    "SERVERERROR":"server error"
+  "eSign": {
+    "SUCCESS": "success",
+    "FAILURE": "axios error",
+    "SERVERERROR": "server error"
   },
-  
+  "loan": {
+    "SUCCESS": "loan request done.",
+    "ALL_LOAN": "all loan request",
+    "APPROVE": "loan approve.",
+    "DELETE": "loan deleted.",
+    "SERVERERROR": "server error.",
+    "LOAN":"loan details"
+  }
+
 }
 module.exports = {
   constants,

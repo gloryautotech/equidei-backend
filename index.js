@@ -122,6 +122,7 @@ app.use('/api/notification', require('./router/notification'));
 app.use('/api/asset', require("./router/asset"))
 app.use('/api/document', require('./router/documentVarification'))
 app.use('/api/payment',require('./router/payment'))
+app.use('/api/loan',require("./router/loan"))
 app.use('/', image);
 
 app.all('*', (req, res, next) => {
