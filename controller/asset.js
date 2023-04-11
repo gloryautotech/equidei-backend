@@ -143,7 +143,7 @@ const getAssetListById = async (req, res) => {
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.GETASSETLIST, constants.HTTP_SUCCESS, getAssetData);
         res.status(200).send(apiResponse);
     } catch (err) {
-        let apiResponse = response.generate(constants.ERROR,messages.asset.FAILURE,constants.HTTP_SERVER_ERROR,err);
+        let apiResponse = response.generate(constants.ERROR, messages.asset.FAILURE, constants.HTTP_SERVER_ERROR, err);
         res.status(500).send(apiResponse);
     }
 }
@@ -159,7 +159,7 @@ const getPaidAsset = async function (req, res) {
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.GETASSETLIST, constants.HTTP_SUCCESS, asset);
         res.status(200).send(apiResponse);
     } catch (err) {
-        let apiResponse = response.generate(constants.ERROR,messages.asset.FAILURE,constants.HTTP_SERVER_ERROR,err);
+        let apiResponse = response.generate(constants.ERROR, messages.asset.FAILURE, constants.HTTP_SERVER_ERROR, err);
         res.status(500).send(apiResponse);
     }
 }
@@ -253,17 +253,19 @@ const verify = async function (req, res) {
                 asset.technicalSpecifications.message = req.body.technicalSpecifications.message ? req.body.technicalSpecifications.message : " ";
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
-                if (asset.purchaseBill.isVerified &&
-                    asset.taxInvoice.isVerified &&
-                    asset.insuranceDoc.isVerified &&
-                    asset.assetInvoice.isVerified &&
-                    asset.technicalSpecifications.isVerified
-                ) {
-                    asset.adminStatus = "Verification Complete"
-                    asset.msmeStatus = "Verification Complete"
-                } else {
-                    asset.adminStatus = "Rejected"
-                    asset.msmeStatus = "Rejected"
+                if (req.body.approveType) {
+                    if (asset.purchaseBill.isVerified &&
+                        asset.taxInvoice.isVerified &&
+                        asset.insuranceDoc.isVerified &&
+                        asset.assetInvoice.isVerified &&
+                        asset.technicalSpecifications.isVerified
+                    ) {
+                        asset.adminStatus = "Verification Complete"
+                        asset.msmeStatus = "Verification Complete"
+                    } else {
+                        asset.adminStatus = "Rejected"
+                        asset.msmeStatus = "Rejected"
+                    }
                 }
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
@@ -344,16 +346,18 @@ const verify = async function (req, res) {
                 asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
-                if (asset.propertyTax.isVerified &&
-                    asset.invoice.isVerified &&
-                    asset.oldValuationReport.isVerified &&
-                    asset.pendingCharges.isVerified
-                ) {
-                    asset.adminStatus = "Verification Complete"
-                    asset.msmeStatus = "Verification Complete"
-                } else {
-                    asset.adminStatus = "Rejected"
-                    asset.msmeStatus = "Rejected"
+                if (req.body.approveType) {
+                    if (asset.propertyTax.isVerified &&
+                        asset.invoice.isVerified &&
+                        asset.oldValuationReport.isVerified &&
+                        asset.pendingCharges.isVerified
+                    ) {
+                        asset.adminStatus = "Verification Complete"
+                        asset.msmeStatus = "Verification Complete"
+                    } else {
+                        asset.adminStatus = "Rejected"
+                        asset.msmeStatus = "Rejected"
+                    }
                 }
                 asset = await asset.save();
                 let apiResponse = response.generate(constants.SUCCESS, messages.asset.VERIFY, constants.HTTP_SUCCESS, asset);
