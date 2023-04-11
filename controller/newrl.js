@@ -69,10 +69,8 @@ const pinataUpload = async function (req, res) {
                 //         Authorization: process.env.JWT
                 //     }
                 // });
-                await fs.unlink('./document.txt')
+                // await fs.unlink('./document.txt')
                 await fs.unlink(filePath)
-                let ipfsHash = resIpfs.data.IpfsHash
-                findAsset[key].ipfsHash = ipfsHash
                 let obj = {
                     name: key,
                     file: ciphertext

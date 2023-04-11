@@ -5,9 +5,9 @@ const Q = require("q");
 
 function upload(file) {
     cloudinary.config({
-        cloud_name: 'dbd8wog43',
-        api_key: '227366481328175',
-        api_secret: 'fseZMdhQ_0DmcxWbXpSzEx9KMrI'
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
     });
 
     return new Q.Promise((resolve, reject) => {
@@ -24,9 +24,9 @@ function upload(file) {
 };
 function downloadZip(files) {
     cloudinary.config({
-        cloud_name: 'dbd8wog43',
-        api_key: '227366481328175',
-        api_secret: 'fseZMdhQ_0DmcxWbXpSzEx9KMrI'
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
     });
     let ids = [];
     for (let file of files) {

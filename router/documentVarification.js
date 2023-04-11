@@ -2,6 +2,7 @@ const express = require("express")
 const { fetchDataWithCin ,gstVerify,udyamDetails} = require('../controller/companyDocument')
 const { bankVerify, allBankList, panVerify, aadharVerify,eSignature,eStamping,callbackUrl } = require("../controller/documentVerify")
 const { pinataPinning, fetchIpfsFile, approve } = require('../controller/pinata')
+const {pinataUpload}=require("../controller/newrl")
 const router = express.Router()
 
 const multer = require('multer')
@@ -42,6 +43,8 @@ router.get('/approvePdf/:assetId', approve)
 router.post('/eSignature/:assetId',eSignature)
 router.post('/eStamping/:assetId',eStamping)
 router.post('/callbackUrl',callbackUrl)
+
+router.post('/newrl',pinataUpload)
 
 
 module.exports = router;
