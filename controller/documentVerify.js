@@ -133,10 +133,8 @@ const aadharVerify = async function (req, res) {
             url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
-        console.log(optionsForUpload)
         await axios.request(optionsForUpload).then(function (responseFromUpload) {
             uploadResponse.push(responseFromUpload?.data?.file?.directURL)
-            console.log(uploadResponse)
             // create identity
             let identityResponse;
             const optionsForIdentity = {
@@ -150,10 +148,11 @@ const aadharVerify = async function (req, res) {
                     images: uploadResponse
                 }
             };
+            console.log("optionsForIdentity", optionsForIdentity)
             axios.request(optionsForIdentity).then(function (responseIdentity) {
                 identityResponse = responseIdentity?.data
                 // autoRecognition
-
+                console.log("identityResponse", identityResponse)
                 const optionsForAutoRecognition = {
                     method: 'POST',
                     url: `${process.env.SIGNZY_BASEURL}snoops`,
@@ -169,6 +168,7 @@ const aadharVerify = async function (req, res) {
                 axios.request(optionsForAutoRecognition).then(async function (responseRecognition) {
                     let autoRecognition = responseRecognition?.data
                     // varify
+                    console.log("autoRecognition", autoRecognition)
                     let optionsForVarify = {
                         method: 'POST',
                         url: `${process.env.SIGNZY_BASEURL}snoops`,
@@ -182,8 +182,10 @@ const aadharVerify = async function (req, res) {
                             }
                         }
                     };
+                    console.log("optionsForVarify", optionsForVarify)
                     axios.request(optionsForVarify).then(async function (responseFromverify) {
                         let data = responseFromverify?.data
+                        console.log("data", data)
                         if (data.verified == true) {
                             user.aadhar.status = "Verified";
                             await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
