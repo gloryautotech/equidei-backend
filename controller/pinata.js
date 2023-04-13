@@ -126,7 +126,6 @@ const approve = async function (req, res) {
             name: name,
             aadhar: aadhar,
             pan: pan,
-            array: array,
             address: "INDIA",
             date: "11/11/2022",
             data: "table"
