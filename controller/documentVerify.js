@@ -81,7 +81,7 @@ const panVerify = async function (req, res) {
                     };
                     axios.request(optionsForVerify).then(async function (responseFromAxios) {
                         let data = responseFromAxios?.data
-                        if ( data.response.result.verified == true) {
+                        if (data.response.result.verified == true) {
                             user.PAN.status = "Verified"
                             await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
                         } else {
@@ -133,11 +133,10 @@ const aadharVerify = async function (req, res) {
             url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
-        let responseFromUpload = await axios.request(optionsForUpload)
-        if (responseFromUpload) {
+        axios.request(optionsForUpload).then(function (responseFromUpload) {
             uploadResponse.push(responseFromUpload?.data?.file?.directURL)
             // create identity
-
+            let identityResponse;
             const optionsForIdentity = {
                 method: 'POST',
                 url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/identities`,
@@ -149,47 +148,39 @@ const aadharVerify = async function (req, res) {
                     images: uploadResponse
                 }
             };
-            let identityResponse = await axios.request(optionsForIdentity)
-            if (identityResponse) {
-                //  autoRecognition
-                console.log("identityResponse", identityResponse)
+            axios.request(optionsForIdentity).then(function (responseIdentity) {
+                identityResponse = responseIdentity?.data
+                // autoRecognition
                 const optionsForAutoRecognition = {
                     method: 'POST',
                     url: `${process.env.SIGNZY_BASEURL}snoops`,
                     headers: { "Content-Type": "application/json" },
                     data: {
                         service: "Identity",
-                        itemId: `${identityResponse.data.id}`,
+                        itemId: `${identityResponse.id}`,
                         task: "autoRecognition",
-                        accessToken: `${identityResponse.data.accessToken}`,
+                        accessToken: `${identityResponse.accessToken}`,
                         "essentials": {}
                     }
                 };
-                console.log(optionsForAutoRecognition)
-                let auto = await axios.request(optionsForAutoRecognition)
-                console.log(auto)
-                if (auto) {
-                    let autoRecognition = identityResponse?.data
+                axios.request(optionsForAutoRecognition).then(async function (responseRecognition) {
+                    let autoRecognition = responseRecognition?.data
                     // varify
-                    console.log("autoRecognition", autoRecognition)
                     let optionsForVarify = {
                         method: 'POST',
                         url: `${process.env.SIGNZY_BASEURL}snoops`,
                         data: {
                             service: 'Identity',
-                            itemId: `${identityResponse.data.id}`,
-                            accessToken: `${identityResponse.data.accessToken}`,
+                            itemId: `${identityResponse.id}`,
+                            accessToken: `${identityResponse.accessToken}`,
                             task: 'verifyAadhaar',
                             essentials: {
                                 uid: user.aadhar.aadharNumber
                             }
                         }
                     };
-                    console.log("optionsForVarify", optionsForVarify)
-                    let responseFromverify = await axios.request(optionsForVarify)
-                    if (responseFromverify) {
+                    axios.request(optionsForVarify).then(async function (responseFromverify) {
                         let data = responseFromverify?.data
-                        console.log("data", data)
                         if (data.verified == true) {
                             user.aadhar.status = "Verified";
                             await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
@@ -199,93 +190,22 @@ const aadharVerify = async function (req, res) {
                         }
                         let apiResponse = response.generate(constants.SUCCESS, messages.AADHAR.SUCCESS, constants.HTTP_SUCCESS, data.response.result)
                         res.status(200).send(apiResponse)
-
-                    }
-                }
-            }
-
-        }
-
-
-
-
-        //  axios.request(optionsForUpload).then(function (responseFromUpload) {
-        //     uploadResponse.push(responseFromUpload?.data?.file?.directURL)
-        //     // create identity
-        //     let identityResponse;
-        //     const optionsForIdentity = {
-        //         method: 'POST',
-        //         url: `${process.env.SIGNZY_BASEURL}patrons/${process.env.SIGNZY_PATRONID}/identities`,
-        //         headers: { "Content-Type": "application/json", Authorization: process.env.SIGNZY_AUTHTOKEN },
-        //         data: {
-        //             type: "aadhaar",
-        //             email: req.body.email,
-        //             callbackUrl: `${process.env.NETLIFY_URL}#/profile/641db74968ab14c9b89523cf`,
-        //             images: uploadResponse
-        //         }
-        //     };
-        //     axios.request(optionsForIdentity).then(function (responseIdentity) {
-        //         identityResponse = responseIdentity?.data
-        //         // autoRecognition
-        //         console.log("identityResponse", identityResponse)
-        //         const optionsForAutoRecognition = {
-        //             method: 'POST',
-        //             url: `${process.env.SIGNZY_BASEURL}snoops`,
-        //             headers: { "Content-Type": "application/json" },
-        //             data: {
-        //                 service: "Identity",
-        //                 itemId: `${identityResponse.id}`,
-        //                 task: "autoRecognition",
-        //                 accessToken: `${identityResponse.accessToken}`,
-        //                 "essentials": {}
-        //             }
-        //         };
-        //         axios.request(optionsForAutoRecognition).then(async function (responseRecognition) {
-        //             let autoRecognition = responseRecognition?.data
-        //             // varify
-        //             console.log("autoRecognition", autoRecognition)
-        //             let optionsForVarify = {
-        //                 method: 'POST',
-        //                 url: `${process.env.SIGNZY_BASEURL}snoops`,
-        //                 data: {
-        //                     service: 'Identity',
-        //                     itemId: `${identityResponse.id}`,
-        //                     accessToken: `${identityResponse.accessToken}`,
-        //                     task: 'verifyAadhaar',
-        //                     essentials: {
-        //                         uid: user.aadhar.aadharNumber
-        //                     }
-        //                 }
-        //             };
-        //             console.log("optionsForVarify", optionsForVarify)
-        //             axios.request(optionsForVarify).then(async function (responseFromverify) {
-        //                 let data = responseFromverify?.data
-        //                 console.log("data", data)
-        //                 if (data.verified == true) {
-        //                     user.aadhar.status = "Verified";
-        //                     await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-        //                 } else {
-        //                     user.aadhar.status = "Rejected";
-        //                     await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
-        //                 }
-        //                 let apiResponse = response.generate(constants.SUCCESS, messages.AADHAR.SUCCESS, constants.HTTP_SUCCESS, data.response.result)
-        //                 res.status(200).send(apiResponse)
-        //             }).catch(function (err) {
-        //                 let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
-        //                 res.status(400).send(apiResponse)
-        //             });
-        //         }).catch(function (err) {
-        //             let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
-        //             res.status(400).send(apiResponse)
-        //         });
-        //     }).catch(function (err) {
-        //         let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
-        //         res.status(400).send(apiResponse)
-        //     });
-        // }).catch(function (err) {
-        //     let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
-        //     res.status(400).send(apiResponse)
-        // });
+                    }).catch(function (err) {
+                        let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
+                        res.status(400).send(apiResponse)
+                    });
+                }).catch(function (err) {
+                    let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
+                    res.status(400).send(apiResponse)
+                });
+            }).catch(function (err) {
+                let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
+                res.status(400).send(apiResponse)
+            });
+        }).catch(function (err) {
+            let apiResponse = response.generate(constants.ERROR, messages.AADHAR.FAILURE, constants.HTTP_NOT_FOUND, err)
+            res.status(400).send(apiResponse)
+        });
 
     } catch (err) {
         let apiResponse = response.generate(constants.ERROR, messages.AADHAR.SERVERERROR, constants.HTTP_SERVER_ERROR, err)
