@@ -95,7 +95,8 @@ const assetSchema = mongoose.Schema({
         type: Number
     },
     isAssetValueChange:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
     propertyTax: {
         name: { type: String },
