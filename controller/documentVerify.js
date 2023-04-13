@@ -148,7 +148,6 @@ const aadharVerify = async function (req, res) {
                     images: uploadResponse
                 }
             };
-            console.log("optionsForIdentity", optionsForIdentity)
             axios.request(optionsForIdentity).then(function (responseIdentity) {
                 identityResponse = responseIdentity?.data
                 // autoRecognition
