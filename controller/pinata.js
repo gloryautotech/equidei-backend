@@ -116,63 +116,11 @@ const approve = async function (req, res) {
     try {
         const doc = new jsPDF();
         let asset = await assetModel.findOne({ _id: req.params.assetId })
-        let array = []
-        if (asset == "plantAndMachinary") {
-            if (asset.purchaseBill.ipfsHash) {
-                array.push("\n" + asset.purchaseBill.pfsHash)
-            }
-            if (asset.taxInvoice.ipfsHash) {
-                array.push("\n" + asset.taxInvoice.ipfsHash)
-            }
-            if (asset.insuranceDoc.ipfsHash) {
-                array.push("\n" + asset.insuranceDoc.ipfsHash)
-            }
-            if (asset.fixedAssetRegister.ipfsHash) {
-                array.push("\n" + asset.fixedAssetRegister.ipfsHash)
-            }
-            if (asset.oldValuationReport.ipfsHash) {
-                array.push("\n" + asset.oldValuationReport.ipfsHash)
-            }
-            if (asset.chargesPending.ipfsHash) {
-                array.push("\n" + asset.chargesPending.ipfsHash)
-            }
-            if (asset.assetInvoice.ipfsHash) {
-                array.push("\n" + asset.assetInvoice.ipfsHash)
-            }
-            if (asset.technicalSpecifications.ipfsHash) {
-                array.push("\n" + asset.technicalSpecifications.ipfsHash)
-            }
-        } else {
-            if (asset.propertyTax.ipfsHash) {
-                array.push("\n" + asset.propertyTax.ipfsHash)
-            }
-            if (asset.insuranceDoc.ipfsHash) {
-                array.push("\n" + asset.insuranceDoc.ipfsHash)
-            }
-            if (asset.powerOfAttorney.ipfsHash) {
-                array.push("\n" + asset.powerOfAttorney.ipfsHash)
-            }
-            if (asset.invoice.ipfsHash) {
-                array.push("\n" + asset.invoice.ipfsHash)
-            }
-            if (asset.clearanceCertificate.ipfsHash) {
-                array.push("\n" + asset.clearanceCertificate.ipfsHash)
-            }
-            if (asset.fixedAssetRegister.ipfsHash) {
-                array.push("\n" + asset.fixedAssetRegister.ipfsHash)
-            }
-            if (asset.oldValuationReport.ipfsHash) {
-                array.push("\n" + asset.oldValuationReport.ipfsHash)
-            }
-            if (asset.pendingCharges.ipfsHash) {
-                array.push("\n" + asset.pendingCharges.ipfsHash)
-            }
-        }
+              
         let findUser = await userModel.findOne({ _id: asset.userId })
         let aadhar = findUser.aadhar.aadharNumber
         let pan = findUser.PAN.panNumber
         let name = findUser.adminName
-        let transactionId = asset.transactionId
         const html = fs1.readFileSync('./trust_deed.html', 'utf8');
         const companyDetails = {
             name: name,
@@ -212,13 +160,12 @@ const approve = async function (req, res) {
             }
         }
         let file = { content: output };
-        html_to_pdf.generatePdf(file, options).then(pdfBuffer => {
+        html_to_pdf.generatePdf(file, options).then(async (pdfBuffer) => {
+            await assetModel.findOneAndUpdate({_id:req.params.assetId}, {msmeStatus:"Valuation Accepted",adminStatus:"Valuation Accepted"},{new:true})
             let arrayBuffer = pdfBuffer.toJSON().data
             let apiResponse = response.generate(constants.SUCCESS, "pdf generate successfully ", constants.HTTP_CREATED, arrayBuffer);
             res.send(apiResponse)
-
         });
-
 
     } catch (err) {
         let apiResponse = response.generate(

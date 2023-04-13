@@ -57,13 +57,13 @@ const panVerify = async function (req, res) {
                     method: 'POST',
                     url: `${process.env.SIGNZY_BASEURL}snoops`,
                     headers: { "Content-Type": "application/json" },
-                    data: {
+                    data: JSON.stringify({
                         service: "Identity",
                         itemId: `${identityResponse.id}`,
                         task: "autoRecognition",
                         accessToken: `${identityResponse.accessToken}`,
                         "essentials": {}
-                    }
+                    })
                 };
                 axios.request(optionsForAutoRecognition).then(async function (responseFromAxios) {
                     autoRecognition = responseFromAxios?.data
@@ -71,13 +71,13 @@ const panVerify = async function (req, res) {
                     let optionsForVerify = {
                         method: 'POST',
                         url: `${process.env.SIGNZY_BASEURL}snoops`,
-                        data: {
+                        data: JSON.stringify({
                             service: 'Identity',
                             itemId: `${autoRecognition.itemId}`,
                             accessToken: `${identityResponse.accessToken}`,
                             task: 'verification',
-                            essentials: { number: `${user.PAN.panNumber}`, name: `${user.PAN.name}`, fuzzy: true }
-                        }
+                            essentials: { number: `${user.PAN.panNumber}`, name: `${user.adminName}`, fuzzy: true }
+                        })
                     };
                     axios.request(optionsForVerify).then(async function (responseFromAxios) {
                         let data = responseFromAxios?.data
@@ -133,9 +133,10 @@ const aadharVerify = async function (req, res) {
             url: process.env.SIGNZY_FILE_UPLOAD,
             data: form
         };
-
+        console.log(optionsForUpload)
         await axios.request(optionsForUpload).then(function (responseFromUpload) {
             uploadResponse.push(responseFromUpload?.data?.file?.directURL)
+            console.log(uploadResponse)
             // create identity
             let identityResponse;
             const optionsForIdentity = {
@@ -336,7 +337,7 @@ const eSignature = async function (req, res) {
                 url: process.env.SIGNZY_FILE_UPLOAD,
                 data: form
             };
-            await axios.request(optionsForUpload).then(async function (responseFromUploadAPi) {
+            axios.request(optionsForUpload).then(async function (responseFromUploadAPi) {
                 let uploadResponse = responseFromUploadAPi?.data?.file?.directURL;
                 let optionForurl = {
                     method: 'POST',

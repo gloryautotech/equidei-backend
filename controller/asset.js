@@ -235,6 +235,16 @@ const verify = async function (req, res) {
                     };
                     asset.chargesPending.message = req.body.chargesPending.message ? req.body.chargesPending.message : " ";
                 }
+                if (req.body.electricityBill) {
+                    if (req.body.electricityBill.isVerified == true) {
+                        asset.electricityBill.status = "Verified";
+                        asset.electricityBill.isVerified = true
+                    } else {
+                        asset.electricityBill.isVerified = false;
+                        asset.electricityBill.status = "Rejected"
+                    };
+                    asset.electricityBill.message = req.body.electricityBill.message ? req.body.electricityBill.message : " ";
+                }
                 if (req.body.assetInvoice.isVerified == true) {
                     asset.assetInvoice.status = "Verified";
                     asset.assetInvoice.isVerified = true
@@ -328,6 +338,16 @@ const verify = async function (req, res) {
                     };
                     asset.fixedAssetRegister.message = req.body.fixedAssetRegister.message ? req.body.fixedAssetRegister.message : " ";
                 }
+                if (req.body.electricityBill) {
+                    if (req.body.electricityBill.isVerified == true) {
+                        asset.electricityBill.status = "Verified";
+                        asset.electricityBill.isVerified = true
+                    } else {
+                        asset.electricityBill.isVerified = false;
+                        asset.electricityBill.status = "Rejected"
+                    };
+                    asset.electricityBill.message = req.body.electricityBill.message ? req.body.electricityBill.message : " ";
+                }
                 if (req.body.oldValuationReport.isVerified == true) {
                     asset.oldValuationReport.status = "Verified";
                     asset.oldValuationReport.isVerified = true
@@ -346,6 +366,9 @@ const verify = async function (req, res) {
                 asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
+                if (req.body.assetValue && asset.assetValue != req.body.assetValue) {
+                    asset.isAssetValueChange = true
+                }
                 if (req.body.approveType) {
                     if (asset.propertyTax.isVerified &&
                         asset.invoice.isVerified &&
@@ -376,5 +399,15 @@ const verify = async function (req, res) {
 }
 
 
+const decline = async function (req, res) {
+    try {
+        let declineAsset = await assetModel.findOneAndUpdate({ _id: req.params.assetId }, { msmeStatus: "Decline", adminStatus: "Decline" }, { new: true })
+        let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, declineAsset);
+        res.status(200).send(apiResponse);
+    } catch (err) {
+        let apiResponse = response.generate(constants.ERROR, messages.asset.FAILURE, constants.HTTP_SERVER_ERROR, err);
+        res.status(500).send(apiResponse);
+    }
+}
 
-module.exports = { assetRegister, updateAsset, getAllAssetListByQuery, getAssetListById, getAllAssetList, getPaidAsset, verify }
+module.exports = { assetRegister, updateAsset, getAllAssetListByQuery, getAssetListById, getAllAssetList, getPaidAsset, verify, decline }

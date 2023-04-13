@@ -94,6 +94,9 @@ const assetSchema = mongoose.Schema({
     assetValue: {
         type: Number
     },
+    isAssetValueChange:{
+        type:Boolean
+    },
     propertyTax: {
         name: { type: String },
         url: { type: String },
@@ -151,6 +154,14 @@ const assetSchema = mongoose.Schema({
         status: { type: String, enum: ["Rejected", "Updated By MSME", "Verified", "Pending"] }
     },
     pendingCharges: {
+        name: { type: String },
+        url: { type: String },
+        ipfsHash: { type: String },
+        message: { type: String },
+        isVerified: { type: Boolean },
+        status: { type: String, enum: ["Rejected", "Updated By MSME", "Verified", "Pending"] }
+    },
+    electricityBill: {
         name: { type: String },
         url: { type: String },
         ipfsHash: { type: String },

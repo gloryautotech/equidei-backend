@@ -1,6 +1,8 @@
 let axios = require("axios").default;
 const { constants, messages } = require("../constants.js");
 const response = require('../lib/responseLib');
+const formData = require('form-data')
+const fs = require('fs')
 
 /*
 Controller function to fetch the data from cin number for the system.
@@ -590,4 +592,195 @@ let udyamDetails = async function (req, res) {
     }
 }
 
-module.exports = { fetchDataWithCin, gstVerify, udyamDetails }
+
+const gstReportFetch = function (req, res) {
+    try {
+        let { gstNumber, userName, password, email } = req.body
+        let options = {
+            method: 'POST',
+            url: `https://sm-gst.scoreme.in/gst/external/pwd/sendemaillink`,
+            headers: {
+                clientId: process.env.SCOREMECLIENTID,
+                clientSecret: process.env.SCOREMECLIENTSECRET
+            },
+            data: {
+                gstin: [`${gstNumber}`],
+                email: [`${email}`],
+            }
+        }
+        axios.request(options).then(function (responseFromAxios) {
+            let tokenValue = responseFromAxios.data.data.referenceId
+
+            let optionsForRefernceId = {
+                method: 'POST',
+                url: `https://sm-gst.scoreme.in/gst/external/pwd/gstanalysisrequest`,
+                headers: {
+                    clientId: process.env.SCOREMECLIENTID,
+                    clientSecret: process.env.SCOREMECLIENTSECRET
+                },
+                data: JSON.stringify({
+                    gstin: [`${gstNumber}`],
+                    username: [`${userName}`],
+                    password: [`${password}`],
+                    from: '022022',
+                    to: '022019',
+                    linkFlag: ["1"],
+                    tokenValue: [`${tokenValue}`]
+                })
+            }
+            axios.request(optionsForRefernceId).then(function (responseFromAxios) {
+
+                let referenceId = responseFromAxios.data.data.referenceId
+                let optionsForReport = {
+                    method: 'POST',
+                    url: `https://sm-gst.scoreme.in/gst/external/getgstreport/${referenceId}`,
+                    headers: {
+                        clientId: process.env.SCOREMECLIENTID,
+                        clientSecret: process.env.SCOREMECLIENTSECRET
+                    },
+                }
+
+                axios.request(optionsForReport).then(async function (responseFromAxios) {
+                    let jsonUrl = responseFromAxios.data.data.jsonUrl
+                    const downloader = new Downloader({
+                        url: jsonUrl,
+                        directory: "./downloads",
+                    });
+
+                    const { filePath, downloadStatus } = await downloader.download()
+                        .catch(e => {
+                            return { filePath: undefined, downloadStatus: undefined };
+                        });
+
+                    const reportData = require(filePath)
+                    res.send(reportData)
+
+                }).catch(function (err) {
+                    console.log(err)
+                })
+            }).catch(function (err) {
+                console.log(err)
+            })
+        }).catch((err) => {
+            console.log(err)
+        })
+    } catch (err) {
+
+    }
+}
+
+const gstReport = async function (req, res) {
+    try {
+        let { gstNumber, userName, password, fromDate, toDate } = req.body
+        let options = {
+            method: 'POST',
+            url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.SIGNZY_PATRONID}/gstanalytics`,
+            headers: {
+                Accept: '*/*',
+                Authorization: process.env.SIGNZY_AUTHTOKEN
+            },
+            data: {
+                task: 'createRequest',
+                type: 'Lite',
+                essentials: {
+                    authType: 'PASSWORD',
+                    gstin: [gstNumber],
+                    username: [userName],
+                    password: [password],
+                    fromDate: [fromDate],
+                    toDate: [toDate]
+                }
+            }
+        };
+
+        axios.request(options).then(function (response) {
+            console.log(response.data.requestId)
+            let requestId = response.data.requestId
+
+            let options = {
+                method: 'POST',
+                url: `https://preproduction.signzy.tech/api/v2/patrons/${process.env.SIGNZY_PATRONID}/gstanalytics`,
+                headers: {
+                    Accept: '*/*',
+                    Authorization: process.env.SIGNZY_AUTHTOKEN
+                },
+                data: {
+                    task: 'getGstAnalyticsReport',
+                    type: 'Detailed',
+                    essentials: { requestId: requestId, gstin: [gstNumber] }
+                }
+            };
+
+            axios.request(options).then(function (response) {
+                console.log(response.data);
+            }).catch(function (error) {
+                console.error(error);
+            });
+
+        }).catch(function (error) {
+            console.error(error);
+        });
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+const camReport = async function (req, res) {
+    try {
+        let { gstin, gstinUsername, gstinFromDate, gstinToDate, gstinPassword, cinLlpin, entityType, bankCode, bankAccountType, bankAccountNumber } = req.body
+        let file = req.files[0]
+        const form = new formData()
+        form.append('file', fs.readFileSync(file.path), file.originalname)
+        console.log(form)
+        let options = {
+            method: 'POST',
+            url: `https://sm-ias.scoreme.in/ias/external/integratedanalysisreport`,
+            headers: {
+                clientId: process.env.SCOREMECLIENTID,
+                clientSecret: process.env.SCOREMECLIENTSECRET
+            },
+            data:
+            {
+                bankStatementFiles: form,
+
+                payload:
+                {
+                    gstin: gstin,
+                    gstinUsername: gstinUsername,
+                    gstinFromDate: gstinFromDate,
+                    gstinToDate: gstinToDate,
+                    gstinPassword: gstinPassword,
+                    cinLlpin: cinLlpin,
+                    entityType: entityType,
+                    bankCode: bankCode,
+                    bankAccountType: bankAccountType,
+                    bankAccountNumber: bankAccountNumber
+                }
+            }
+        };
+
+        axios.request(options).then(function (response) {
+            console.log(response)
+            //     console.log(response.data.referenceId);
+            //     let options = {
+            //         method: 'GET',
+            //         url: `https://sm-ias.scoreme.in/ias/external/getintegratedanalysisreport/${response.data.referenceId}`,
+            //         headers: {
+            //             clientId: process.env.SCOREMECLIENTID,
+            //             clientSecret: process.env.SCOREMECLIENTSECRET
+            //         },
+            //     }
+            //     axios.request(options).then(function (response) {
+            //         console.log(response)
+            //     })
+        }).catch(function (error) {
+            console.error(error);
+        });
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+module.exports = { fetchDataWithCin, gstVerify, udyamDetails, gstReportFetch, gstReport, camReport }
