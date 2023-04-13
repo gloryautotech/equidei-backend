@@ -401,7 +401,7 @@ const verify = async function (req, res) {
 
 const decline = async function (req, res) {
     try {
-        let declineAsset = await assetModel.findOneAndUpdate({ _id: req.params.assetId }, { msmeStatus: "Decline", adminStatus: "Decline" }, { new: true })
+        let declineAsset = await assetModel.findOneAndUpdate({ _id: req.body.assetId }, { msmeStatus: "Decline", adminStatus: "Decline" }, { new: true })
         let apiResponse = response.generate(constants.SUCCESS, messages.asset.UPDATE, constants.HTTP_SUCCESS, declineAsset);
         res.status(200).send(apiResponse);
     } catch (err) {

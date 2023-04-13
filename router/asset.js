@@ -10,6 +10,6 @@ router.get('/getAllAssetListById', getAssetListById)
 router.put('/updateAsset', updateAsset)
 router.get('/paidAssetList', getPaidAsset)
 router.post('/verify', verify)
-router.post('/decline/:assetId', decline)
+router.post('/decline/', decline)
 
 module.exports = router
