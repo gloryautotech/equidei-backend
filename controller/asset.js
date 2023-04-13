@@ -366,7 +366,7 @@ const verify = async function (req, res) {
                 asset.pendingCharges.message = req.body.pendingCharges.message ? req.body.pendingCharges.message : " ";
                 asset.valuationReport = req.body.valuationReport ? req.body.valuationReport : " ";
                 asset.estimatedValuation = req.body.estimatedValuation ? req.body.estimatedValuation : 0;
-                if (req.body.assetValue && asset.assetValue != req.body.assetValue) {
+                if (req.body.estimatedValuation && asset.assetValue != req.body.estimatedValuation) {
                     asset.isAssetValueChange = true
                 }
                 if (req.body.approveType) {
