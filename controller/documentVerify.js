@@ -71,17 +71,17 @@ const panVerify = async function (req, res) {
                     let optionsForVerify = {
                         method: 'POST',
                         url: `${process.env.SIGNZY_BASEURL}snoops`,
-                        data: JSON.stringify({
+                        data: {
                             service: 'Identity',
                             itemId: `${autoRecognition.itemId}`,
                             accessToken: `${identityResponse.accessToken}`,
                             task: 'verification',
-                            essentials: { number: `${user.PAN.panNumber}`, name: `${user.adminName}`, fuzzy: true }
-                        })
+                            essentials: { number: `${user.PAN.panNumber}`, name: `${user.adminName}` }
+                        }
                     };
                     axios.request(optionsForVerify).then(async function (responseFromAxios) {
                         let data = responseFromAxios?.data
-                        if (data.verified == true) {
+                        if ( data.response.result.verified == true) {
                             user.PAN.status = "Verified"
                             await userModel.findOneAndUpdate({ email: req.body.email }, user, { new: true })
                         } else {
