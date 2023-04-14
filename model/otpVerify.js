@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const otp = mongoose.Schema({
     userId: { type: String },
-    otp: { type: Number }
+    otp: { type: String }
 }, {
     timestamps: { createdAt: true },
 }

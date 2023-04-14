@@ -6,7 +6,7 @@ const ErrorResponse = require('../utils/errorResponse');
 
 // keep strings in lowercase
 const allowedRoutes = [
-	'/api/v1/otp', '/api/auth/login', '/api/auth/signup','/api/auth/verifyOTP'
+	'/api/v1/otp', '/api/auth/login', '/api/auth/signup', '/api/auth/verifyotp'
 ];
 
 const protect = catchAsync(async (req, res, next) => {
@@ -54,10 +54,6 @@ const protect = catchAsync(async (req, res, next) => {
 	}
 
 	req.user = user;
-
-	await redisClient.set(cacheKey, JSON.stringify(user), {
-		EX: 60 * 10, // 10 min of expiration
-	});
 
 	next();
 });
