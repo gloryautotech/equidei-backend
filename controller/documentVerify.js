@@ -111,6 +111,26 @@ const panVerify = async function (req, res) {
         res.status(500).send(apiResponse)
     }
 }
+// const serviceVerify = async function (req, res) {
+//     try {
+//         // upload file
+//         // Download the helper library from https://www.twilio.com/docs/node/install
+// // Find your Account SID and Auth Token at twilio.com/console
+// // and set the environment variables. See http://twil.io/secure
+// const accountSid = process.env.TWILIO_ACCOUNT_SID;
+// const authToken = process.env.TWILIO_AUTH_TOKEN;
+// const client = require('twilio')(accountSid, authToken);
+
+// client.verify.v2.services
+//                 .create({friendlyName: 'My First Verify Service'})
+//                 .then(service => console.log(service.sid));
+
+        
+//     } catch (err) {
+//         let apiResponse = response.generate(constants.ERROR, messages.PAN.SERVERERROR, constants.HTTP_SERVER_ERROR, err)
+//         res.status(500).send(apiResponse)
+//     }
+// }
 
 /*
 Controller function to verify aadhar document kyc.
@@ -478,4 +498,4 @@ let callbackUrl = async function (data) {
         res.status(500).send(apiResponse)
     }
 }
-module.exports = { panVerify, aadharVerify, bankVerify, allBankList, eSignature, eStamping, callbackUrl }
+module.exports = { panVerify, aadharVerify, bankVerify, allBankList, eSignature, eStamping, callbackUrl, }

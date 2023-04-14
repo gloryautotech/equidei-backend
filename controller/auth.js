@@ -1222,7 +1222,7 @@ let sendOTP = async (req, res, next) => {
             client.messages
                 .create({
                     to: `+91${req.body.userId}`,
-                    from: '+19498280840', // your Twilio phone number
+                    from: '+19403082154', // your Twilio phone number
                     body: `Your verification code is ${otp}.`,
                 })
                 .then(async () => {

@@ -6,7 +6,7 @@ const ErrorResponse = require('../utils/errorResponse');
 
 // keep strings in lowercase
 const allowedRoutes = [
-	'/api/v1/otp', '/api/auth/login', '/api/auth/signup'
+	'/api/v1/otp', '/api/auth/login', '/api/auth/signup','/api/auth/verifyOTP'
 ];
 
 const protect = catchAsync(async (req, res, next) => {

@@ -160,7 +160,7 @@ const approve = async function (req, res) {
         }
         let file = { content: output };
         html_to_pdf.generatePdf(file, options).then(async (pdfBuffer) => {
-            await assetModel.findOneAndUpdate({_id:req.params.assetId}, {msmeStatus:"Valuation Accepted",adminStatus:"Valuation Accepted"},{new:true})
+            await assetModel.findOneAndUpdate({_id:req.params.assetId}, {msmeStatus:"Valuation Accepted"},{new:true})
             let arrayBuffer = pdfBuffer.toJSON().data
             let apiResponse = response.generate(constants.SUCCESS, "pdf generate successfully ", constants.HTTP_CREATED, arrayBuffer);
             res.send(apiResponse)

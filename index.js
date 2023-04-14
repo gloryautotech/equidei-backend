@@ -113,7 +113,7 @@ app.get('/checkenv', (req, res) => {
 	res.json({ env: process.env.NODE_ENV });
 });
 
-// app.use(protect);
+app.use(protect);
 
 app.use('/api/auth', require('./router/auth'));
 app.use('/api/userList', require('./router/userList'));
