@@ -6,7 +6,7 @@ const ErrorResponse = require('../utils/errorResponse');
 
 // keep strings in lowercase
 const allowedRoutes = [
-	'/api/v1/otp', '/api/auth/login', '/api/auth/signup', '/api/auth/verifyotp'
+	'/api/v1/otp', '/api/auth/login', '/api/auth/signup','/api/auth/verifyotp',"/api/auth/sendotp",'/api/auth/checkemail'
 ];
 
 const protect = catchAsync(async (req, res, next) => {
@@ -24,13 +24,6 @@ const protect = catchAsync(async (req, res, next) => {
 
 	if (!decoded) return next(new ErrorResponse('Invalid token', 401));
 
-	const cacheKey = `auth:user:${decoded.id}`;
-	const cachedUser = await redisClient.get(cacheKey);
-
-	if (cachedUser) {
-		req.user = JSON.parse(cachedUser);
-		return next();
-	}
 
 	const selOpts = {
 		profileStatus: 1,
@@ -42,16 +35,12 @@ const protect = catchAsync(async (req, res, next) => {
 	};
 
 	const user =
-		(await UserModel.findById(decoded.id)
-			.select(selOpts)
-			.populate('role')
+		(await UserModel.findOne({_id:decoded.id})
+			// .select(selOpts)
 			.lean());
 
 	if (!user) return next(new ErrorResponse('Invalid token', 401));
 
-	if (user.profileStatus !== 'APPROVED') {
-		return next(new ErrorResponse('Profile is blocked', 403));
-	}
 
 	req.user = user;
 

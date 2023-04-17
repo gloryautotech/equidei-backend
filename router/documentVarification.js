@@ -1,6 +1,6 @@
 const express = require("express")
 const { fetchDataWithCin ,gstVerify,udyamDetails,gstReportFetch,gstReport,camReport} = require('../controller/companyDocument')
-const { bankVerify, allBankList, panVerify, aadharVerify,eSignature,eStamping,callbackUrl, } = require("../controller/documentVerify")
+const { bankVerify, allBankList, panVerify, aadharVerify,eSignature,eStamping,callbackUrl } = require("../controller/documentVerify")
 const { pinataPinning, fetchIpfsFile, approve } = require('../controller/pinata')
 const {pinataUpload}=require("../controller/newrl")
 const router = express.Router()
@@ -28,7 +28,6 @@ router.get('/bankList', allBankList)
 // aadhar and pan verify
 router.post('/aadharVerify', aadharVerify)
 router.post('/panVerify', panVerify)
-// router.post('/sid', serviceVerify)
 
 
 // GST verify
